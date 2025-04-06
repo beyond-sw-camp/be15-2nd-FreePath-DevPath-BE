@@ -1,8 +1,8 @@
-package com.freepath.devpath.command.service;
+package com.freepath.devpath.user.command.service;
 
-import com.freepath.devpath.command.entity.User;
-import com.freepath.devpath.command.repository.UserRepository;
-import com.freepath.devpath.common.dto.UserCreateRequest;
+import com.freepath.devpath.user.command.entity.User;
+import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -36,7 +36,7 @@ public class SecurityConfig {
                                 .accessDeniedHandler(restAccessDeniedHandler)) // 인가 실패
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(HttpMethod.POST,
-                                        "/user/signup").permitAll()
+                                        "/user/signup", "user/test/*").permitAll()
                                 .anyRequest().authenticated()
                 );
         return http.build();
