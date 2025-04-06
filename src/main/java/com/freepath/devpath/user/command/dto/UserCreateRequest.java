@@ -16,5 +16,4 @@ public class UserCreateRequest {
     private final String nickname;
     private final String loginMethod;
     private final String itNewsSubscription;
-    private final UserRole userRole;
 }
