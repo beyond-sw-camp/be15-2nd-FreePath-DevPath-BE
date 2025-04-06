@@ -9,6 +9,7 @@ import com.freepath.devpath.user.command.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class AuthService {
     public TokenResponse login(LoginRequest request) {
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호"));
+
+        // 유저 탈퇴 여부 확인
+        validateUserStatus(user);
 
         // 요청에 담긴 password를 encoding한 값이 DB에 저장된 값과 동일한지 확인
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -75,6 +79,9 @@ public class AuthService {
         User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new BadCredentialsException("해당 리프레시 토큰을 위한 유저 없음"));
 
+        // 유저 탈퇴 여부 확인
+        validateUserStatus(user);
+
         // 새로운 토큰 재발급
         String accessToken = jwtTokenProvider.createToken(user.getLoginId(), user.getUserRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(), user.getUserRole().name());
@@ -104,4 +111,13 @@ public class AuthService {
         redisTemplate.delete(loginId);    // Redis에 저장된 refresh token 삭제
     }
 
+    private void validateUserStatus(User user) {
+        if (user.getUserDeletedAt() != null) {
+            throw new DisabledException("탈퇴한 유저입니다.");
+        }
+
+        if ("Y".equals(user.getIsUserRestricted())) {
+            throw new DisabledException("정지당한 유저입니다.");
+        }
+    }
 }
