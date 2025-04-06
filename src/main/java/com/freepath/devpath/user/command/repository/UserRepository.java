@@ -1,6 +1,6 @@
-package com.freepath.devpath.command.repository;
+package com.freepath.devpath.user.command.repository;
 
-import com.freepath.devpath.command.entity.User;
+import com.freepath.devpath.user.command.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

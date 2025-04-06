@@ -1,7 +1,6 @@
-package com.freepath.devpath.command.entity;
+package com.freepath.devpath.user.command.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,44 +15,44 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    @Column(unique = true, nullable = false, length = 50)
     private String loginId;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
-    @Email
     private String email;
 
-    @Column(nullable = false, length = 50)
     private String userName;
 
-    @Column(unique = true, nullable = false, length = 50)
     private String nickname;
 
-    @Column(nullable = false, length = 10)
     private String loginMethod;
 
-    @Column(columnDefinition = "CHAR(4)")
     private String developerPersonality;
 
-    @Column(nullable = false, columnDefinition = "CHAR(1)")
-    private String itNewsSubscription = "N";
+    private String itNewsSubscription;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole userRole = UserRole.USER;
+    private UserRole userRole;
 
-    @Column(nullable = false, columnDefinition = "CHAR(1)")
-    private String isUserRestricted = "N";
+    // insert 시 JPA가 이 컬럼에 값을 명시하지 않음
+    @Column(insertable = false)
+    private String isUserRestricted;
 
     @Column(insertable = false)
     private Date userRegisteredAt;
 
     private Date userDeletedAt;
 
+    // userRole값이 null일 경우는 Default값인 USER로 설정하고, 아닌 경우 ADMIN으로 설정할 수 있도록 하기 위함
+    @PrePersist
+    public void setDefaultUserRole() {
+        if (userRole == null) {
+            userRole = UserRole.USER;
+        }
+    }
+
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
     }
+
 }
