@@ -10,7 +10,7 @@ public class UserCreateRequest {
     private final String password;
     private final String email;
     private final String userName;
-    private final String nickName;
+    private final String nickname;
     private final String loginMethod;
     private final String itNewsSubscription;
 }

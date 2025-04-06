@@ -32,6 +32,9 @@ public class User {
     @Column(unique = true, nullable = false, length = 50)
     private String nickname;
 
+    @Column(nullable = false, length = 10)
+    private String loginMethod;
+
     @Column(columnDefinition = "CHAR(4)")
     private String developerPersonality;
 
@@ -45,10 +48,9 @@ public class User {
     @Column(nullable = false, columnDefinition = "CHAR(1)")
     private String isUserRestricted = "N";
 
-    @Column(nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Column(insertable = false)
     private Date userRegisteredAt;
 
-    @Column(nullable = true)
     private Date userDeletedAt;
 
     public void setEncodedPassword(String encodedPassword) {
