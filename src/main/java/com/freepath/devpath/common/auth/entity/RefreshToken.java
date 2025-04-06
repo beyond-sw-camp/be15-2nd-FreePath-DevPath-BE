@@ -1,31 +1,13 @@
 package com.freepath.devpath.common.auth.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Date;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "refresh_token")
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshToken {
-
-    @Id
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
+@Builder
+public class RefreshToken implements Serializable {
     private String token;
-
-    @Column(nullable = false)
-    private Date expiryDate;
 }
