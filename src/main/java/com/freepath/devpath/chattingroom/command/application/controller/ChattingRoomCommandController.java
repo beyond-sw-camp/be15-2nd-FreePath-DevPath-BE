@@ -6,6 +6,7 @@ import com.freepath.devpath.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,4 +37,14 @@ public class ChattingRoomCommandController {
                 chattingRoomCommandService.createGroupChattingRoom(userDetails.getUsername(), boardId);
         return ResponseEntity.ok(ApiResponse.success(chattingRoomCommandResponse));
     }
+
+    @PutMapping("/chatting/list/{chattingRoomId}")
+    public ResponseEntity<ApiResponse<Void>> quitChattingRoom(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable int chattingRoomId
+    ){
+        chattingRoomCommandService.quitChattingRoom(userDetails.getUsername(),chattingRoomId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
 }

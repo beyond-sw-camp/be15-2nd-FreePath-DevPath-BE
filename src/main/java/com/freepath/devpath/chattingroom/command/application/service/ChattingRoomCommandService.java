@@ -48,6 +48,7 @@ public class ChattingRoomCommandService {
 
     }
 
+    @Transactional
     public ChattingRoomCommandResponse createGroupChattingRoom(
             String username, int boardId
     ) {
@@ -64,5 +65,17 @@ public class ChattingRoomCommandService {
 
         chattingJoinRepository.save(chattingJoin1);
         return new ChattingRoomCommandResponse(chattingRoomId);
+    }
+
+    @Transactional
+    public void quitChattingRoom(String username, int chattingRoomId) {
+        int userId = Integer.parseInt(username);
+        ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
+                .orElseThrow(() -> new RuntimeException("해당 채팅방은 없습니다."));
+        chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
+        ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
+                .orElseThrow(() -> new RuntimeException("채팅방에 참여하고 있지 않습니다."));
+        chattingJoin.setChattingJoinStatus('N');
+
     }
 }
