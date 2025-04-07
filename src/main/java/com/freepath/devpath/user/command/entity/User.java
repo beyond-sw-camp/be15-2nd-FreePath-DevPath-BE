@@ -58,7 +58,7 @@ public class User{
 
     public void update(UserModifyRequest request, String encodedPassword) {
         this.password = encodedPassword;
-        this.email = request.getEmail();
+        this.itNewsSubscription = request.getItNewsSubscription();
         this.nickname = request.getNickname();
     }
 
