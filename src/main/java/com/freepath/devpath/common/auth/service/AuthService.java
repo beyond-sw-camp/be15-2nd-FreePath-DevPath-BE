@@ -2,7 +2,7 @@ package com.freepath.devpath.common.auth.service;
 
 import com.freepath.devpath.common.auth.dto.LoginRequest;
 import com.freepath.devpath.common.auth.dto.TokenResponse;
-import com.freepath.devpath.common.auth.entity.RefreshToken;
+import com.freepath.devpath.common.auth.domain.RefreshToken;
 import com.freepath.devpath.common.jwt.JwtTokenProvider;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserRepository;
@@ -37,8 +37,10 @@ public class AuthService {
         }
 
         // 로그인 성공 시 token 발급
-        String accessToken = jwtTokenProvider.createToken(user.getLoginId(), user.getUserRole().name());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(), user.getUserRole().name());
+        String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
+        String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
+        System.out.println(user.getUserId());
+
 
         // Redis에 value로 저장할 객체 생성
         RefreshToken redisRefreshToken = RefreshToken.builder()
@@ -47,7 +49,7 @@ public class AuthService {
 
         // Redis에 key를 loginId, value를 refreshToken 객체, TTL을 7일로 설정
         redisTemplate.opsForValue().set(
-                user.getLoginId(),
+                String.valueOf(user.getUserId()),
                 redisRefreshToken,
                 Duration.ofDays(7)
         );
@@ -60,12 +62,12 @@ public class AuthService {
 
 
     public TokenResponse refreshToken(String providedRefreshToken) {
-        // 리프레시 토큰 유효성 검사, 저장 되어 있는 loginId 추출
+        // 리프레시 토큰 유효성 검사, 저장 되어 있는 userId 추출
         jwtTokenProvider.validateToken(providedRefreshToken);
-        String loginId = jwtTokenProvider.getUsernameFromJWT(providedRefreshToken);
+        String userId = jwtTokenProvider.getUsernameFromJWT(providedRefreshToken);
 
         // Redis에 저장된 리프레시 토큰 조회
-        RefreshToken storedRefreshToken = redisTemplate.opsForValue().get(loginId);
+        RefreshToken storedRefreshToken = redisTemplate.opsForValue().get(userId);
         if (storedRefreshToken == null) {
             throw new BadCredentialsException("해당 유저로 조회되는 리프레시 토큰 없음");
         }
@@ -76,15 +78,15 @@ public class AuthService {
         }
 
         // user의 isUserRestricted와 userDeletedAt을 조회해서 탈퇴된 유저인지 판단하는 로직으로 수정 필요
-        User user = userRepository.findByLoginId(loginId)
+        User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new BadCredentialsException("해당 리프레시 토큰을 위한 유저 없음"));
 
         // 유저 탈퇴 여부 확인
         validateUserStatus(user);
 
         // 새로운 토큰 재발급
-        String accessToken = jwtTokenProvider.createToken(user.getLoginId(), user.getUserRole().name());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(), user.getUserRole().name());
+        String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
+        String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
 
 
         RefreshToken newToken = RefreshToken.builder()
@@ -93,7 +95,7 @@ public class AuthService {
 
         // Redis에 새로운 리프레시 토큰 저장 (기존 토큰 덮어쓰기)
         redisTemplate.opsForValue().set(
-                user.getLoginId(),
+                String.valueOf(user.getUserId()),
                 newToken,
                 Duration.ofDays(7)
         );
@@ -107,8 +109,8 @@ public class AuthService {
     public void logout(String refreshToken) {
         // refresh token의 서명 및 만료 검증
         jwtTokenProvider.validateToken(refreshToken);
-        String loginId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
-        redisTemplate.delete(loginId);    // Redis에 저장된 refresh token 삭제
+        String userId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
+        redisTemplate.delete(userId);    // Redis에 저장된 refresh token 삭제
     }
 
     private void validateUserStatus(User user) {
