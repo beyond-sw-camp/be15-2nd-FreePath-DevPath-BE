@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserCommandService {
@@ -30,9 +28,8 @@ public class UserCommandService {
     }
 
     public void modifyUser(UserModifyRequest request, String loginId) {
-        Optional<User> userOptional = userRepository.findByLoginId(loginId);
-
-        User user = userOptional.orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new UserException(UserErrorCode.PASSWORD_NOT_MATCHED);
