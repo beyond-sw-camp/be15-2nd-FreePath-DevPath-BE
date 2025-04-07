@@ -61,4 +61,8 @@ public class User{
         this.email = request.getEmail();
         this.nickname = request.getNickname();
     }
+
+    public void markAsDeleted() {
+        this.userDeletedAt = new Date();
+    }
 }

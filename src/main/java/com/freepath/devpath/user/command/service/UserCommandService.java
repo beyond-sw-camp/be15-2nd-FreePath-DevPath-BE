@@ -39,4 +39,16 @@ public class UserCommandService {
         user.update(request, encodedPassword);
         userRepository.save(user);
     }
+
+    public void deleteUser(String loginId, String password) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(UserErrorCode.PASSWORD_NOT_MATCHED);
+        }
+
+        user.markAsDeleted();
+        userRepository.save(user);
+    }
 }

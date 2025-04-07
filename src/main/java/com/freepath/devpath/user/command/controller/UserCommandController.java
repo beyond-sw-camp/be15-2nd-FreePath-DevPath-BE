@@ -1,5 +1,6 @@
 package com.freepath.devpath.user.command.controller;
 
+import com.freepath.devpath.user.command.dto.UserDeleteRequest;
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
@@ -27,10 +28,23 @@ public class UserCommandController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<ApiResponse<UserModifyRequest>> modifyUser(@RequestBody @Validated UserModifyRequest request, @AuthenticationPrincipal User user){
+    public ResponseEntity<ApiResponse<UserModifyRequest>> modifyUser(
+            @RequestBody @Validated UserModifyRequest request,
+            @AuthenticationPrincipal User user){
 
         String loginId = user.getUsername(); // loginId는 username으로 전달됨
         userCommandService.modifyUser(request, loginId);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(
+            @AuthenticationPrincipal User user,
+            @RequestBody @Validated UserDeleteRequest request
+    ) {
+        String loginId = user.getUsername();
+        userCommandService.deleteUser(loginId, request.getPassword());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }
