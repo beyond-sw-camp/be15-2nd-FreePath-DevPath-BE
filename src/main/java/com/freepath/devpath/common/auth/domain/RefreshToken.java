@@ -1,4 +1,4 @@
-package com.freepath.devpath.common.auth.entity;
+package com.freepath.devpath.common.auth.domain;
 
 import lombok.*;
 
