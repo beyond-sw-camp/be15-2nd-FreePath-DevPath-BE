@@ -1,4 +1,4 @@
-package com.freepath.devpath.board.post.entity;
+package com.freepath.devpath.board.post.command.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
