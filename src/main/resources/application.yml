@@ -8,7 +8,6 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
   jpa:
     show-sql: true
     hibernate:
@@ -17,7 +16,6 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
-
 
 
   data:
@@ -41,7 +39,7 @@ mybatis:
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION} # 30분
-  refresh-expiration : ${JWT_REFRESH-EXPIRATION} # 7일
+  refresh-expiration : ${JWT_REFRESH-EXPIRATION}
 
 server:
   port: 8080
