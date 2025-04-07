@@ -6,6 +6,8 @@ import com.freepath.devpath.common.auth.entity.RefreshToken;
 import com.freepath.devpath.common.jwt.JwtTokenProvider;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.exception.UserErrorCode;
+import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -110,6 +112,26 @@ public class AuthService {
         String loginId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
         redisTemplate.delete(loginId);    // Redis에 저장된 refresh token 삭제
     }
+
+    public void deleteUser(String loginId, String password) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(UserErrorCode.PASSWORD_NOT_MATCHED);
+        }
+
+        // 소프트 딜리트 처리
+        user.markAsDeleted();
+        userRepository.save(user);
+
+        // Redis에서 해당 loginId에 해당하는 리프레시 토큰 삭제
+        Boolean existed = redisTemplate.hasKey(loginId);
+        if (Boolean.TRUE.equals(existed)) {
+            redisTemplate.delete(loginId);
+        }
+    }
+
 
     private void validateUserStatus(User user) {
         if (user.getUserDeletedAt() != null) {
