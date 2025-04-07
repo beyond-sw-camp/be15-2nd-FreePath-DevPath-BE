@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,6 +45,15 @@ public class ChattingRoomCommandController {
             @PathVariable int chattingRoomId
     ){
         chattingRoomCommandService.quitChattingRoom(userDetails.getUsername(),chattingRoomId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @DeleteMapping("/chatting/list/{chattingRoomId}")
+    public ResponseEntity<ApiResponse<Void>> deleteChattingRoom(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable int chattingRoomId
+    ){
+        chattingRoomCommandService.deleteChattingRoom(userDetails.getUsername(),chattingRoomId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 

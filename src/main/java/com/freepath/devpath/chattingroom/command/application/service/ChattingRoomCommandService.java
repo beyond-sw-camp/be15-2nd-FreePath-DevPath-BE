@@ -78,4 +78,11 @@ public class ChattingRoomCommandService {
         chattingJoin.setChattingJoinStatus('N');
 
     }
+
+    @Transactional
+    public void deleteChattingRoom(String username, int chattingRoomId) {
+        int userId = Integer.parseInt(username);
+        chattingRoomRepository.deleteById(chattingRoomId);
+        chattingJoinRepository.deleteByChattingRoomId(chattingRoomId);
+    }
 }
