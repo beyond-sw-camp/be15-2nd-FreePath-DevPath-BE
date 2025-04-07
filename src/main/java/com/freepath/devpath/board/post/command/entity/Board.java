@@ -1,6 +1,8 @@
 package com.freepath.devpath.board.post.command.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +11,9 @@ import java.util.Date;
 @Entity
 @Table(name = "board")
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Board {
 
     @Id
@@ -30,5 +34,6 @@ public class Board {
 
     private Date boardModifiedAt;
 
+    @Column(insertable = false)
     private String isBoardDeleted;
 }
