@@ -3,7 +3,7 @@ package com.freepath.devpath.user.command.service;
 import com.freepath.devpath.user.exception.UserException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
-import com.freepath.devpath.email.RedisUtil;
+import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserRepository;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;

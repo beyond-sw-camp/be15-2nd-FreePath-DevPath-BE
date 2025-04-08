@@ -1,4 +1,4 @@
-package com.freepath.devpath.email;
+package com.freepath.devpath.email.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

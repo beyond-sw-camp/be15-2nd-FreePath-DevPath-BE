@@ -52,6 +52,10 @@ public class User{
         }
     }
 
+    public void updateEmail(String newEmail) {
+        this.email = newEmail;
+    }
+
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
     }

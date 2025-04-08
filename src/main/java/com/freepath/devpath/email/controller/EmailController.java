@@ -1,7 +1,11 @@
-package com.freepath.devpath.email;
+package com.freepath.devpath.email.controller;
 
+import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.email.Dto.EmailCheckDto;
+import com.freepath.devpath.email.service.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,14 +24,18 @@ public class EmailController {
 //        return emailService.joinEmail(emailDto.getEmail());
 //    }
 
+
     @PostMapping("/email/check")
-    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto){
-        Boolean Checked = emailService.checkAuthNum(emailCheckDto.getEmail(),emailCheckDto.getAuthNum());
-        if(Checked){
-            return "ok";
-        }
-        else{
-            throw new NullPointerException("뭔가 잘못!");
+    public ResponseEntity<ApiResponse<String>> authCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
+        boolean checked = emailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+
+        if (checked) {
+            return ResponseEntity.ok(ApiResponse.success("ok"));
+        } else {
+            throw new IllegalArgumentException("인증번호가 일치하지 않습니다."); // 또는 커스텀 예외
         }
     }
+
+
+
 }

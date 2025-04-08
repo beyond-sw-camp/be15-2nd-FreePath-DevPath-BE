@@ -44,7 +44,8 @@ public class SecurityConfig {
                         auth -> auth.requestMatchers(HttpMethod.POST,
 
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/user/find-id").authenticated()
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                               .requestMatchers(HttpMethod.POST, "/user/find-id").authenticated()
                                 .requestMatchers(HttpMethod.PUT, "/user/info").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .anyRequest().authenticated()

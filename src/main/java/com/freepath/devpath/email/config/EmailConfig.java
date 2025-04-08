@@ -1,4 +1,4 @@
-package com.freepath.devpath.email;
+package com.freepath.devpath.email.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ public class EmailConfig {
         mailSender.setHost("smtp.gmail.com");// 속성을 넣기 시작합니다. 이메일 전송에 사용할 SMTP 서버 호스트를 설정
         mailSender.setPort(587);// 587로 포트를 지정
         mailSender.setUsername("leessjjgg123@gmail.com");//구글계정을 넣습니다.
-        mailSender.setPassword("diih kqxp wvoc fffs");//구글 앱 비밀번호를 넣습니다.
+        mailSender.setPassword("cgdj ahnp lnbl fctd");//구글 앱 비밀번호를 넣습니다.
 
         Properties javaMailProperties = new Properties();//JavaMail의 속성을 설정하기 위해 Properties 객체를 생성
         javaMailProperties.put("mail.transport.protocol", "smtp");//프로토콜로 smtp 사용
