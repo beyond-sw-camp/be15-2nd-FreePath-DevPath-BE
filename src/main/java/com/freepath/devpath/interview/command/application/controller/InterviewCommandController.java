@@ -1,7 +1,9 @@
 package com.freepath.devpath.interview.command.application.controller;
 
 import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomCommandRequest;
+import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.application.service.InterviewCommandService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,19 @@ public class InterviewCommandController {
         Long userId = Long.valueOf(userDetails.getUsername());
 
         InterviewRoomCommandResponse response = interviewCommandService.createRoomAndFirstQuestion(userId, request.getInterviewCategory());
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /* 질문에 대한 답변, 답변에 대한 평가, 다음 질문 도출 */
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("/{roomId}/interview")
+    public ResponseEntity<ApiResponse<InterviewAnswerCommandResponse>> answerAndEvaluate(
+            @PathVariable Long roomId,
+            @RequestBody InterviewAnswerCommandRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(userId, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

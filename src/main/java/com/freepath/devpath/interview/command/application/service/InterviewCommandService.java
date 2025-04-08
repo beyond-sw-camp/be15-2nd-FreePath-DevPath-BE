@@ -1,5 +1,7 @@
 package com.freepath.devpath.interview.command.application.service;
 
+import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
+import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.domain.aggregate.Interview;
 import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
@@ -49,5 +51,52 @@ public class InterviewCommandService {
                 .build();
     }
 
+    /* 질문에 대한 답변, 답변에 대한 평가, 다음 질문 도출 */
+    @Transactional
+    public InterviewAnswerCommandResponse answerAndEvaluate(Long userId, Long roomId, InterviewAnswerCommandRequest request) {
 
+        InterviewRoom room = interviewRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 면접방이 없습니다."));
+
+        // 1. 사용자의 답변 저장
+        interviewRepository.save(
+                Interview.builder()
+                        .interviewRoomId(roomId)
+                        .interviewRole(Interview.InterviewRole.USER)
+                        .interviewMessage(request.getUserAnswer())
+                        .build()
+        );
+
+        // 2. GPT 평가 생성
+        String evaluation = gptService.evaluateAnswer(request.getUserAnswer());
+
+        //3. GPT 평가 저장
+        interviewRepository.save(
+                Interview.builder()
+                        .interviewRoomId(roomId)
+                        .interviewRole(Interview.InterviewRole.AI)
+                        .interviewMessage(evaluation)
+                        .build()
+        );
+
+        // 4. 면접방 당 총 3회차의 면접 실행
+        String nextQuestion = null;
+        if (request.getInterviewIndex() < 3) {
+            nextQuestion = gptService.generateFirstQuestion(room.getInterviewCategory());
+            interviewRepository.save(
+                    Interview.builder()
+                            .interviewRoomId(roomId)
+                            .interviewRole(Interview.InterviewRole.AI)
+                            .interviewMessage(nextQuestion)
+                            .build()
+            );
+        }
+
+        return InterviewAnswerCommandResponse.builder()
+                .interviewRoomId(roomId)
+                .userAnswer(request.getUserAnswer())
+                .gptEvaluation(evaluation)
+                .nextQuestion(nextQuestion)
+                .build();
+    }
 }
