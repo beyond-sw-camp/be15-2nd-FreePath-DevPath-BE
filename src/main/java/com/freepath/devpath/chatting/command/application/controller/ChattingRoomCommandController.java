@@ -2,7 +2,7 @@ package com.freepath.devpath.chatting.command.application.controller;
 
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingRoomCommandResponse;
 import com.freepath.devpath.chatting.command.application.service.ChattingRoomCommandService;
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
