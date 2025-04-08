@@ -1,13 +1,14 @@
 package com.freepath.devpath.user.exception;
 
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
 public class UserException extends RuntimeException {
-    private final UserErrorCode userErrorCode;
+    private final ErrorCode errorCode;
 
-    public UserException(final UserErrorCode userErrorCode) {
-        super(userErrorCode.getMessage());
-        this.userErrorCode = userErrorCode;
+    public UserException(final ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 }
