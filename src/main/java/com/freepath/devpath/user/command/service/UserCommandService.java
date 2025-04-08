@@ -1,6 +1,6 @@
 package com.freepath.devpath.user.command.service;
 
-import com.freepath.devpath.email.RedisUtil;
+import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserRepository;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
