@@ -1,8 +1,8 @@
-package com.freepath.devpath.email.controller;
+package com.freepath.devpath.email.command.application.controller;
 
-import com.freepath.devpath.common.response.ApiResponse;
-import com.freepath.devpath.email.Dto.NewsRequestDto;
-import com.freepath.devpath.email.service.NewsService;
+import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.email.command.application.Dto.NewsRequestDto;
+import com.freepath.devpath.email.command.application.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +35,18 @@ public class NewsController {
     public String testSendNews() {
         newsService.sendNewsForToday();  // 스케줄링 메서드 수동 호출
         return "메일 전송 테스트 완료";
+    }
+
+    @PutMapping("/news/{newsId}")
+    public ResponseEntity<ApiResponse<Void>> updateNews(@PathVariable int newsId, @RequestBody NewsRequestDto dto) {
+        newsService.updateNews(newsId, dto);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    // 뉴스 삭제
+    @DeleteMapping("/news/{newsId}")
+    public ResponseEntity<ApiResponse<Void>> deleteNews(@PathVariable int newsId) {
+        newsService.deleteNews(newsId);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }
