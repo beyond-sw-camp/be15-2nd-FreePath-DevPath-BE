@@ -1,7 +1,7 @@
 package com.freepath.devpath.chatting.command.application.controller;
 
 import com.freepath.devpath.chatting.command.application.service.UserBlockCommandService;
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
