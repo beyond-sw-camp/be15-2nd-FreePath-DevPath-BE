@@ -38,5 +38,4 @@ public class AuthController {
         authService.logout(request.getRefreshToken());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
-
 }

@@ -1,0 +1,14 @@
+package com.freepath.devpath.chattingroom.command.domain.repository;
+
+import com.freepath.devpath.chattingroom.command.domain.aggregate.ChattingJoin;
+import com.freepath.devpath.chattingroom.command.domain.aggregate.ChattingJoinId;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+public interface ChattingJoinRepository extends JpaRepository<ChattingJoin, ChattingJoinId> {
+    @Modifying
+    @Query("DELETE FROM ChattingJoin cj WHERE cj.id.chattingRoomId = :chattingRoomId")
+    void deleteByChattingRoomId(@Param("chattingRoomId") int chattingRoomId);
+}
