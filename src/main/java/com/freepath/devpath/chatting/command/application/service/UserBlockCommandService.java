@@ -30,4 +30,16 @@ public class UserBlockCommandService {
         userBlockRepository.save(userBlock);
 
     }
+
+    @Transactional
+    public void unblockUser(String username, int blockedId) {
+        int blockerId = Integer.parseInt(username);
+        Optional<UserBlock> selectUserBlock = userBlockRepository.findByBlockerIdAndBlockedId(blockerId, blockedId);
+
+        if (selectUserBlock.isEmpty()) {
+            throw new IllegalStateException("차단한 사용자가 존재하지 않습니다.");
+        }
+
+        userBlockRepository.delete(selectUserBlock.get());
+    }
 }

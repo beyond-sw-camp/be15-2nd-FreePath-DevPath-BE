@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface UserBlockRepository extends JpaRepository<UserBlock,Integer> {
     Optional<UserBlock> findByBlockerIdAndBlockedId(int blockerId, int blockedId);
+
+    int deleteUserBlockByBlockerIdAndBlockedId(int blockerId, int blockedId);
+
 }
