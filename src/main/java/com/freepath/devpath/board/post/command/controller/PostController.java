@@ -9,7 +9,7 @@ import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.command.service.PostService;
 import com.freepath.devpath.board.post.command.dto.PostCreateResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
