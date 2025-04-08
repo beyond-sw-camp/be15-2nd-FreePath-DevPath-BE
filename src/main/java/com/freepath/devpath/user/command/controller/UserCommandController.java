@@ -1,7 +1,7 @@
 package com.freepath.devpath.user.command.controller;
 
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
-import com.freepath.devpath.user.command.response.FindLoginIdResponse;
+
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.freepath.devpath.common.response.ApiResponse;
