@@ -1,11 +1,14 @@
 package com.freepath.devpath.interview.command.application.controller;
 
+import com.freepath.devpath.board.post.command.exception.FileUpdateFailedException;
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.application.service.InterviewCommandService;
+import com.freepath.devpath.interview.command.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,4 +47,63 @@ public class InterviewCommandController {
         InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(userId, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
+
+    @ExceptionHandler(InterviewRoomCreationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomCreationException(InterviewRoomCreationException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewQuestionCreationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewQuestionCreationException(InterviewQuestionCreationException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewRoomNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomNotFoundException(InterviewRoomNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewRoomAccessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomAccessException(InterviewRoomAccessException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewIndexInvalidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewIndexInvalidException(InterviewIndexInvalidException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewAnswerEmptyException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewAnswerEmptyException(InterviewAnswerEmptyException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewEvaluationCreationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewEvaluationCreationException(InterviewEvaluationCreationException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
 }
