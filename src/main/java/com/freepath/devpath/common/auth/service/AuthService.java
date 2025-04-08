@@ -41,7 +41,7 @@ public class AuthService {
         // 로그인 성공 시 token 발급
         String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
-        System.out.println("userId : "+user.getUserId());
+        System.out.println(user.getUserId());
 
 
         // Redis에 value로 저장할 객체 생성
@@ -113,26 +113,7 @@ public class AuthService {
         jwtTokenProvider.validateToken(refreshToken);
         String userId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
         redisTemplate.delete(userId);    // Redis에 저장된 refresh token 삭제
-    }
-
-    public void deleteUser(Integer userId, String password) {
-        User user = userRepository.findByUserIdAndUserDeletedAtIsNull(userId)
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
-        }
-
-        // 소프트 딜리트 처리
-        user.markAsDeleted();
-        userRepository.save(user);
-
-        // Redis에서 해당 loginId에 해당하는 리프레시 토큰 삭제
-        Boolean existed = redisTemplate.hasKey(String.valueOf(userId));
-        if (Boolean.TRUE.equals(existed)) {
-            redisTemplate.delete(String.valueOf(userId));
-        }
-    }
+      }
 
     private void validateUserStatus(User user) {
         if (user.getUserDeletedAt() != null) {
