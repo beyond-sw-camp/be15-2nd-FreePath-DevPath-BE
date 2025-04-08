@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // 회원 관련 오류
     USER_NOT_FOUND("10001", "해당 회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    PASSWORD_NOT_MATCHED("10002ww", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
+    PASSWORD_NOT_MATCHED("10002", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

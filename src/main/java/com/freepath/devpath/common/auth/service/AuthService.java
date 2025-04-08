@@ -114,6 +114,26 @@ public class AuthService {
         redisTemplate.delete(userId);    // Redis에 저장된 refresh token 삭제
       }
 
+
+    public void deleteUser(String userId, String password) {
+        User user = userRepository.findByUserIdAndUserDeletedAtIsNull(Integer.valueOf(userId))
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
+        }
+
+        // 소프트 딜리트 처리
+        user.markAsDeleted();
+        userRepository.save(user);
+
+        // Redis에서 해당 loginId에 해당하는 리프레시 토큰 삭제
+        Boolean existed = redisTemplate.hasKey(userId);
+        if (Boolean.TRUE.equals(existed)) {
+            redisTemplate.delete(userId);
+        }
+    }
+
     private void validateUserStatus(User user) {
         if (user.getUserDeletedAt() != null) {
             throw new DisabledException("탈퇴한 유저입니다.");

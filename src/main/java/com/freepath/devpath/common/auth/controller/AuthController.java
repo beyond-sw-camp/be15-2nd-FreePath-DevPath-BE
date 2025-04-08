@@ -38,4 +38,15 @@ public class AuthController {
         authService.logout(request.getRefreshToken());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
+    @DeleteMapping("")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(
+            @AuthenticationPrincipal User user,
+            @RequestBody @Validated UserDeleteRequest request
+    ) {
+        String userId = user.getUsername();
+        authService.deleteUser(userId, request.getPassword());
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
 }
