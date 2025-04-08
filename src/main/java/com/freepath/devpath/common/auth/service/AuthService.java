@@ -1,5 +1,7 @@
 package com.freepath.devpath.common.auth.service;
 
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.user.exception.UserException;
 import com.freepath.devpath.common.auth.dto.LoginRequest;
 import com.freepath.devpath.common.auth.dto.TokenResponse;
 import com.freepath.devpath.common.auth.domain.RefreshToken;
@@ -32,8 +34,8 @@ public class AuthService {
         validateUserStatus(user);
 
         // 요청에 담긴 password를 encoding한 값이 DB에 저장된 값과 동일한지 확인
-            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                throw new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호");
         }
 
         // 로그인 성공 시 token 발급
@@ -110,7 +112,7 @@ public class AuthService {
         jwtTokenProvider.validateToken(refreshToken);
         String userId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
         redisTemplate.delete(userId);    // Redis에 저장된 refresh token 삭제
-    }
+      }
 
     private void validateUserStatus(User user) {
         if (user.getUserDeletedAt() != null) {
@@ -121,4 +123,5 @@ public class AuthService {
             throw new DisabledException("정지당한 유저입니다.");
         }
     }
+
 }
