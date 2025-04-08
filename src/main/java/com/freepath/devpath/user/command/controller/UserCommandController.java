@@ -1,6 +1,7 @@
 package com.freepath.devpath.user.command.controller;
 
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
+import com.freepath.devpath.user.command.response.FindLoginIdResponse;
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.freepath.devpath.common.response.ApiResponse;
@@ -27,12 +28,12 @@ public class UserCommandController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<ApiResponse<UserModifyRequest>> modifyUser(
+    public ResponseEntity<ApiResponse<Void>> modifyUser(
             @RequestBody @Validated UserModifyRequest request,
-            @AuthenticationPrincipal User user){
+            @AuthenticationPrincipal User user) {
 
-        String loginId = user.getUsername(); // loginId는 username으로 전달됨
-        userCommandService.modifyUser(request, loginId);
+        Integer userId = Integer.valueOf(user.getUsername()); // 이제 username 은 userId
+        userCommandService.modifyUser(request, userId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

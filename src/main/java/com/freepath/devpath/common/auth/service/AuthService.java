@@ -1,13 +1,13 @@
 package com.freepath.devpath.common.auth.service;
 
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.user.exception.UserException;
 import com.freepath.devpath.common.auth.dto.LoginRequest;
 import com.freepath.devpath.common.auth.dto.TokenResponse;
-import com.freepath.devpath.common.auth.entity.RefreshToken;
+import com.freepath.devpath.common.auth.domain.RefreshToken;
 import com.freepath.devpath.common.jwt.JwtTokenProvider;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserRepository;
-import com.freepath.devpath.user.exception.UserErrorCode;
-import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,13 +34,15 @@ public class AuthService {
         validateUserStatus(user);
 
         // 요청에 담긴 password를 encoding한 값이 DB에 저장된 값과 동일한지 확인
-            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                throw new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호");
         }
 
         // 로그인 성공 시 token 발급
-        String accessToken = jwtTokenProvider.createToken(user.getLoginId(), user.getUserRole().name());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(), user.getUserRole().name());
+        String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
+        String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
+        System.out.println("userId : "+user.getUserId());
+
 
         // Redis에 value로 저장할 객체 생성
         RefreshToken redisRefreshToken = RefreshToken.builder()
@@ -49,7 +51,7 @@ public class AuthService {
 
         // Redis에 key를 loginId, value를 refreshToken 객체, TTL을 7일로 설정
         redisTemplate.opsForValue().set(
-                user.getLoginId(),
+                String.valueOf(user.getUserId()),
                 redisRefreshToken,
                 Duration.ofDays(7)
         );
@@ -62,12 +64,12 @@ public class AuthService {
 
 
     public TokenResponse refreshToken(String providedRefreshToken) {
-        // 리프레시 토큰 유효성 검사, 저장 되어 있는 loginId 추출
+        // 리프레시 토큰 유효성 검사, 저장 되어 있는 userId 추출
         jwtTokenProvider.validateToken(providedRefreshToken);
-        String loginId = jwtTokenProvider.getUsernameFromJWT(providedRefreshToken);
+        String userId = jwtTokenProvider.getUsernameFromJWT(providedRefreshToken);
 
         // Redis에 저장된 리프레시 토큰 조회
-        RefreshToken storedRefreshToken = redisTemplate.opsForValue().get(loginId);
+        RefreshToken storedRefreshToken = redisTemplate.opsForValue().get(userId);
         if (storedRefreshToken == null) {
             throw new BadCredentialsException("해당 유저로 조회되는 리프레시 토큰 없음");
         }
@@ -78,15 +80,15 @@ public class AuthService {
         }
 
         // user의 isUserRestricted와 userDeletedAt을 조회해서 탈퇴된 유저인지 판단하는 로직으로 수정 필요
-        User user = userRepository.findByLoginId(loginId)
+        User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new BadCredentialsException("해당 리프레시 토큰을 위한 유저 없음"));
 
         // 유저 탈퇴 여부 확인
         validateUserStatus(user);
 
         // 새로운 토큰 재발급
-        String accessToken = jwtTokenProvider.createToken(user.getLoginId(), user.getUserRole().name());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(), user.getUserRole().name());
+        String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
+        String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
 
 
         RefreshToken newToken = RefreshToken.builder()
@@ -95,7 +97,7 @@ public class AuthService {
 
         // Redis에 새로운 리프레시 토큰 저장 (기존 토큰 덮어쓰기)
         redisTemplate.opsForValue().set(
-                user.getLoginId(),
+                String.valueOf(user.getUserId()),
                 newToken,
                 Duration.ofDays(7)
         );
@@ -109,16 +111,16 @@ public class AuthService {
     public void logout(String refreshToken) {
         // refresh token의 서명 및 만료 검증
         jwtTokenProvider.validateToken(refreshToken);
-        String loginId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
-        redisTemplate.delete(loginId);    // Redis에 저장된 refresh token 삭제
+        String userId = jwtTokenProvider.getUsernameFromJWT(refreshToken);
+        redisTemplate.delete(userId);    // Redis에 저장된 refresh token 삭제
     }
 
-    public void deleteUser(String loginId, String password) {
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+    public void deleteUser(Integer userId, String password) {
+        User user = userRepository.findByUserIdAndUserDeletedAtIsNull(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UserException(UserErrorCode.PASSWORD_NOT_MATCHED);
+            throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
         }
 
         // 소프트 딜리트 처리
@@ -126,12 +128,11 @@ public class AuthService {
         userRepository.save(user);
 
         // Redis에서 해당 loginId에 해당하는 리프레시 토큰 삭제
-        Boolean existed = redisTemplate.hasKey(loginId);
+        Boolean existed = redisTemplate.hasKey(String.valueOf(userId));
         if (Boolean.TRUE.equals(existed)) {
-            redisTemplate.delete(loginId);
+            redisTemplate.delete(String.valueOf(userId));
         }
     }
-
 
     private void validateUserStatus(User user) {
         if (user.getUserDeletedAt() != null) {
@@ -142,4 +143,5 @@ public class AuthService {
             throw new DisabledException("정지당한 유저입니다.");
         }
     }
+
 }

@@ -1,7 +1,7 @@
 package com.freepath.devpath.user.command.service;
 
 import com.freepath.devpath.user.exception.UserException;
-import com.freepath.devpath.user.exception.UserErrorCode;
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserRepository;
@@ -27,15 +27,22 @@ public class UserCommandService {
         userRepository.save(user);
     }
 
-    public void modifyUser(UserModifyRequest request, String loginId) {
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+    @Transactional
+    public void modifyUser(UserModifyRequest request, Integer userId) {
+        User user = userRepository.findByUserIdAndUserDeletedAtIsNull(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new UserException(UserErrorCode.PASSWORD_NOT_MATCHED);
+        String encodedPassword = user.getPassword();
+
+        // 비밀번호 변경 요청이 있을 경우만 검증 및 인코딩 수행
+        if (request.getNewPassword() != null && !request.getNewPassword().isBlank()) {
+            if (request.getCurrentPassword() == null ||
+                    !passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
+            }
+            encodedPassword = passwordEncoder.encode(request.getNewPassword());
         }
 
-        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
         user.update(request, encodedPassword);
         userRepository.save(user);
     }

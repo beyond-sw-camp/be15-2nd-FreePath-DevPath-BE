@@ -45,8 +45,8 @@ public class AuthController {
             @RequestBody @Validated UserDeleteRequest request
     ) {
 
-        String loginId = user.getUsername();
-        authService.deleteUser(loginId, request.getPassword());
+        Integer userId = Integer.valueOf(user.getUsername());
+        authService.deleteUser(userId, request.getPassword());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }
