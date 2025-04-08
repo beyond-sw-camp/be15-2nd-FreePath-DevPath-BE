@@ -1,5 +1,6 @@
 package com.freepath.devpath.interview.command.application.service;
 
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
@@ -7,6 +8,8 @@ import com.freepath.devpath.interview.command.domain.aggregate.Interview;
 import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRepository;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRoomRepository;
+import com.freepath.devpath.interview.command.exception.InterviewQuestionCreationException;
+import com.freepath.devpath.interview.command.exception.InterviewRoomCreationException;
 import com.freepath.devpath.interview.command.infrastructure.gpt.GptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,15 +28,24 @@ public class InterviewCommandService {
     public InterviewRoomCommandResponse createRoomAndFirstQuestion(Long userId, String category) {
 
         // 1. 면접방 생성 및 저장
-        InterviewRoom room = interviewRoomRepository.save(
-                InterviewRoom.builder()
-                        .userId(userId)
-                        .interviewCategory(category)
-                        .build()
-        );
+        InterviewRoom room = null;
+         try{
+            room = interviewRoomRepository.save(
+                    InterviewRoom.builder()
+                            .userId(userId)
+                            .interviewCategory(category)
+                            .build()
+            );
+         } catch(Exception e){
+             throw new InterviewRoomCreationException(ErrorCode.INTERVIEW_ROOM_CREATION_FAILED);
+         }
+
 
         // 2. GPT로부터 첫 질문 생성
         String firstQuestion = gptService.generateFirstQuestion(category);
+         if(firstQuestion == null){
+             throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
+         }
 
         // 3. 질문 내용을 INTERVIEW 테이블에 저장
         interviewRepository.save(

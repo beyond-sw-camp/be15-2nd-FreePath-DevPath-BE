@@ -1,6 +1,6 @@
 package com.freepath.devpath.interview.command.application.controller;
 
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;

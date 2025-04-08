@@ -22,6 +22,18 @@ public enum ErrorCode {
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
 
+    // ITNews 관련 오류 : 30000번대
+
+    // CSQuiz 관련 오류 : 40000번대
+
+    // 면접 관련 오류 : 50000번대
+    INTERVIEW_ROOM_CREATION_FAILED("50001", "면접방을 생성할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERVIEW_QUESTION_CREATION_FAILED("50002", "면접 질문을 생성할 수 없습니다", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // Chatting 관련 오류 : 60000번대
+
+    // Report 관련 오류 : 70000번대
+
 
     // 공통 오류
     VALIDATION_ERROR("90001", "입력 값 검증 오류입니다.", HttpStatus.BAD_REQUEST),
