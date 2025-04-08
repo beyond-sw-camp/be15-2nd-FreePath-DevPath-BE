@@ -8,8 +8,7 @@ import com.freepath.devpath.interview.command.domain.aggregate.Interview;
 import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRepository;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRoomRepository;
-import com.freepath.devpath.interview.command.exception.InterviewQuestionCreationException;
-import com.freepath.devpath.interview.command.exception.InterviewRoomCreationException;
+import com.freepath.devpath.interview.command.exception.*;
 import com.freepath.devpath.interview.command.infrastructure.gpt.GptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,8 +66,25 @@ public class InterviewCommandService {
     @Transactional
     public InterviewAnswerCommandResponse answerAndEvaluate(Long userId, Long roomId, InterviewAnswerCommandRequest request) {
 
+        // 0-1. 면접방 존재 여부 확인
         InterviewRoom room = interviewRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 면접방이 없습니다."));
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 0-2. 면접방 진행자 검증
+        if(!room.getUserId().equals(userId)){
+            throw new InterviewRoomAccessException(ErrorCode.INTERVIEW_ROOM_ACCESS_DENIED);
+        }
+
+        // 0-3. 면접방 당 면접 개수 검증
+        int interviewIndex = request.getInterviewIndex();
+        if(interviewIndex<1 || interviewIndex>3){
+            throw new InterviewIndexInvalidException(ErrorCode.INTERVIEW_INDEX_INVALID);
+        }
+
+        // 0-4. 면접 답변 내용 검증
+        if(request.getUserAnswer() == null){
+            throw new InterviewAnswerEmptyException(ErrorCode.INTERVIEW_ANSWER_EMPTY);
+        }
 
         // 1. 사용자의 답변 저장
         interviewRepository.save(
@@ -81,8 +97,11 @@ public class InterviewCommandService {
 
         // 2. GPT 평가 생성
         String evaluation = gptService.evaluateAnswer(request.getUserAnswer());
+        if(evaluation == null){
+            throw new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED);
+        }
 
-        //3. GPT 평가 저장
+        // 3. GPT 평가 저장
         interviewRepository.save(
                 Interview.builder()
                         .interviewRoomId(roomId)
@@ -93,7 +112,7 @@ public class InterviewCommandService {
 
         // 4. 면접방 당 총 3회차의 면접 실행
         String nextQuestion = null;
-        if (request.getInterviewIndex() < 3) {
+        if (interviewIndex < 3) {
             nextQuestion = gptService.generateFirstQuestion(room.getInterviewCategory());
             interviewRepository.save(
                     Interview.builder()
@@ -104,6 +123,7 @@ public class InterviewCommandService {
             );
         }
 
+        // 5. 응답
         return InterviewAnswerCommandResponse.builder()
                 .interviewRoomId(roomId)
                 .userAnswer(request.getUserAnswer())
