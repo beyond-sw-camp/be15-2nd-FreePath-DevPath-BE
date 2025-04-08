@@ -42,9 +42,6 @@ public class InterviewCommandService {
 
         // 2. GPT로부터 첫 질문 생성
         String firstQuestion = gptService.generateFirstQuestion(category);
-         if(firstQuestion == null){
-             throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
-         }
 
         // 3. 질문 내용을 INTERVIEW 테이블에 저장
         interviewRepository.save(
@@ -97,9 +94,6 @@ public class InterviewCommandService {
 
         // 2. GPT 평가 생성
         String evaluation = gptService.evaluateAnswer(request.getUserAnswer());
-        if(evaluation == null){
-            throw new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED);
-        }
 
         // 3. GPT 평가 저장
         interviewRepository.save(

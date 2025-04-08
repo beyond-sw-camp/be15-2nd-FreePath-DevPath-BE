@@ -1,11 +1,13 @@
 package com.freepath.devpath.interview.command.infrastructure.gpt;
 
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.interview.command.exception.InterviewEvaluationCreationException;
+import com.freepath.devpath.interview.command.exception.InterviewQuestionCreationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -33,24 +35,30 @@ public class GptService {
         );
 
         // 2. GPT가 도출한 질문 저장
-        String response = webClient.post()
-                .uri("https://api.openai.com/v1/chat/completions")
-                .header("Authorization", "Bearer " + apiKey)
-                .header("Content-Type", "application/json")
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                .map(json -> {
-                    List<Map<String, Object>> choices = (List<Map<String, Object>>) json.get("choices");
-                    Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
-                    return (String) message.get("content");
-                })
-                .doOnNext(res -> System.out.println("[GPT 질문 응답 수신] " + res))
-                .onErrorResume(error -> {
-                    System.out.println("[GPT 질문 오류] " + error.getMessage());
-                    return Mono.just("GPT 질문 생성 중 오류가 발생했습니다.");
-                })
-                .block();
+        String response = null;
+        try{
+            response = webClient.post()
+                    .uri("https://api.openai.com/v1/chat/completions")
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .map(json -> {
+                        List<Map<String, Object>> choices = (List<Map<String, Object>>) json.get("choices");
+                        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+                        return (String) message.get("content");
+                    })
+                    .doOnNext(res -> System.out.println("[GPT 질문 응답 수신] " + res))
+                    .block();
+
+        } catch(Exception e){
+            throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
+        }
+
+        if(response == null){
+            throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
+        }
 
         return response;
     }
@@ -67,25 +75,31 @@ public class GptService {
                 )
         );
 
-        String response = webClient.post()
-                .uri("https://api.openai.com/v1/chat/completions")
-                .header("Authorization", "Bearer " + apiKey)
-                .header("Content-Type", "application/json")
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                .map(json -> {
-                    List<Map<String, Object>> choices = (List<Map<String, Object>>) json.get("choices");
-                    Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
-                    return (String) message.get("content");
-                })
-                .doOnNext(res -> System.out.println("[GPT 응답 수신] " + res))
-                .onErrorResume(error -> {
-                    System.out.println("[GPT 오류] " + error.getMessage());
-                    return Mono.just("GPT 응답 중 오류가 발생했습니다.");
-                })
-                .block();
+        String response = null;
+        try {
+            response = webClient.post()
+                    .uri("https://api.openai.com/v1/chat/completions")
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                    })
+                    .map(json -> {
+                        List<Map<String, Object>> choices = (List<Map<String, Object>>) json.get("choices");
+                        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+                        return (String) message.get("content");
+                    })
+                    .doOnNext(res -> System.out.println("[GPT 응답 수신] " + res))
+                    .block();
 
+        } catch (Exception e){
+            throw new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED);
+        }
+
+        if(response == null){
+            throw new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED);
+        }
         return response;
     }
 
