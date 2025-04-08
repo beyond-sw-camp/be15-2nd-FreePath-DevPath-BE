@@ -1,4 +1,4 @@
-package com.freepath.devpath.email;
+package com.freepath.devpath.email.Dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

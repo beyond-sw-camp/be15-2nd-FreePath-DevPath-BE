@@ -1,5 +1,6 @@
-package com.freepath.devpath.email;
+package com.freepath.devpath.email.service;
 
+import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.user.command.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -70,22 +71,6 @@ public class EmailService {
         redisUtil.setDataExpire(Integer.toString(authNumber),toMail,60*5L);
     }
 
-//    public boolean checkAuthNum(String email,String authNum){
-//        System.out.println(authNum);
-//        System.out.println(email);
-//        if(redisUtil.getData(authNum)==null){
-//            return false;
-//        }
-//        else if(redisUtil.getData(authNum).equals(email)){
-//            return true;
-//        }
-//        else{
-//            return false;
-//        }
-//    }
-
-    // EmailService.java
-
     public boolean checkAuthNum(String email, String authNum) {
         if (redisUtil.getData(authNum) == null) return false;
         if (!redisUtil.getData(authNum).equals(email)) return false;
@@ -97,6 +82,8 @@ public class EmailService {
 
         // 인증 상태 저장 (선택 사항)
         redisUtil.setDataExpire("VERIFIED_USER:" + email, "true", 60 * 30L);
+
+        redisUtil.deleteData(authNum);
         return true;
     }
 
