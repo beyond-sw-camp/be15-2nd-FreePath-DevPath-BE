@@ -1,4 +1,4 @@
-package com.freepath.devpath.email.domain;
+package com.freepath.devpath.email.command.domain.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,6 +33,13 @@ public class News {
 
     public void setMailingDate(Date date) {
         this.mailingDate = date;
+    }
+
+    public void update(String title, String link, String content, Date mailingDate) {
+        this.title = title;
+        this.link = link;
+        this.content = content;
+        this.mailingDate = mailingDate;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.freepath.devpath.common.response;
+package com.freepath.devpath.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

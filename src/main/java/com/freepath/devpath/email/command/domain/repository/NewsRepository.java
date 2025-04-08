@@ -1,6 +1,6 @@
-package com.freepath.devpath.email.repository;
+package com.freepath.devpath.email.command.domain.repository;
 
-import com.freepath.devpath.email.domain.News;
+import com.freepath.devpath.email.command.domain.domain.News;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
