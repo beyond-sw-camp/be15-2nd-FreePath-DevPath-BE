@@ -9,5 +9,5 @@ import java.util.List;
 @Getter
 @Builder
 public class ChattingRoomResponse {
-    private final List<ChattingRoom> chattingRooms;
+    private final List<ChattingRoomDTO> chattingRooms;
 }
