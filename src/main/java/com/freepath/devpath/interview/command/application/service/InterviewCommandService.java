@@ -79,7 +79,7 @@ public class InterviewCommandService {
         }
 
         // 0-4. 면접 답변 내용 검증
-        if(request.getUserAnswer() == null){
+        if(request.getUserAnswer() == null || request.getUserAnswer().isEmpty()){
             throw new InterviewAnswerEmptyException(ErrorCode.INTERVIEW_ANSWER_EMPTY);
         }
 

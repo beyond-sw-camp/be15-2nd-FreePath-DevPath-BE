@@ -56,7 +56,7 @@ public class GptService {
             throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
         }
 
-        if(response == null){
+        if(response == null || response.isEmpty()){
             throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
         }
 
@@ -97,7 +97,7 @@ public class GptService {
             throw new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED);
         }
 
-        if(response == null){
+        if(response == null || response.isEmpty()){
             throw new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED);
         }
         return response;
