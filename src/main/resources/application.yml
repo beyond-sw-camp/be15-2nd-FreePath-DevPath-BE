@@ -41,5 +41,10 @@ jwt:
   expiration: ${JWT_EXPIRATION} # 30분
   refresh-expiration : ${JWT_REFRESH_EXPIRATION} # 7일
 
+chatgpt:
+  api:
+    key: ${CHATGPT_API_KEY}
+    url: https://api.openai.com/v1/chat/completions
+
 server:
   port: 8080
