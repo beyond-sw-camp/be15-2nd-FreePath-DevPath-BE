@@ -2,7 +2,7 @@ package com.freepath.devpath.chatting.query.controller;
 
 import com.freepath.devpath.chatting.query.dto.ChattingRoomResponse;
 import com.freepath.devpath.chatting.query.service.ChattingRoomQueryService;
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
