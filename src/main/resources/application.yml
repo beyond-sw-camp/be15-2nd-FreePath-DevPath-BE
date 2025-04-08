@@ -39,7 +39,7 @@ mybatis:
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION} # 30분
-  refresh-expiration : ${JWT_REFRESH-EXPIRATION}
+  refresh-expiration : ${JWT_REFRESH_EXPIRATION} # 7일
 
 server:
   port: 8080
