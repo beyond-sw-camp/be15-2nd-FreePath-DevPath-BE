@@ -3,9 +3,12 @@ package com.freepath.devpath.board.post.command.service;
 import com.freepath.devpath.board.post.command.dto.PostCreateRequest;
 import com.freepath.devpath.board.post.command.entity.Attachment;
 import com.freepath.devpath.board.post.command.entity.Board;
+import com.freepath.devpath.board.post.command.exception.FileDeleteFailedException;
+import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.command.repository.AttachmentRepository;
 import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.command.dto.PostCreateResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.common.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,5 +72,28 @@ public class PostService {
                 .build();
     }
 
+    @Transactional
+    public void deletePost(int boardId) {
+        Board post = postRepository.findById(boardId)
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_DELETE_FAILED));
+
+        // 저장된 S3 Key를 바탕으로 저장된 첨부파일 삭제
+        List<Attachment> attachments  = attachmentRepository.findByBoardId(boardId);
+
+        // 게시글에 저장된 첨부파일이 있는 경우에만 추가적으로 삭제
+        if (!attachments.isEmpty()) {
+            for (Attachment attachment : attachments) {
+                try {
+                    s3Service.deleteFile(attachment.getS3_key());
+                    attachmentRepository.delete(attachment);
+                } catch (Exception e) {
+                    throw new FileDeleteFailedException(ErrorCode.FILE_DELETE_FAILED);
+                }
+            }
+        }
+
+        // 게시글 Soft Delete
+        post.delete();
+    }
 }
 

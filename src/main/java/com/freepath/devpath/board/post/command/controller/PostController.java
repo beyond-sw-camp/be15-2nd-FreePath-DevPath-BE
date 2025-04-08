@@ -34,4 +34,14 @@ public class PostController {
                 .status(HttpStatusCode.CREATED)
                 .body(ApiResponse.success(postCreateResponse));
     }
+
+    @DeleteMapping("/{board-id}")
+    public ResponseEntity<ApiResponse<Void>> deletePost(
+            @PathVariable("board-id") int boardId
+    ) {
+        postService.deletePost(boardId);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
 }

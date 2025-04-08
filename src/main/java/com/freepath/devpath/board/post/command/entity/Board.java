@@ -36,4 +36,9 @@ public class Board {
 
     @Column(insertable = false)
     private String isBoardDeleted;
+
+
+    public void delete() {
+        this.isBoardDeleted = "Y";
+    }
 }
