@@ -1,9 +1,12 @@
 package com.freepath.devpath.board.post.command.service;
 
 import com.freepath.devpath.board.post.command.dto.PostCreateRequest;
+import com.freepath.devpath.board.post.command.dto.PostUpdateRequest;
 import com.freepath.devpath.board.post.command.entity.Attachment;
 import com.freepath.devpath.board.post.command.entity.Board;
 import com.freepath.devpath.board.post.command.exception.FileDeleteFailedException;
+import com.freepath.devpath.board.post.command.exception.FileUpdateFailedException;
+import com.freepath.devpath.board.post.command.exception.InvalidPostAuthorException;
 import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.command.repository.AttachmentRepository;
 import com.freepath.devpath.board.post.command.repository.PostRepository;
@@ -73,9 +76,19 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(int boardId) {
+    public void deletePost(int boardId, int userId) {
         Board post = postRepository.findById(boardId)
                 .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_DELETE_FAILED));
+
+        // 다른 회원이 해당 게시물 ID를 알고 삭제하려는 경우를 필터링
+        if (post.getUserId() != userId) {
+            throw new InvalidPostAuthorException(ErrorCode.POST_DELETE_FORBIDDEN);
+        }
+
+        // 이미 삭제되어있는 게시물을 삭제하려는 경우 에러 반환
+        if (post.getIsBoardDeleted().equals("Y")) {
+            throw new FileDeleteFailedException(ErrorCode.POST_ALREADY_DELETED);
+        }
 
         // 저장된 S3 Key를 바탕으로 저장된 첨부파일 삭제
         List<Attachment> attachments  = attachmentRepository.findByBoardId(boardId);
@@ -94,6 +107,28 @@ public class PostService {
 
         // 게시글 Soft Delete
         post.delete();
+    }
+
+    @Transactional
+    public void updatePost(PostUpdateRequest postUpdateRequest, int boardId, int userId) {
+        Board post = postRepository.findById(boardId)
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
+
+        // 다른 회원이 해당 게시물 ID를 알고 수정하려는 경우를 필터링
+        if (post.getUserId() != userId) {
+            throw new InvalidPostAuthorException(ErrorCode.POST_UPDATE_FORBIDDEN);
+        }
+
+        // 이미 삭제되어있는 게시물을 삭제하려는 경우 에러 반환
+        if (post.getIsBoardDeleted().equals("Y")) {
+            throw new FileUpdateFailedException(ErrorCode.POST_ALREADY_DELETED);
+        }
+
+        String modifiedTitle = postUpdateRequest.getTitle();
+        String modiifiedContents = postUpdateRequest.getContent();
+
+        // 게시글 제목, 내용 수정
+        post.modifyTitleAndContent(modifiedTitle, modiifiedContents);
     }
 }
 

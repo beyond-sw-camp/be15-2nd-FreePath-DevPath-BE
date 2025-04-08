@@ -16,9 +16,17 @@ public enum ErrorCode {
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     POST_CREATION_FAILED("20002", "게시글 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_UPDATE_FAILED("20003", "게시글 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-    POST_DELETE_FAILED("20004", "게시글 삭제에 실패했습니다.", HttpStatus.NOT_FOUND),
+    POST_UPDATE_FORBIDDEN("20004", "게시글을 작성한 사용자의 요청이 아닙니다.", HttpStatus.FORBIDDEN),
+    POST_DELETE_FAILED("20005", "게시글 삭제에 실패했습니다.", HttpStatus.NOT_FOUND),
     FILE_DELETE_FAILED("20006", "첨부파일 삭제에 실패했습니다", HttpStatus.INTERNAL_SERVER_ERROR),
-    POST_ALREADY_DELETED("20005", "이미 삭제된 게시글입니다.", HttpStatus.GONE);
+    POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
+    POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
+
+
+    // 공통 오류
+    VALIDATION_ERROR("90001", "입력 값 검증 오류입니다.", HttpStatus.BAD_REQUEST),
+    UNKNOWN_RUNTIME_ERROR("90002", "알 수 없는 런타임 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    UNKNOWN_ERROR("90003", "알 수 없는 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String code;
     private final String message;

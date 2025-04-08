@@ -41,4 +41,9 @@ public class Board {
     public void delete() {
         this.isBoardDeleted = "Y";
     }
+
+    public void modifyTitleAndContent(String modifiedTitle, String modiifiedContents) {
+        this.boardTitle = modifiedTitle;
+        this.boardContents = modiifiedContents;
+    }
 }
