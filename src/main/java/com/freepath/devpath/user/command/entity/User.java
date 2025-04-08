@@ -1,5 +1,6 @@
 package com.freepath.devpath.user.command.entity;
 
+import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.Date;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
@@ -59,4 +60,13 @@ public class User {
         this.password = encodedPassword;
     }
 
+    public void update(UserModifyRequest request, String encodedPassword) {
+        this.password = encodedPassword;
+        this.itNewsSubscription = request.getItNewsSubscription();
+        this.nickname = request.getNickname();
+    }
+
+    public void markAsDeleted() {
+        this.userDeletedAt = new Date();
+    }
 }

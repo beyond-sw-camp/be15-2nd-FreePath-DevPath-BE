@@ -12,4 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLoginId(String loginId);
 
     List<User> findByItNewsSubscription(String y);
+
+    Optional<User> findByUserIdAndUserDeletedAtIsNull(Integer userId);
+
 }
