@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Utilities;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -20,22 +21,31 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
-    public void uploadFile(String key, InputStream inputStream, String contentType) throws IOException {
+    public String uploadFile(String key, InputStream inputStream, String contentType) throws IOException {
         s3Client.putObject(
                 PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
-                        .contentType(contentType != null ? contentType : "application/octet-stream") // fallback
+                        .contentType(contentType != null ? contentType : "application/octet-stream")
                         .build(),
                 RequestBody.fromInputStream(inputStream, inputStream.available())
         );
+
+        // S3 URL 생성
+        return getFileUrl(key);
     }
+
 
     public void deleteFile(String key) {
         s3Client.deleteObject(DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
                 .build());
+    }
+
+    private String getFileUrl(String key) {
+        S3Utilities utilities = s3Client.utilities();
+        return utilities.getUrl(builder -> builder.bucket(bucketName).key(key)).toString();
     }
 }
 
