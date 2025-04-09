@@ -63,7 +63,7 @@ public class UserCommandController {
     }
 
     @PostMapping("update-password")
-    public ResponseEntity<ApiResponse<String>> findPassword(@RequestBody @Validated UpdatePasswordRequest request){
+    public ResponseEntity<ApiResponse<Void>> findPassword(@RequestBody @Validated UpdatePasswordRequest request){
         userCommandService.updatePassword(request.getEmail(), request.getLoginId(), request.getNewPassword());
 
         return ResponseEntity.ok(ApiResponse.success(null));
