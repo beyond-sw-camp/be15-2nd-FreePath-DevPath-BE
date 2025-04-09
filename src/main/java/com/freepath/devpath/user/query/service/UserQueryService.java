@@ -14,11 +14,8 @@ public class UserQueryService {
     private final UserMapper userMapper;
 
     public String findLoginIdByEmail(String email) {
-        System.out.println("email : " + email);
-
         // 인증 여부 확인
-        String verified = redisUtil.getData("VERIFIED_USER:" + email);
-        System.out.println("verified : " + verified);
+        String verified = redisUtil.getData("VERIFIED_LOGINID:" + email);
         if (!"true".equals(verified)) {
             throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
         }
@@ -29,8 +26,8 @@ public class UserQueryService {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
 
-        redisUtil.deleteData("TEMP_USER:" + email);
-        redisUtil.deleteData("VERIFIED_USER:" + email);
+        redisUtil.deleteData("TEMP_LOGINID:" + email);
+        redisUtil.deleteData("VERIFIED_LOGINID:" + email);
 
         return loginId;
     }

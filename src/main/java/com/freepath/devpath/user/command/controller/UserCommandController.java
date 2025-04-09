@@ -6,6 +6,7 @@ import com.freepath.devpath.email.command.application.service.EmailService;
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.user.command.dto.UpdatePasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,13 @@ public class UserCommandController {
 
         Integer userId = Integer.valueOf(user.getUsername()); // 이제 username 은 userId
         userCommandService.modifyUser(request, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("update-password")
+    public ResponseEntity<ApiResponse<String>> findPassword(@RequestBody @Validated UpdatePasswordRequest request){
+        userCommandService.updatePassword(request.getEmail(), request.getNewPassword());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

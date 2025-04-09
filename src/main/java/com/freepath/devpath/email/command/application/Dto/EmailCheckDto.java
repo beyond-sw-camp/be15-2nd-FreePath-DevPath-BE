@@ -1,6 +1,7 @@
 package com.freepath.devpath.email.command.application.Dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -13,4 +14,6 @@ public class EmailCheckDto {
     @NotEmpty(message = "인증 번호를 입력해 주세요")
     private String authNum;
 
+    @NotBlank
+    private String purpose;
 }
