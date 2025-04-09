@@ -71,4 +71,32 @@ public class UserCommandService {
     public boolean isEmailDuplicate(String email) {
         return userCommandRepository.existsByEmailAndUserDeletedAtIsNull(email);
     }
+
+    public boolean isLoginIdDuplicate(String loginId) {
+        return userCommandRepository.findByLoginId(loginId).isPresent();
+    }
+
+    public void updatePassword(String email, String loginId, String newPassword) {
+        // 인증 여부 확인
+        String verified = redisUtil.getData("VERIFIED_PASSWORD:" + email);
+        if (!"true".equals(verified)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
+        }
+
+        User user = userCommandRepository.findByEmailAndLoginIdAndUserDeletedAtIsNull(email, loginId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new UserException(ErrorCode.SAME_AS_OLD_PASSWORD);
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        int updatedCount = userCommandRepository.updatePasswordByEmail(email, encodedPassword);
+        if (updatedCount == 0) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        redisUtil.deleteData("TEMP_PASSWORD:" + email);
+        redisUtil.deleteData("VERIFIED_PASSWORD:" + email);
+    }
 }
