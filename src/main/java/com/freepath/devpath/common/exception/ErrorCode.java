@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public enum ErrorCode {
     // 회원 관련 오류
-    USER_NOT_FOUND("10001", "해당 회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    USER_NOT_FOUND("10001", "해당 회원은 찾을 수 없거나 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     PASSWORD_NOT_MATCHED("10002", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED_EMAIL("10003", "이메일 인증이 완료되지 않았습니다.", HttpStatus.UNAUTHORIZED),
+    EMAIL_ALREADY_EXISTS("10004", "이미 존재하는 이메일입니다.", HttpStatus.CONFLICT),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -23,6 +25,11 @@ public enum ErrorCode {
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
 
     // ITNews 관련 오류 : 30000번대
+
+    // 이메일 인증 실패 추가
+    INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    EMAIL_NOT_REGISTERED_TEMP("30002", "인증은 성공했지만, 회원 정보가 없습니다.", HttpStatus.BAD_REQUEST),
+    NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // CSQuiz 관련 오류 : 40000번대
     CS_QUIZ_NOT_FOUND("40001","해당 CS 퀴즈를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
