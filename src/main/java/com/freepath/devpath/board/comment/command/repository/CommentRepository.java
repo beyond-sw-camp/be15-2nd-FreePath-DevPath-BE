@@ -1,6 +1,6 @@
-package com.freepath.devpath.board.comment.repository;
+package com.freepath.devpath.board.comment.command.repository;
 
-import com.freepath.devpath.board.comment.domain.Comment;
+import com.freepath.devpath.board.comment.command.domain.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
