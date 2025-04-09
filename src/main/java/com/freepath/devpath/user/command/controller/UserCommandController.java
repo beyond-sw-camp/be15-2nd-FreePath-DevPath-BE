@@ -32,6 +32,12 @@ public class UserCommandController {
                             ErrorCode.EMAIL_ALREADY_EXISTS.getMessage()));
         }
 
+        if (userCommandService.isLoginIdDuplicate(request.getLoginId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.failure(ErrorCode.LOGIN_ID_ALREADY_EXISTS.getCode(),
+                            ErrorCode.LOGIN_ID_ALREADY_EXISTS.getMessage()));
+        }
+
         userCommandService.saveTempUser(request);                       // 1. 유저 정보 Redis에 임시 저장
         emailService.joinEmail(request.getEmail());                     // 2. 입력된 이메일로 인증번호 발송
         return ResponseEntity.status(HttpStatus.CREATED)

@@ -72,6 +72,10 @@ public class UserCommandService {
         return userCommandRepository.existsByEmailAndUserDeletedAtIsNull(email);
     }
 
+    public boolean isLoginIdDuplicate(String loginId) {
+        return userCommandRepository.findByLoginId(loginId).isPresent();
+    }
+
     public void updatePassword(String email, String loginId, String newPassword) {
         // 인증 여부 확인
         String verified = redisUtil.getData("VERIFIED_PASSWORD:" + email);

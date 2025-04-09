@@ -14,6 +14,7 @@ public enum ErrorCode {
     UNAUTHORIZED_EMAIL("10003", "이메일 인증이 완료되지 않았습니다.", HttpStatus.UNAUTHORIZED),
     EMAIL_ALREADY_EXISTS("10004", "이미 존재하는 이메일입니다.", HttpStatus.CONFLICT),
     SAME_AS_OLD_PASSWORD("10005", "이전 비밀번호와 같은 비밀번호는 사용할 수 없습니다.", HttpStatus.CONFLICT),
+    LOGIN_ID_ALREADY_EXISTS("10006", "이미 사용중인 ID 입니다.", HttpStatus.CONFLICT),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
