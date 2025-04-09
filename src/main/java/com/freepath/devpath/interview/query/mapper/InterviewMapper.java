@@ -18,4 +18,7 @@ public interface InterviewMapper {
     /* 면접방에 있는 면접 내역 조회 */
     List<InterviewDetailDto> selectInterviewListByRoomId(Long interviewRoomId);
 
+    /* 면접방의 총평 조회 */
+    String selectInterviewSummaryByRoomId(Long roomId);
+
 }

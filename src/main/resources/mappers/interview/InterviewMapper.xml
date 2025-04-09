@@ -30,4 +30,16 @@
         ORDER BY interview_id ASC
     </select>
 
+    <!-- 면접방의 총평 조회 -->
+    <select id="selectInterviewSummaryByRoomId" resultType="string">
+        SELECT interview_message
+        FROM interview
+        WHERE interview_room_id = #{roomId}
+        AND interview_role = 'AI'
+        AND interview_message LIKE '[총평]%'
+        ORDER BY interview_id DESC
+        LIMIT 1
+
+    </select>
+
 </mapper>

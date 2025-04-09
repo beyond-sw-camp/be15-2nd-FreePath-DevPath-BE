@@ -4,10 +4,8 @@ import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
-import com.freepath.devpath.interview.query.exception.InterviewQueryAccessException;
-import com.freepath.devpath.interview.query.exception.InterviewQueryHistoryNotFoundException;
-import com.freepath.devpath.interview.query.exception.InterviewRoomQueryCreationException;
-import com.freepath.devpath.interview.query.exception.InterviewRoomQueryNotFoundException;
+import com.freepath.devpath.interview.query.dto.InterviewSummaryResponse;
+import com.freepath.devpath.interview.query.exception.*;
 import com.freepath.devpath.interview.query.service.InterviewQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +48,19 @@ public class InterviewQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    /* 면접방의 총평 조회 */
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/{interviewRoomId}/summary")
+    public ResponseEntity<ApiResponse<InterviewSummaryResponse>> getInterviewSummary(
+            @PathVariable Long interviewRoomId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        InterviewSummaryResponse response = interviewQueryService.getInterviewSummary(interviewRoomId, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
 
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
@@ -79,6 +90,14 @@ public class InterviewQueryController {
 
     @ExceptionHandler(InterviewQueryHistoryNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleInterviewQueryHistoryNotFoundException(InterviewQueryHistoryNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewRoomQueryAccessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomQueryAccessException(InterviewRoomQueryAccessException e) {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getHttpStatus())

@@ -106,4 +106,12 @@ public class InterviewCommandController {
                 .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
     }
 
+    @ExceptionHandler(InterviewSummarizeCreationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewSummarizeCreationException(InterviewSummarizeCreationException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
 }
