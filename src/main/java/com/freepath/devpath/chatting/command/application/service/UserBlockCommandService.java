@@ -6,9 +6,8 @@ import com.freepath.devpath.chatting.exception.UserAlreadyBlockedException;
 import com.freepath.devpath.chatting.exception.UserNotBlockedException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.exception.UserException;
-import jakarta.persistence.TableGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserBlockCommandService {
     private final UserBlockRepository userBlockRepository;
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
     @Transactional
     public void blockUser(String username, int blockedId) {
         int blockerId = Integer.parseInt(username);
@@ -31,7 +30,7 @@ public class UserBlockCommandService {
             throw new UserAlreadyBlockedException(ErrorCode.USER_ALREADY_BLOCKED);
         }
         //존재하지 않는 사용자를 차단하는 경우
-        Optional<User> targetUser = userRepository.findById((long)blockedId);
+        Optional<User> targetUser = userCommandRepository.findById((long)blockedId);
         if (targetUser.isEmpty()) {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }

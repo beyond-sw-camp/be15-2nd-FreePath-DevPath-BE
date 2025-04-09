@@ -13,11 +13,10 @@ import com.freepath.devpath.chatting.exception.NoChattingJoinException;
 import com.freepath.devpath.chatting.exception.NoSuchChattingRoomException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ public class ChattingCommandService {
     private final ChattingRepository chattingRepository;
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
 
     public void joinRoom(int roomId, int user) {
         chatRooms.computeIfAbsent(roomId, k -> new HashSet<>()).add(user);
@@ -79,7 +78,7 @@ public class ChattingCommandService {
                 .build();
 
         Chatting savedChatting = chattingRepository.save(chatting);
-        User user = userRepository.findById((long)userId).orElseThrow(
+        User user = userCommandRepository.findById((long)userId).orElseThrow(
                 () -> new UserException(ErrorCode.USER_NOT_FOUND)
         );
 
