@@ -1,6 +1,8 @@
 package com.freepath.devpath.email.command.application.service;
 
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.email.config.RedisUtil;
+import com.freepath.devpath.email.exception.TempUserNotFoundException;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -77,7 +79,7 @@ public class EmailService {
 
         // TEMP_USER 있는지 확인
         if (redisUtil.getData("TEMP_USER:" + email) == null) {
-            throw new IllegalStateException("인증은 성공했지만, 회원 정보가 없습니다.");
+            throw new TempUserNotFoundException(ErrorCode.EMAIL_NOT_REGISTERED_TEMP);
         }
 
         // 인증 상태 저장 (선택 사항)

@@ -1,8 +1,10 @@
 package com.freepath.devpath.email.command.application.service;
 
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.email.command.application.Dto.NewsRequestDto;
 import com.freepath.devpath.email.command.domain.domain.News;
 import com.freepath.devpath.email.command.domain.repository.NewsRepository;
+import com.freepath.devpath.email.exception.NewsNotFoundException;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;
@@ -37,7 +39,7 @@ public class NewsService {
     // 특정 뉴스 ID로 이메일 발송
     public void sendNewsToSubscribers(int newsId) {
         News news = newsRepository.findById(newsId)
-                .orElseThrow(() -> new IllegalArgumentException("뉴스를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NewsNotFoundException(ErrorCode.NEWS_NOT_FOUND));
 
         List<User> subscribers = userCommandRepository.findByItNewsSubscription("Y");
 
@@ -76,7 +78,7 @@ public class NewsService {
     // 뉴스 수정
     public void updateNews(int newsId, NewsRequestDto dto) {
         News news = newsRepository.findById(newsId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 뉴스가 존재하지 않습니다."));
+                .orElseThrow(() -> new NewsNotFoundException(ErrorCode.NEWS_NOT_FOUND));
 
         news.update(dto.getTitle(), dto.getLink(), dto.getContent(), dto.getMailingDate());
         newsRepository.save(news);
@@ -85,7 +87,7 @@ public class NewsService {
     // 뉴스 삭제
     public void deleteNews(int newsId) {
         if (!newsRepository.existsById(newsId)) {
-            throw new IllegalArgumentException("해당 뉴스가 존재하지 않습니다.");
+            throw new NewsNotFoundException(ErrorCode.NEWS_NOT_FOUND);
         }
         newsRepository.deleteById(newsId);
     }

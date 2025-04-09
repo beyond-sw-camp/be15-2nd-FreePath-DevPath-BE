@@ -26,6 +26,11 @@ public enum ErrorCode {
 
     // ITNews 관련 오류 : 30000번대
 
+    // 이메일 인증 실패 추가
+    INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    EMAIL_NOT_REGISTERED_TEMP("30002", "인증은 성공했지만, 회원 정보가 없습니다.", HttpStatus.BAD_REQUEST),
+    NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
     // CSQuiz 관련 오류 : 40000번대
 
     // 면접 관련 오류 : 50000번대
