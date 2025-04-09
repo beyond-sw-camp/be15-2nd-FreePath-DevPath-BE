@@ -3,6 +3,7 @@ package com.freepath.devpath.email.command.application.controller;
 import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.email.command.application.Dto.NewsRequestDto;
 import com.freepath.devpath.email.command.application.service.NewsService;
+import com.freepath.devpath.email.command.domain.domain.News;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,10 @@ public class NewsController {
 
     // 뉴스 저장
     @PostMapping("/news")
-    public ResponseEntity<ApiResponse<Void>> saveNews(@RequestBody NewsRequestDto dto) {
-        newsService.saveNews(dto);
+    public ResponseEntity<ApiResponse<News>> saveNews(@RequestBody NewsRequestDto dto) {
+        News news = newsService.saveNews(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(null));
+                .body(ApiResponse.success(news));
     }
 
     // 뉴스 직접 발송
