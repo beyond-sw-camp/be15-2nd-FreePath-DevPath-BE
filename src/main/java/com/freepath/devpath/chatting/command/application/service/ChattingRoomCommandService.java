@@ -85,4 +85,12 @@ public class ChattingRoomCommandService {
         chattingRoomRepository.deleteById(chattingRoomId);
         chattingJoinRepository.deleteByChattingRoomId(chattingRoomId);
     }
+
+    public boolean isChattingJoin(int userId, int chattingRoomId) {
+        return chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId, userId)).isPresent();
+    }
+
+    public boolean isChattingRoomExists(int roomId) {
+        return chattingRoomRepository.findById(roomId).isPresent();
+    }
 }
