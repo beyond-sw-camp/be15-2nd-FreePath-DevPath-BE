@@ -94,7 +94,7 @@ public class ChattingRoomCommandService {
         //채팅 생성
         Chatting chatting = Chatting.builder()
                 .chattingRoomId(chattingRoomId)
-                .userId(userId)
+                .userId(1)
                 .chattingMessage(user.getNickname()+"님이 퇴장했습니다.")
                 .chattingCreatedAt(LocalDateTime.now())
                 .build();
