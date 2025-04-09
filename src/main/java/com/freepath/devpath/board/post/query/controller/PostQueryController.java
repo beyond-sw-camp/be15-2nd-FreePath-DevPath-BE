@@ -5,11 +5,14 @@ import com.freepath.devpath.board.post.query.dto.request.PostSearchRequest;
 import com.freepath.devpath.board.post.query.dto.response.CategoryListResponse;
 import com.freepath.devpath.board.post.query.dto.response.PostDetailResponse;
 import com.freepath.devpath.board.post.query.dto.response.PostListResponse;
+import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.query.service.PostQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,4 +50,13 @@ public class PostQueryController {
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    @ExceptionHandler(NoSuchPostException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoSuchPostException(NoSuchPostException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
 }
