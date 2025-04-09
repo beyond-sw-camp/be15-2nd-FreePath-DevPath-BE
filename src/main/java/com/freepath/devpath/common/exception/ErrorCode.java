@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public enum ErrorCode {
     // 회원 관련 오류
-    USER_NOT_FOUND("10001", "해당 회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    USER_NOT_FOUND("10001", "해당 회원은 찾을 수 없거나 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     PASSWORD_NOT_MATCHED("10002", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED_EMAIL("10003", "이메일 인증이 완료되지 않았습니다.", HttpStatus.UNAUTHORIZED),
+    EMAIL_ALREADY_EXISTS("10004", "이미 존재하는 이메일입니다.", HttpStatus.CONFLICT),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

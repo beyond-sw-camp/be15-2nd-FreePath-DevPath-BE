@@ -86,5 +86,4 @@ public class EmailService {
         redisUtil.deleteData(authNum);
         return true;
     }
-
 }
