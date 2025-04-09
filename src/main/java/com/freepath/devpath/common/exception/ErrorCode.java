@@ -52,7 +52,12 @@ public enum ErrorCode {
     INTERVIEW_HISTORY_NOT_FOUND("51005", "면접방에 대한 면접 이력이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
     // Chatting 관련 오류 : 60000번대
-
+    USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
+    USER_NOT_BLOCKED("60002","차단하지 않은 사용자입니다.",HttpStatus.NOT_FOUND),
+    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.NOT_FOUND),
+    NO_SUCH_CHATTING_ROOM("60004","유효한 채팅방이 아닙니다.", HttpStatus.NOT_FOUND),
+    CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
+    INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
     // Report 관련 오류 : 70000번대
 
 
