@@ -1,7 +1,13 @@
 package com.freepath.devpath.interview.query.controller;
 
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
+import com.freepath.devpath.interview.query.exception.InterviewQueryAccessException;
+import com.freepath.devpath.interview.query.exception.InterviewQueryHistoryNotFoundException;
+import com.freepath.devpath.interview.query.exception.InterviewRoomQueryCreationException;
+import com.freepath.devpath.interview.query.exception.InterviewRoomQueryNotFoundException;
 import com.freepath.devpath.interview.query.service.InterviewQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -30,6 +35,54 @@ public class InterviewQueryController {
         List<InterviewRoomDto> response = interviewQueryService.getInterviewRoomList(userId);
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /* 면접방 정보 및 면접 이력 조회 */
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/{interviewRoomId}")
+    public ResponseEntity<ApiResponse<InterviewRoomDetailResponse>> getInterviewRoomDetail(
+            @PathVariable Long interviewRoomId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        InterviewRoomDetailResponse response = interviewQueryService.getInterviewRoomByRoomId(interviewRoomId, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+
+    // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
+
+    @ExceptionHandler(InterviewRoomQueryCreationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomQueryCreationException(InterviewRoomQueryCreationException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewRoomQueryNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomQueryNotFoundException(InterviewRoomQueryNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewQueryAccessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewQueryAccessException(InterviewQueryAccessException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewQueryHistoryNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewQueryHistoryNotFoundException(InterviewQueryHistoryNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
     }
 
 }

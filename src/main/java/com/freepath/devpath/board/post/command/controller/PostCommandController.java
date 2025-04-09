@@ -6,7 +6,7 @@ import com.freepath.devpath.board.post.command.exception.FileDeleteFailedExcepti
 import com.freepath.devpath.board.post.command.exception.FileUpdateFailedException;
 import com.freepath.devpath.board.post.command.exception.InvalidPostAuthorException;
 import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
-import com.freepath.devpath.board.post.command.service.PostService;
+import com.freepath.devpath.board.post.command.service.PostCommandService;
 import com.freepath.devpath.board.post.command.dto.PostCreateResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.common.dto.ApiResponse;
@@ -25,17 +25,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-public class PostController {
+public class PostCommandController {
 
-    private final PostService postService;
+    private final PostCommandService postCommandService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostCreateResponse>> uploadPost(
             @RequestPart PostCreateRequest postCreateRequest,
-            @RequestPart("files") List<MultipartFile> multipartFiles,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        PostCreateResponse postCreateResponse = postService.createPost(postCreateRequest, multipartFiles, Integer.parseInt(userDetails.getUsername()));
+        PostCreateResponse postCreateResponse = postCommandService.createPost(postCreateRequest, multipartFiles, Integer.parseInt(userDetails.getUsername()));
 
         return ResponseEntity
                 .status(HttpStatusCode.CREATED)
@@ -49,7 +49,7 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         int userId = Integer.parseInt(userDetails.getUsername());
-        postService.updatePost(postUpdateRequest, boardId, userId);
+        postCommandService.updatePost(postUpdateRequest, boardId, userId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }
@@ -60,7 +60,7 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         int userId = Integer.parseInt(userDetails.getUsername());
-        postService.deletePost(boardId, userId);
+        postCommandService.deletePost(boardId, userId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

@@ -1,6 +1,8 @@
 package com.freepath.devpath.email.query.service;
 
 import com.freepath.devpath.common.dto.Pagination;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.email.exception.NewsNotFoundException;
 import com.freepath.devpath.email.query.dto.NewsDto;
 import com.freepath.devpath.email.query.dto.NewsListResponse;
 import com.freepath.devpath.email.query.dto.NewsSearchRequest;
@@ -18,7 +20,11 @@ public class NewsQueryService {
     private final NewsMapper newsMapper;
 
     public NewsDto getNews(int newsId) {
-        return newsMapper.findNewsById(newsId);
+        NewsDto news = newsMapper.findNewsById(newsId);
+        if (news == null) {
+            throw new NewsNotFoundException(ErrorCode.NEWS_NOT_FOUND);
+        }
+        return news;
     }
 
     @Transactional(readOnly = true)

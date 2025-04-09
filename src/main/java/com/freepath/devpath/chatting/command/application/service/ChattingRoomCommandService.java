@@ -8,7 +8,6 @@ import com.freepath.devpath.chatting.command.domain.repository.ChattingRepositor
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.exception.NoChattingJoinException;
-import com.freepath.devpath.chatting.exception.NoSuchChattingRoomException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -119,10 +118,10 @@ public class ChattingRoomCommandService {
     @Transactional
     public void deleteChattingRoom(String username, int chattingRoomId) {
         int userId = Integer.parseInt(username);
-        if(chattingRoomRepository.findById(chattingRoomId).isEmpty()){
-            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
-        }
-        //chattingRoomRepository.deleteById(chattingRoomId);
+        ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
+                .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
+        chattingRoom.setBoardId(null);
         chattingJoinRepository.deleteByChattingRoomId(chattingRoomId);
+        chattingRoom.setUserCount(0);
     }
 }
