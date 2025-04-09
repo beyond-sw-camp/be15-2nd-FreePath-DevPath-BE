@@ -2,10 +2,10 @@ package com.freepath.devpath.user.command.controller;
 
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
-import com.freepath.devpath.email.service.EmailService;
+import com.freepath.devpath.email.command.application.service.EmailService;
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

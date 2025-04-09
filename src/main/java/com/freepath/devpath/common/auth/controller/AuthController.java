@@ -4,7 +4,7 @@ import com.freepath.devpath.common.auth.dto.LoginRequest;
 import com.freepath.devpath.common.auth.dto.RefreshTokenRequest;
 import com.freepath.devpath.common.auth.dto.TokenResponse;
 import com.freepath.devpath.common.auth.service.AuthService;
-import com.freepath.devpath.common.response.ApiResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.auth.dto.UserDeleteRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

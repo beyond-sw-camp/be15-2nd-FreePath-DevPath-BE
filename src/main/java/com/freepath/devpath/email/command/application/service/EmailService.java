@@ -1,7 +1,6 @@
-package com.freepath.devpath.email.service;
+package com.freepath.devpath.email.command.application.service;
 
 import com.freepath.devpath.email.config.RedisUtil;
-import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

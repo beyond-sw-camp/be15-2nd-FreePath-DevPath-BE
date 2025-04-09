@@ -1,4 +1,4 @@
-package com.freepath.devpath.email.service;
+package com.freepath.devpath.email.command.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

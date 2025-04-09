@@ -1,4 +1,4 @@
-package com.freepath.devpath.email.domain;
+package com.freepath.devpath.email.command.domain.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

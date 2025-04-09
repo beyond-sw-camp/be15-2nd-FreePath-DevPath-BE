@@ -1,8 +1,8 @@
-package com.freepath.devpath.email.controller;
+package com.freepath.devpath.email.command.application.controller;
 
-import com.freepath.devpath.common.response.ApiResponse;
-import com.freepath.devpath.email.Dto.NewsRequestDto;
-import com.freepath.devpath.email.service.NewsService;
+import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.email.command.application.Dto.NewsRequestDto;
+import com.freepath.devpath.email.command.application.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

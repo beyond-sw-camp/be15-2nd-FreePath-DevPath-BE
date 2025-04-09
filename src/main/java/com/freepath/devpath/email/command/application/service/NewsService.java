@@ -1,8 +1,8 @@
-package com.freepath.devpath.email.service;
+package com.freepath.devpath.email.command.application.service;
 
-import com.freepath.devpath.email.Dto.NewsRequestDto;
-import com.freepath.devpath.email.domain.News;
-import com.freepath.devpath.email.repository.NewsRepository;
+import com.freepath.devpath.email.command.application.Dto.NewsRequestDto;
+import com.freepath.devpath.email.command.domain.domain.News;
+import com.freepath.devpath.email.command.domain.repository.NewsRepository;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;

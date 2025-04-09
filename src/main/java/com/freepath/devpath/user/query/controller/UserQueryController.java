@@ -1,8 +1,8 @@
 package com.freepath.devpath.user.query.controller;
 
 import com.freepath.devpath.common.auth.service.AuthService;
-import com.freepath.devpath.common.response.ApiResponse;
-import com.freepath.devpath.email.service.EmailService;
+import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.email.command.application.service.EmailService;
 import com.freepath.devpath.user.query.service.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
