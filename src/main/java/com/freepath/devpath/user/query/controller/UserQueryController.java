@@ -28,7 +28,6 @@ public class UserQueryController {
                 .body(ApiResponse.success(null));
     }
 
-
     @PostMapping("/find-id")
     public ResponseEntity<ApiResponse<String>> findLoginId(@RequestBody String email){
         String loginId = userQueryService.findLoginIdByEmail(email);

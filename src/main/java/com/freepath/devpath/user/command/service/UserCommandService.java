@@ -72,23 +72,21 @@ public class UserCommandService {
         return userCommandRepository.existsByEmailAndUserDeletedAtIsNull(email);
     }
 
-    public void updatePassword(String email, String newPassword) {
+    public void updatePassword(String email, String loginId, String newPassword) {
         // 인증 여부 확인
         String verified = redisUtil.getData("VERIFIED_PASSWORD:" + email);
         if (!"true".equals(verified)) {
             throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
         }
 
-        User user = userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+        User user = userCommandRepository.findByEmailAndLoginIdAndUserDeletedAtIsNull(email, loginId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
-        // 이전 비밀번호와 같은지 검사
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new UserException(ErrorCode.SAME_AS_OLD_PASSWORD); // 에러코드는 새로 정의
+            throw new UserException(ErrorCode.SAME_AS_OLD_PASSWORD);
         }
 
         String encodedPassword = passwordEncoder.encode(newPassword);
-
         int updatedCount = userCommandRepository.updatePasswordByEmail(email, encodedPassword);
         if (updatedCount == 0) {
             throw new UserException(ErrorCode.USER_NOT_FOUND);

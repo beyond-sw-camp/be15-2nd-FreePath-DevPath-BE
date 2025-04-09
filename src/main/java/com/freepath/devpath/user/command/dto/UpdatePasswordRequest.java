@@ -9,5 +9,6 @@ import lombok.RequiredArgsConstructor;
 public class UpdatePasswordRequest {
     @Email
     private final String email;
+    private final String loginId;
     private final String newPassword;
 }
