@@ -21,7 +21,6 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final UserCommandRepository userCommandRepository;
-    private final UserRepository userRepository;
     private final JavaMailSender mailSender;
 
     // 뉴스 저장만
