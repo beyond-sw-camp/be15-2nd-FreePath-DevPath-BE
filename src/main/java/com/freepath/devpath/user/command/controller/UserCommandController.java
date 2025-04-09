@@ -22,14 +22,6 @@ public class UserCommandController {
     private final UserCommandService userCommandService;
     private final EmailService emailService;
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<ApiResponse<Void>> registUser(@RequestBody @Validated UserCreateRequest request) {
-//        userCommandService.registerUser(request);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED) // 201 상태코드
-//                .body(ApiResponse.success(null));
-//    }
-
     @PostMapping("/signup/temp")
     public ResponseEntity<ApiResponse<Void>> registTempUser(@RequestBody @Validated UserCreateRequest request) {
         userCommandService.saveTempUser(request);                       // 1. 유저 정보 Redis에 임시 저장

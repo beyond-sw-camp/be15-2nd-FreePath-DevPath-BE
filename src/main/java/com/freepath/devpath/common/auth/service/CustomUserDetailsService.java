@@ -1,7 +1,7 @@
 package com.freepath.devpath.common.auth.service;
 
 import com.freepath.devpath.user.command.entity.User;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +15,11 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findById(Long.valueOf(userId))
+        User user = userCommandRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new UsernameNotFoundException("회원을 찾지 못했습니다."));
 
         return new org.springframework.security.core.userdetails.User(

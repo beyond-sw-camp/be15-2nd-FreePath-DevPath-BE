@@ -4,7 +4,7 @@ import com.freepath.devpath.email.Dto.NewsRequestDto;
 import com.freepath.devpath.email.domain.News;
 import com.freepath.devpath.email.repository.NewsRepository;
 import com.freepath.devpath.user.command.entity.User;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.List;
 public class NewsService {
 
     private final NewsRepository newsRepository;
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
     private final JavaMailSender mailSender;
 
     // 뉴스 저장만
@@ -39,7 +39,7 @@ public class NewsService {
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new IllegalArgumentException("뉴스를 찾을 수 없습니다."));
 
-        List<User> subscribers = userRepository.findByItNewsSubscription("Y");
+        List<User> subscribers = userCommandRepository.findByItNewsSubscription("Y");
 
         for (User user : subscribers) {
             sendEmail(user.getEmail(), news.getTitle(), news.getContent());

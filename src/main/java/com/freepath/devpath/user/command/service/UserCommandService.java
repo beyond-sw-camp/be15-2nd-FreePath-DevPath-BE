@@ -5,7 +5,7 @@ import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.user.command.entity.User;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -17,26 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserCommandService {
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RedisUtil redisUtil;
 
-//    @Transactional
-//    public void registerUser(UserCreateRequest request) {
-//        // 중복 회원 체크 로직 등 추가 기능
-//        User user = modelMapper.map(request, User.class);
-//        user.setEncodedPassword(passwordEncoder.encode(request.getPassword()));
-//        userRepository.save(user);
-//    }
-
-    // UserCommandService.java
     public void saveTempUser(UserCreateRequest request) {
         String userJson = new Gson().toJson(request);
         redisUtil.setDataExpire("TEMP_USER:" + request.getEmail(), userJson, 60 * 30L); // 30분
     }
 
-    // UserCommandService.java
     public void registerUserFromRedis(String email) {
         String verified = redisUtil.getData("VERIFIED_USER:" + email);
         if (!"true".equals(verified)) {
@@ -51,7 +41,7 @@ public class UserCommandService {
         UserCreateRequest request = new Gson().fromJson(userJson, UserCreateRequest.class);
         User user = modelMapper.map(request, User.class);
         user.setEncodedPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.save(user);
+        userCommandRepository.save(user);
 
         // 인증 정보 삭제
         redisUtil.deleteData("TEMP_USER:" + email);
@@ -60,7 +50,7 @@ public class UserCommandService {
 
     @Transactional
     public void modifyUser(UserModifyRequest request, Integer userId) {
-        User user = userRepository.findByUserIdAndUserDeletedAtIsNull(userId)
+        User user = userCommandRepository.findByUserIdAndUserDeletedAtIsNull(userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
         String encodedPassword = user.getPassword();
@@ -75,6 +65,6 @@ public class UserCommandService {
         }
 
         user.update(request, encodedPassword);
-        userRepository.save(user);
+        userCommandRepository.save(user);
     }
 }
