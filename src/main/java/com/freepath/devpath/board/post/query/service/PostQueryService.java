@@ -1,5 +1,6 @@
 package com.freepath.devpath.board.post.query.service;
 
+import com.freepath.devpath.board.post.query.dto.request.MyPostRequest;
 import com.freepath.devpath.board.post.query.dto.request.PostSearchRequest;
 import com.freepath.devpath.board.post.query.dto.response.*;
 import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
@@ -10,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -57,6 +60,30 @@ public class PostQueryService {
 
         return CategoryListResponse.builder()
                 .categories(categories)
+                .build();
+    }
+
+    public MyPostListResponse getPostByUserId(int userId, MyPostRequest request) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("limit", request.getLimit());
+        params.put("offset", request.getOffset());
+
+        List<PostDto> myPosts = postMapper.selectPostListByUserId(params);
+        int totalItems = postMapper.countMyPostList(params);
+
+        int page = request.getPage();
+        int size = request.getSize();
+
+        Pagination pagination = Pagination.builder()
+                .currentPage(page)
+                .totalPage((int) Math.ceil((double) totalItems / size))
+                .totalItems(totalItems)
+                .build();
+
+        return MyPostListResponse.builder()
+                .myPosts(myPosts)
+                .pagination(pagination)
                 .build();
     }
 }
