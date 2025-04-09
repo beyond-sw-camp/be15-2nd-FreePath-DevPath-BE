@@ -122,6 +122,8 @@ public class ChattingRoomCommandService {
                 .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
         chattingRoom.setBoardId(null);
         chattingJoinRepository.deleteByChattingRoomId(chattingRoomId);
+        chattingRepository.deleteByChattingRoomId(chattingRoomId);
+        chattingRoomRepository.delete(chattingRoom);
         chattingRoom.setUserCount(0);
     }
 }

@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChattingRepository extends JpaRepository<Chatting,Integer> {
     Chatting save(Chatting chatting);
+
+    void deleteByChattingRoomId(int chattingRoomId);
+
 }
