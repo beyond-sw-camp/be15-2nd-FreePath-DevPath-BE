@@ -13,4 +13,6 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
     );
 
     List<Interview> findByInterviewRoomId(Long roomId);
+
+    void deleteByInterviewRoomId(Long interviewRoomId);
 }

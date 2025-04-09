@@ -151,4 +151,30 @@ public class InterviewCommandService {
                 .nextQuestion(nextQuestion)
                 .build();
     }
+
+    /* 면접방 삭제 */
+    @Transactional
+    public void deleteInterviewRoom(Long userId, Long roomId) {
+
+        // 면접방 존재 여부 확인
+        InterviewRoom room = interviewRoomRepository.findById(roomId)
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 소유자 검증
+        if (!room.getUserId().equals(userId)) {
+            throw new InterviewRoomAccessException(ErrorCode.INTERVIEW_ROOM_ACCESS_DENIED);
+        }
+
+        try {
+            // 1. 면접 이력 삭제
+            interviewRepository.deleteByInterviewRoomId(roomId);
+
+            // 2. 면접방 삭제
+            interviewRoomRepository.deleteById(roomId);
+        } catch (Exception e) {
+            throw new InterviewRoomDeleteException(ErrorCode.INTERVIEW_ROOM_DELETE_FAILED);
+        }
+    }
+
+
 }
