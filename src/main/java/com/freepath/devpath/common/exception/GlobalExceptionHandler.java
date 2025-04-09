@@ -1,6 +1,9 @@
 package com.freepath.devpath.common.exception;
 
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.email.exception.EmailAuthException;
+import com.freepath.devpath.email.exception.NewsNotFoundException;
+import com.freepath.devpath.email.exception.TempUserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +44,28 @@ public class GlobalExceptionHandler {
         String detailedMessage = errorCode.getMessage() + " -> " + e.getMessage();
 
         ApiResponse<Void> response = ApiResponse.failure(errorCode.getCode(), detailedMessage);
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+    }
+
+
+    @ExceptionHandler(EmailAuthException.class)
+    public ResponseEntity<ApiResponse<Void>> handleEmailAuthException(EmailAuthException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ApiResponse<Void> response = ApiResponse.failure(errorCode.getCode(), errorCode.getMessage());
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+    }
+
+    @ExceptionHandler(TempUserNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTempUserNotFoundException(TempUserNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ApiResponse<Void> response = ApiResponse.failure(errorCode.getCode(), errorCode.getMessage());
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+    }
+
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNewsNotFoundException(NewsNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ApiResponse<Void> response = ApiResponse.failure(errorCode.getCode(), errorCode.getMessage());
         return new ResponseEntity<>(response, errorCode.getHttpStatus());
     }
 }

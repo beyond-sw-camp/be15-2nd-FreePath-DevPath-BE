@@ -1,7 +1,9 @@
 package com.freepath.devpath.email.command.application.service;
 
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.email.config.RedisUtil;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.email.exception.TempUserNotFoundException;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ import java.util.Random;
 @Slf4j
 public class EmailService {
 
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
     private final RedisUtil redisUtil;
 
     private final JavaMailSender mailSender;
@@ -77,7 +79,7 @@ public class EmailService {
 
         // TEMP_USER 있는지 확인
         if (redisUtil.getData("TEMP_USER:" + email) == null) {
-            throw new IllegalStateException("인증은 성공했지만, 회원 정보가 없습니다.");
+            throw new TempUserNotFoundException(ErrorCode.EMAIL_NOT_REGISTERED_TEMP);
         }
 
         // 인증 상태 저장 (선택 사항)
@@ -86,5 +88,20 @@ public class EmailService {
         redisUtil.deleteData(authNum);
         return true;
     }
+    public void sendCheckEmail(String email) {
+        makeRandomNumber();
+        String setFrom = "leessjjgg123@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+        String toMail = email;
+        String title = "[DevPath] 회원 인증 이메일입니다."; // 이메일 제목
+        String content =
+                "<b>" + "DevPath" + "</b>" + "에서 발송한 회원 인증용 메일입니다." +    //html 형식으로 작성 !
+                        "<br><br>" +
+                        "인증 번호는 " + authNumber + "입니다." +
+                        "<br>" +
+                        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+        mailSend(setFrom, toMail, title, content);
 
+        redisUtil.setDataExpire("VERIFIED_USER:" + email, "true", 60 * 10L);
+        redisUtil.setDataExpire("TEMP_USER:" + email, email, 60 * 10L);
+    }
 }
