@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.freepath.devpath.board.comment.query.mapper.CommentMapper">
+
+    <!-- 계층형 쿼리-->
+    <select id="findHierarchicalComments"
+            parameterType="int"
+            resultType="com.freepath.devpath.board.comment.query.dto.HierarchicalCommentDto">
+        WITH RECURSIVE comment_tree AS (
+            SELECT
+                c.comment_id,
+                c.parent_comment_id,
+                c.board_id,
+                u.nickname,
+                c.comment_contents AS contents,
+                c.comment_created_at AS createdAt,
+                c.comment_modified_at AS modifiedAt,
+                0 AS depth
+            FROM comment c
+                     JOIN users u ON c.user_id = u.user_id
+            WHERE c.board_id = #{boardId}
+              AND c.parent_comment_id IS NULL
+
+            UNION ALL
+
+            SELECT
+                c.comment_id,
+                c.parent_comment_id,
+                c.board_id,
+                u.nickname,
+                c.comment_contents,
+                c.comment_created_at,
+                c.comment_modified_at,
+                ct.depth + 1
+            FROM comment c
+                     JOIN users u ON c.user_id = u.user_id
+                     JOIN comment_tree ct ON c.parent_comment_id = ct.comment_id
+        )
+        SELECT * FROM comment_tree
+        ORDER BY createdAt ASC
+    </select>
+
+    <select id="findMyComments" resultType="com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto">
+        SELECT
+            b.board_title AS boardTitle,
+            c.comment_contents AS contents,
+            c.comment_created_at AS createdAt,
+            c.comment_modified_at AS modifiedAt
+        FROM
+            comment c
+                JOIN
+            board b ON c.board_id = b.board_id
+        WHERE
+            c.user_id = #{userId}
+        ORDER BY
+            c.comment_created_at DESC
+    </select>
+
+</mapper>

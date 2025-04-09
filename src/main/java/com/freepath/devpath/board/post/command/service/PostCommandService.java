@@ -125,10 +125,10 @@ public class PostCommandService {
         }
 
         String modifiedTitle = postUpdateRequest.getTitle();
-        String modiifiedContents = postUpdateRequest.getContent();
+        String modifiedContents = postUpdateRequest.getContent();
 
         // 게시글 제목, 내용 수정
-        post.modifyTitleAndContent(modifiedTitle, modiifiedContents);
+        post.modifyTitleAndContent(modifiedTitle, modifiedContents);
     }
 }
 
