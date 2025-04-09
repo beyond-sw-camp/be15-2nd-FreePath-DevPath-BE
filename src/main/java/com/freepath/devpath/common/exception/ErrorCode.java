@@ -51,6 +51,7 @@ public enum ErrorCode {
     INTERVIEW_ROOM_QUERY_NO_OWNER("51003", "소유자가 없는 면접방입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_QUERY_ACCESS_DENIED("51004", "조회할 수 없는 면접방입니다.", HttpStatus.FORBIDDEN),
     INTERVIEW_HISTORY_NOT_FOUND("51005", "면접방에 대한 면접 이력이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    INTERVIEW_SUMMARY_NOT_FOUND("51006","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
 
     // Chatting 관련 오류 : 60000번대
     USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),

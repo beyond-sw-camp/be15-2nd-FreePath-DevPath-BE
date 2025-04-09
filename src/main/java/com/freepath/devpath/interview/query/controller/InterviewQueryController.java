@@ -4,6 +4,7 @@ import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
+import com.freepath.devpath.interview.query.dto.InterviewSummaryResponse;
 import com.freepath.devpath.interview.query.exception.InterviewQueryAccessException;
 import com.freepath.devpath.interview.query.exception.InterviewQueryHistoryNotFoundException;
 import com.freepath.devpath.interview.query.exception.InterviewRoomQueryCreationException;
@@ -46,6 +47,19 @@ public class InterviewQueryController {
 
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewRoomDetailResponse response = interviewQueryService.getInterviewRoomByRoomId(interviewRoomId, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /* 면접방의 총평 조회 */
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/{interviewRoomId}/summary")
+    public ResponseEntity<ApiResponse<InterviewSummaryResponse>> getInterviewSummary(
+            @PathVariable Long interviewRoomId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        InterviewSummaryResponse response = interviewQueryService.getInterviewSummary(interviewRoomId, userId);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
