@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freepath.devpath.interview.query.mapper.InterviewMapper">
+
+    <!-- 사용자가 참여 중인 면접방 조회-->
+    <select id="selectInterviewRoomListByUserId" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
+        SELECT *
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+        ORDER BY interview_room_created_at DESC
+    </select>
+
+</mapper>
