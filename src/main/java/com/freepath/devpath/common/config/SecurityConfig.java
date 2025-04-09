@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
-                                        "/user/find-id", "/verify-email").permitAll()
+                                        "/user/find-id", "/user/verify-email").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/user/info").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()

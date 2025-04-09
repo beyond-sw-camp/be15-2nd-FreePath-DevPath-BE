@@ -1,5 +1,6 @@
 package com.freepath.devpath.user.command.controller;
 
+import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import com.freepath.devpath.email.service.EmailService;
 import com.freepath.devpath.user.command.service.UserCommandService;
@@ -24,6 +25,12 @@ public class UserCommandController {
 
     @PostMapping("/signup/temp")
     public ResponseEntity<ApiResponse<Void>> registTempUser(@RequestBody @Validated UserCreateRequest request) {
+        if (userCommandService.isEmailDuplicate(request.getEmail())) { // 이미 존재하는 이메일인지 확인 후 인증 절차 진행
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.failure( ErrorCode.EMAIL_ALREADY_EXISTS.getCode(),
+                            ErrorCode.EMAIL_ALREADY_EXISTS.getMessage()));
+        }
+
         userCommandService.saveTempUser(request);                       // 1. 유저 정보 Redis에 임시 저장
         emailService.joinEmail(request.getEmail());                     // 2. 입력된 이메일로 인증번호 발송
         return ResponseEntity.status(HttpStatus.CREATED)

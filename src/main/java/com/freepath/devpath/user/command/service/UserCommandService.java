@@ -67,4 +67,8 @@ public class UserCommandService {
         user.update(request, encodedPassword);
         userCommandRepository.save(user);
     }
+
+    public boolean isEmailDuplicate(String email) {
+        return userCommandRepository.existsByEmailAndUserDeletedAtIsNull(email);
+    }
 }

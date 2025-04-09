@@ -146,7 +146,7 @@ public class AuthService {
     }
 
     public void validateUserStatusByEmail(String email) {
-        User user = userCommandRepository.findByEmail(email)
+        User user = userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
         validateUserStatus(user);
     }
