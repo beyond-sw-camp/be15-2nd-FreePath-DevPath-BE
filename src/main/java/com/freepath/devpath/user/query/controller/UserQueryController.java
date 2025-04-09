@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -29,7 +31,8 @@ public class UserQueryController {
     }
 
     @PostMapping("/find-id")
-    public ResponseEntity<ApiResponse<String>> findLoginId(@RequestBody String email){
+    public ResponseEntity<ApiResponse<String>> findLoginId(@RequestBody Map<String, String> body){
+        String email = body.get("email");
         String loginId = userQueryService.findLoginIdByEmail(email);
 
         return ResponseEntity.ok(ApiResponse.success(loginId));
