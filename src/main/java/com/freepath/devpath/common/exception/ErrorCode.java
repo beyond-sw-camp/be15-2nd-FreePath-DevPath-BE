@@ -33,6 +33,7 @@ public enum ErrorCode {
     NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // CSQuiz 관련 오류 : 40000번대
+    CS_QUIZ_NOT_FOUND("40001","해당 CS 퀴즈를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // 면접 관련 오류 : 50000번대
     INTERVIEW_ROOM_CREATION_FAILED("50001", "면접방을 생성할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
