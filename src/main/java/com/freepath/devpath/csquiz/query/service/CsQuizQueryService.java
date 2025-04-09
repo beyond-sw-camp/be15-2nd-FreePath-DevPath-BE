@@ -1,14 +1,13 @@
 package com.freepath.devpath.csquiz.query.service;
 
-import com.freepath.devpath.csquiz.query.dto.response.CsQuizDetailResultDTO;
-import com.freepath.devpath.csquiz.query.dto.response.CsQuizPreviewDTO;
-import com.freepath.devpath.csquiz.query.dto.response.CsQuizResponse;
+import com.freepath.devpath.common.dto.Pagination;
+import com.freepath.devpath.csquiz.query.dto.*;
 import com.freepath.devpath.csquiz.query.mapper.CsQuizQueryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +17,25 @@ public class CsQuizQueryService {
     public List<CsQuizPreviewDTO> getWeeklyQuiz() {
         return csQuizQueryMapper.findWeeklyQuiz();
     }
-    public CsQuizDetailResultDTO getQuizById(Long csquizId) {
+    public CsQuizResponse getQuizById(Long csquizId) {
         return csQuizQueryMapper.findQuizById(csquizId);
     }
-    public List<CsQuizDetailResultDTO> getAllQuizzes() {
-        return csQuizQueryMapper.findAllQuizzes();
+    @Transactional(readOnly = true)
+    public CsQuizListResponse getAllQuizzes(CsQuizSearchRequest csQuizSearchRequest) {
+        List<CsQuizDetailResultDTO> quizzes = csQuizQueryMapper.selectAllQuizzes(csQuizSearchRequest);
+        Long totalItems = csQuizQueryMapper.countProducts(csQuizSearchRequest);
+
+        int page = csQuizSearchRequest.getPage();
+        int size = csQuizSearchRequest.getSize();
+
+        return CsQuizListResponse.builder()
+                .csQuizList(quizzes)
+                .pagination(Pagination.builder()
+                        .currentPage(page)
+                        .totalPage((int) Math.ceil((double) totalItems / size))
+                        .totalItems(totalItems)
+                        .build())
+                .build();
     }
     public int getCorrectAnswerCount(int userId) {
         return csQuizQueryMapper.countCorrectAnswersByUserId(userId);

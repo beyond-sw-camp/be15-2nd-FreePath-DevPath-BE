@@ -1,4 +1,4 @@
-package com.freepath.devpath.csquiz.command.dto.request;
+package com.freepath.devpath.csquiz.command.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,11 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class CsQuizOptionUpdateRequest {
-
-    @NotNull
-    private final int optionId;
-
+public class CsQuizOptionCreateRequest {
     @NotNull
     private final int optionNo;
 

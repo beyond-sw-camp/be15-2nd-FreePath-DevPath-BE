@@ -1,4 +1,4 @@
-package com.freepath.devpath.csquiz.command.dto.request;
+package com.freepath.devpath.csquiz.command.application.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

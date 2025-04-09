@@ -1,9 +1,7 @@
 package com.freepath.devpath.csquiz.query.controller;
 
-import com.freepath.devpath.common.response.ApiResponse;
-import com.freepath.devpath.csquiz.query.dto.response.CsQuizDetailResultDTO;
-import com.freepath.devpath.csquiz.query.dto.response.CsQuizPreviewDTO;
-import com.freepath.devpath.csquiz.query.dto.response.CsQuizResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.csquiz.query.dto.*;
 import com.freepath.devpath.csquiz.query.service.CsQuizQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,12 +26,14 @@ public class CsQuizQueryController {
     }
 
     @GetMapping("/admin/csquiz/{csquizId}") // 관리자의 csquiz 조회
-    public CsQuizDetailResultDTO getQuizById(@PathVariable Long csquizId) {
+    public CsQuizResponse getQuizById(@PathVariable Long csquizId) {
         return csQuizQueryService.getQuizById(csquizId);
     }
+
     @GetMapping("/admin/csquiz/all") // 모든 퀴즈 조회
-    public List<CsQuizDetailResultDTO> getAllQuizzes() {
-        return csQuizQueryService.getAllQuizzes();
+    public ResponseEntity<ApiResponse<CsQuizListResponse>> getAllQuizzes(CsQuizSearchRequest csQuizSearchRequest) {
+        CsQuizListResponse quizzes = csQuizQueryService.getAllQuizzes(csQuizSearchRequest);
+        return ResponseEntity.ok(ApiResponse.success(quizzes));
     }
     @GetMapping("/csquiz/result/correct-count")
     public int getCorrectAnswerCount() {

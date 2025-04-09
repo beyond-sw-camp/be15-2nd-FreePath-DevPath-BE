@@ -1,10 +1,12 @@
-package com.freepath.devpath.csquiz.command.controller;
+package com.freepath.devpath.csquiz.command.application.controller;
 
-import com.freepath.devpath.common.response.ApiResponse;
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizCreateRequest;
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizUpdateRequest;
-import com.freepath.devpath.csquiz.command.service.CsQuizSchedulerService;
-import com.freepath.devpath.csquiz.command.service.CsQuizService;
+import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizCreateRequest;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizUpdateRequest;
+import com.freepath.devpath.csquiz.command.application.service.CsQuizSchedulerService;
+import com.freepath.devpath.csquiz.command.application.service.CsQuizService;
+import com.freepath.devpath.csquiz.exception.CsQuizNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,15 @@ public class AdminCsQuizController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
+
+    @ExceptionHandler(CsQuizNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCsQuizNotFound(CsQuizNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
 
 
 }

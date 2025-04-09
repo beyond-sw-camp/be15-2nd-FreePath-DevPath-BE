@@ -1,4 +1,4 @@
-package com.freepath.devpath.csquiz.command.service;
+package com.freepath.devpath.csquiz.command.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

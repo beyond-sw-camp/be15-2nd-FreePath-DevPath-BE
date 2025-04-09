@@ -2,16 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.freepath.devpath.csquiz.query.mapper.CsQuizQueryMapper">
 
-    <resultMap id="QuizWithOptionsMap" type="com.freepath.devpath.csquiz.query.dto.response.CsQuizPreviewDTO">
+    <!-- 사용자가 퀴즈를 풀 때 -->
+    <resultMap id="QuizPreviewMap" type="com.freepath.devpath.csquiz.query.dto.CsQuizPreviewDTO">
         <id property="csquizId" column="csquiz_id"/>
         <result property="csquizContents" column="csquiz_contents"/>
-        <collection property="options" ofType="com.freepath.devpath.csquiz.query.dto.response.CsQuizOptionDTO">
+        <collection property="options" ofType="com.freepath.devpath.csquiz.query.dto.CsQuizOptionDTO">
             <result property="optionNo" column="option_no"/>
             <result property="optionContents" column="option_contents"/>
         </collection>
     </resultMap>
 
-    <select id="findWeeklyQuiz" resultMap="QuizWithOptionsMap">
+    <!-- 퀴즈 전체 상세용 -->
+    <resultMap id="QuizDetailMap" type="com.freepath.devpath.csquiz.query.dto.CsQuizResponse">
+        <id property="csquizId" column="csquiz_id"/>
+        <result property="csquizContents" column="csquiz_contents"/>
+        <result property="csquizAnswer" column="csquiz_answer"/>
+        <result property="csquizExplanation" column="csquiz_explanation"/>
+        <collection property="options" ofType="com.freepath.devpath.csquiz.query.dto.CsQuizOptionDTO">
+            <result property="optionNo" column="option_no"/>
+            <result property="optionContents" column="option_contents"/>
+        </collection>
+    </resultMap>
+
+    <!-- 퀴즈 결과용 -->
+    <resultMap id="QuizResultMap" type="com.freepath.devpath.csquiz.query.dto.CsQuizDetailResultDTO">
+        <id property="csquizId" column="csquiz_id" />
+        <result property="csquizContents" column="csquiz_contents" />
+        <result property="csquizAnswer" column="csquiz_answer" />
+        <result property="csquizExplanation" column="csquiz_explanation" />
+        <result property="userAnswer" column="user_answer" />
+        <result property="isCsquizCorrect" column="is_csquiz_correct" />
+        <collection property="options" ofType="com.freepath.devpath.csquiz.query.dto.CsQuizOptionDTO">
+            <result property="optionNo" column="option_no" />
+            <result property="optionContents" column="option_contents" />
+        </collection>
+    </resultMap>
+
+    <!-- 주간 퀴즈 10개 -->
+    <select id="findWeeklyQuiz" resultMap="QuizPreviewMap">
         SELECT
         q.csquiz_id,
         q.csquiz_contents,
@@ -24,7 +52,8 @@
         LIMIT 40
     </select>
 
-    <select id="findQuizById" resultMap="QuizWithOptionsMap" parameterType="long">
+    <!-- 단건 퀴즈 조회 -->
+    <select id="findQuizById" resultMap="QuizDetailMap" parameterType="long">
         SELECT
         q.csquiz_id,
         q.csquiz_contents,
@@ -37,7 +66,9 @@
         WHERE q.csquiz_id = #{csquizId}
     </select>
 
-    <select id="findAllQuizzes" resultMap="QuizWithOptionsMap">
+    <!-- 전체 퀴즈 목록 조회 -->
+    <select id="selectAllQuizzes" resultMap="QuizDetailMap"
+            parameterType="com.freepath.devpath.csquiz.query.dto.CsQuizSearchRequest">
         SELECT
         q.csquiz_id,
         q.csquiz_contents,
@@ -48,8 +79,10 @@
         FROM csquiz q
         LEFT JOIN csquiz_option o ON q.csquiz_id = o.csquiz_id
         ORDER BY q.csquiz_id
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <!-- 사용자가 맞힌 퀴즈 개수 -->
     <select id="countCorrectAnswersByUserId" resultType="int">
         SELECT COUNT(*)
         FROM csquiz_result
@@ -57,19 +90,7 @@
         AND is_csquiz_correct = 'Y'
     </select>
 
-    <resultMap id="QuizResultMap" type="com.freepath.devpath.csquiz.query.dto.response.CsQuizDetailResultDTO">
-        <id property="csquizId" column="csquiz_id" />
-        <result property="csquizContents" column="csquiz_contents" />
-        <result property="csquizAnswer" column="csquiz_answer" />
-        <result property="csquizExplanation" column="csquiz_explanation" />
-        <result property="userAnswer" column="user_answer" />
-        <result property="isCsquizCorrect" column="is_csquiz_correct" />
-        <collection property="options" ofType="com.freepath.devpath.csquiz.query.dto.response.CsQuizOptionDTO">
-            <result property="optionNo" column="option_no" />
-            <result property="optionContents" column="option_contents" />
-        </collection>
-    </resultMap>
-
+    <!-- 사용자 퀴즈 결과 상세 목록 -->
     <select id="findQuizResultsByUserId" resultMap="QuizResultMap">
         SELECT
         q.csquiz_id,
@@ -86,5 +107,9 @@
         WHERE r.user_id = #{userId}
         ORDER BY q.csquiz_id DESC
     </select>
-
+    <select id="countProducts" resultType="long"
+            parameterType="com.freepath.devpath.csquiz.query.dto.CsQuizSearchRequest">
+        SELECT COUNT(*)
+        FROM csquiz
+    </select>
 </mapper>

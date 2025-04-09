@@ -1,8 +1,7 @@
-package com.freepath.devpath.csquiz.query.dto.response;
+package com.freepath.devpath.csquiz.query.dto;
 
 import lombok.Getter;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter

@@ -1,8 +1,8 @@
-package com.freepath.devpath.csquiz.command.service;
+package com.freepath.devpath.csquiz.command.application.service;
 
-import com.freepath.devpath.csquiz.command.entity.CsQuiz;
-import com.freepath.devpath.csquiz.command.repository.CsQuizRepository;
-import com.freepath.devpath.csquiz.command.repository.CsQuizResultRepository;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuiz;
+import com.freepath.devpath.csquiz.command.domain.repository.CsQuizRepository;
+import com.freepath.devpath.csquiz.command.domain.repository.CsQuizResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

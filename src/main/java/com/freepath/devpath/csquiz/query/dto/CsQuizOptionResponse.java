@@ -1,6 +1,6 @@
-package com.freepath.devpath.csquiz.query.dto.response;
+package com.freepath.devpath.csquiz.query.dto;
 
-import com.freepath.devpath.csquiz.command.entity.CsQuizOption;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuizOption;
 import lombok.Getter;
 
 @Getter

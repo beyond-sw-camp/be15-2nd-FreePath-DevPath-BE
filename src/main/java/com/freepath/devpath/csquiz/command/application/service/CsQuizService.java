@@ -1,13 +1,15 @@
-package com.freepath.devpath.csquiz.command.service;
+package com.freepath.devpath.csquiz.command.application.service;
 
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizCreateRequest;
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizOptionCreateRequest;
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizOptionUpdateRequest;
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizUpdateRequest;
-import com.freepath.devpath.csquiz.command.entity.CsQuiz;
-import com.freepath.devpath.csquiz.command.entity.CsQuizOption;
-import com.freepath.devpath.csquiz.command.repository.CsQuizOptionRepository;
-import com.freepath.devpath.csquiz.command.repository.CsQuizRepository;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizCreateRequest;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizOptionCreateRequest;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizOptionUpdateRequest;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizUpdateRequest;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuiz;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuizOption;
+import com.freepath.devpath.csquiz.command.domain.repository.CsQuizOptionRepository;
+import com.freepath.devpath.csquiz.command.domain.repository.CsQuizRepository;
+import com.freepath.devpath.csquiz.exception.CsQuizNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,7 @@ public class CsQuizService {
     @Transactional
     public void updateQuiz(int quizId, CsQuizUpdateRequest csQuizUpdateRequest) {
         CsQuiz csQuiz = csQuizRepository.findById(quizId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 퀴즈가 존재하지 않습니다."));
+                .orElseThrow(() -> new CsQuizNotFoundException(ErrorCode.CS_QUIZ_NOT_FOUND));
 
         csQuiz.setCsquizContents(csQuizUpdateRequest.getCsquizContents());
         csQuiz.setCsquizAnswer(csQuizUpdateRequest.getCsquizAnswer());

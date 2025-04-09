@@ -1,4 +1,4 @@
-package com.freepath.devpath.csquiz.command.entity;
+package com.freepath.devpath.csquiz.command.domain.aggregate;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.freepath.devpath.csquiz.command.repository;
+package com.freepath.devpath.csquiz.command.domain.repository;
 
-import com.freepath.devpath.csquiz.command.entity.CsQuiz;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +11,5 @@ public interface CsQuizRepository extends JpaRepository<CsQuiz, Integer> {
 
     List<CsQuiz> findTop10ByIsCsquizSubmittedOrderByCsquizIdAsc(String n);
 
-    List<CsQuiz> findTop10ByIsCsquizSubmittedOrderByCsquizIdDesc(String y);
+
 }

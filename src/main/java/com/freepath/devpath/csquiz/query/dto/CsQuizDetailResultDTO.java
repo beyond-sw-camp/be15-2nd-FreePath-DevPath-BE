@@ -1,20 +1,18 @@
-package com.freepath.devpath.csquiz.query.dto.response;
+package com.freepath.devpath.csquiz.query.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class CsQuizResponse {
+@Setter
+public class CsQuizDetailResultDTO {
     private int csquizId;
     private String csquizContents;
+    private int userAnswer;
+    private String isCsquizCorrect;
     private int csquizAnswer;
     private String csquizExplanation;
     private List<CsQuizOptionDTO> options;
-
-
 }

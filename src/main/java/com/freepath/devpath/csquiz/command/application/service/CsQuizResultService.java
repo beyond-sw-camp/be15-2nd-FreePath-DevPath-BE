@@ -1,10 +1,12 @@
-package com.freepath.devpath.csquiz.command.service;
+package com.freepath.devpath.csquiz.command.application.service;
 
-import com.freepath.devpath.csquiz.command.dto.request.CsQuizResultRequest;
-import com.freepath.devpath.csquiz.command.entity.CsQuiz;
-import com.freepath.devpath.csquiz.command.entity.CsQuizResult;
-import com.freepath.devpath.csquiz.command.repository.CsQuizRepository;
-import com.freepath.devpath.csquiz.command.repository.CsQuizResultRepository;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.csquiz.command.application.dto.CsQuizResultRequest;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuiz;
+import com.freepath.devpath.csquiz.command.domain.aggregate.CsQuizResult;
+import com.freepath.devpath.csquiz.command.domain.repository.CsQuizRepository;
+import com.freepath.devpath.csquiz.command.domain.repository.CsQuizResultRepository;
+import com.freepath.devpath.csquiz.exception.CsQuizNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,7 @@ public class CsQuizResultService {
         int userId = Integer.parseInt(authentication.getName());
 
         CsQuiz quiz = quizRepository.findById(request.getCsquizId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 퀴즈가 존재하지 않습니다."));
+                .orElseThrow(() -> new CsQuizNotFoundException(ErrorCode.CS_QUIZ_NOT_FOUND));
 
         String isCorrect = quiz.getCsquizAnswer() == request.getUserAnswer() ? "Y" : "N";
 

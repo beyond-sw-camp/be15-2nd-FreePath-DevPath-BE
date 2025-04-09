@@ -1,4 +1,4 @@
-package com.freepath.devpath.csquiz.command.entity;
+package com.freepath.devpath.csquiz.command.domain.aggregate;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,22 +6,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="csquiz_result")
+@Table(name="csquiz_option")
 @Getter
 @NoArgsConstructor
-public class CsQuizResult {
+public class CsQuizOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int csquizResultId;
+
+    private int optionId;
     @Setter
     private int csquizId;
     @Setter
-    private int userId;
+    private int optionNo;
     @Setter
-    private int userAnswer;
-    @Setter
-    private String isCsquizCorrect;
-
+    private String optionContents;
 
 }
