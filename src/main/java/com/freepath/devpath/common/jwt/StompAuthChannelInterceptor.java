@@ -22,7 +22,6 @@ import java.security.Principal;
 public class StompAuthChannelInterceptor implements ChannelInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final ChattingRoomCommandService chattingRoomCommandService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -43,26 +42,7 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
             accessor.setUser(principal);
         }
 
-        //String destination = accessor.getDestination(); // "/topic/chat/123"
-        //            int roomId = extractRoomId(destination);
-        //
-        //            //만약 채팅방에 참여중인 사용자가 아니라면
-        //            if(!chattingRoomCommandService.isChattingJoin(userId,roomId)){
-        //                throw new RuntimeException("채팅방에 참여중이 아닙니다.");
-        //            }
-        //            if(!chattingRoomCommandService.isChattingRoomExists(roomId)){
-        //                throw new RuntimeException("채팅방이 존재하지 않습니다.");
-        //            }
-
-
-
         return message;
-    }
-
-    private int extractRoomId(String destination) {
-        // "/topic/chat/123" -> 123
-        String[] parts = destination.split("/");
-        return Integer.parseInt(parts[parts.length - 1]);
     }
 }
 

@@ -30,28 +30,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ChattingCommandService {
     private final SimpMessagingTemplate messagingTemplate;
-    private final Map<Integer, Set<Integer>> chatRooms = new HashMap<>();
     private final ChattingRepository chattingRepository;
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
     private final UserCommandRepository userCommandRepository;
 
-    public void joinRoom(int roomId, int user) {
-        chatRooms.computeIfAbsent(roomId, k -> new HashSet<>()).add(user);
-        // 입장 시 시스템 메시지 전송
-        sendSystemMessage(roomId, user + "님이 입장했습니다.");
-        log.info(user+"님이 입장했습니다.");
-    }
-
-    public void leaveRoom(int roomId, int user) {
-        Set<Integer> users = chatRooms.get(roomId);
-        if (users != null && users.remove(user)) {
-            sendSystemMessage(roomId, user + "님이 퇴장했습니다.");
-            if (users.isEmpty()) {
-                chatRooms.remove(roomId);
-            }
-        }
-    }
 
     @Transactional
     public void sendChatting(ChatDTO chatDTO, Principal principal) {

@@ -25,14 +25,4 @@ public class ChattingCommandController {
         log.info(principal.getName()+" : "+chatDTO.toString());
         chattingService.sendChatting(chatDTO,principal);
     }
-//    @MessageMapping("/chatting/join")
-//    public void join(ChatDTO chatDTO) {
-//        chattingService.joinRoom(chatDTO.getChattingRoomId());
-//    }
-//
-//    /* 사용자가 채팅방을 퇴장할 때 호출하는 메시지 핸들러 */
-//    @MessageMapping("/chat/leave")
-//    public void leave(ChatDTO chatDTO) {
-//        chattingService.leaveRoom(chatDTO.getChattingRoomId());
-//    }
 }

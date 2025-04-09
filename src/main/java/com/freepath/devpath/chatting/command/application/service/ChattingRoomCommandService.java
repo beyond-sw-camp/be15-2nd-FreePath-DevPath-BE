@@ -1,21 +1,32 @@
 package com.freepath.devpath.chatting.command.application.service;
 
+import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingRoomCommandResponse;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoin;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoinId;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingRole;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingRoom;
+import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
+import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
+import com.freepath.devpath.chatting.exception.NoChattingJoinException;
+import com.freepath.devpath.chatting.exception.NoSuchChattingRoomException;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.user.command.entity.User;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
+import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class ChattingRoomCommandService {
+    private final SimpMessagingTemplate messagingTemplate;
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
+    private final UserCommandRepository userCommandRepository;
+    private final ChattingRepository chattingRepository;
 
     @Transactional
     public ChattingRoomCommandResponse createChattingRoom(
@@ -70,12 +81,31 @@ public class ChattingRoomCommandService {
     @Transactional
     public void quitChattingRoom(String username, int chattingRoomId) {
         int userId = Integer.parseInt(username);
+        //유효성 검사
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
-                .orElseThrow(() -> new RuntimeException("해당 채팅방은 없습니다."));
+                .orElseThrow(() -> new NoSuchChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
         chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
         ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
-                .orElseThrow(() -> new RuntimeException("채팅방에 참여하고 있지 않습니다."));
+                .orElseThrow(() -> new NoChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
+        //퇴장 처리
         chattingJoin.setChattingJoinStatus('N');
+        User user = userCommandRepository.findById((long)userId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        //채팅 생성
+        Chatting chatting = Chatting.builder()
+                .chattingRoomId(chattingRoomId)
+                .userId(userId)
+                .chattingMessage(user.getNickname()+"님이 퇴장했습니다.")
+                .chattingCreatedAt(LocalDateTime.now())
+                .build();
+        Chatting savedChatting = chattingRepository.save(chatting);
+        //메세지 처리
+        ChattingResponse chattingResponse = ChattingResponse.builder()
+                .message(savedChatting.getChattingMessage())
+                .timestamp(savedChatting.getChattingCreatedAt().toString())
+                .nickname(user.getNickname())
+                .build();
+        messagingTemplate.convertAndSend("/topic/room/" + chattingRoomId, chattingResponse);
 
     }
 
