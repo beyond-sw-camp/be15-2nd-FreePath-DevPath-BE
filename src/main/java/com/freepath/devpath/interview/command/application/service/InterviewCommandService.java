@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class InterviewCommandService {
@@ -123,7 +125,25 @@ public class InterviewCommandService {
             );
         }
 
-        // 5. 응답
+        // 5. 마지막 답변이라면 면접 총평 생성
+        if(interviewIndex == 3){
+            List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
+                    .filter(interview -> interview.getInterviewRole() == Interview.InterviewRole.AI)
+                    .map(Interview::getInterviewMessage)
+                    .filter(msg -> msg.startsWith("[답변 평가]"))
+                    .toList();
+            String summary = gptService.summarizeInterview(gptEvaluations);
+
+            interviewRepository.save(
+                    Interview.builder()
+                            .interviewRoomId(roomId)
+                            .interviewRole(Interview.InterviewRole.AI)
+                            .interviewMessage("[총평]"+summary)
+                            .build()
+            );
+        }
+
+        // 6. 응답
         return InterviewAnswerCommandResponse.builder()
                 .interviewRoomId(roomId)
                 .userAnswer(request.getUserAnswer())
