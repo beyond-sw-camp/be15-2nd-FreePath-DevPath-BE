@@ -7,7 +7,7 @@ import com.freepath.devpath.common.auth.dto.TokenResponse;
 import com.freepath.devpath.common.auth.domain.RefreshToken;
 import com.freepath.devpath.common.jwt.JwtTokenProvider;
 import com.freepath.devpath.user.command.entity.User;
-import com.freepath.devpath.user.command.repository.UserRepository;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,13 +21,13 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserCommandRepository userCommandRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, RefreshToken> redisTemplate;
 
     public TokenResponse login(LoginRequest request) {
-        User user = userRepository.findByLoginId(request.getLoginId())
+        User user = userCommandRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호"));
 
         // 유저 탈퇴 여부 확인
@@ -79,7 +79,7 @@ public class AuthService {
         }
 
         // user의 isUserRestricted와 userDeletedAt을 조회해서 탈퇴된 유저인지 판단하는 로직으로 수정 필요
-        User user = userRepository.findById(Long.valueOf(userId))
+        User user = userCommandRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new BadCredentialsException("해당 리프레시 토큰을 위한 유저 없음"));
 
         // 유저 탈퇴 여부 확인
@@ -116,7 +116,7 @@ public class AuthService {
 
 
     public void deleteUser(String userId, String password) {
-        User user = userRepository.findByUserIdAndUserDeletedAtIsNull(Integer.valueOf(userId))
+        User user = userCommandRepository.findByUserIdAndUserDeletedAtIsNull(Integer.valueOf(userId))
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -125,7 +125,7 @@ public class AuthService {
 
         // 소프트 딜리트 처리
         user.markAsDeleted();
-        userRepository.save(user);
+        userCommandRepository.save(user);
 
         // Redis에서 해당 loginId에 해당하는 리프레시 토큰 삭제
         Boolean existed = redisTemplate.hasKey(userId);
@@ -144,4 +144,9 @@ public class AuthService {
         }
     }
 
+    public void validateUserStatusByEmail(String email) {
+        User user = userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        validateUserStatus(user);
+    }
 }

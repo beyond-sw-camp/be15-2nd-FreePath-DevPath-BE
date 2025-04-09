@@ -34,12 +34,11 @@ public class News {
     public void setMailingDate(Date date) {
         this.mailingDate = date;
     }
-
+  
     public void update(String title, String link, String content, Date mailingDate) {
         this.title = title;
         this.link = link;
         this.content = content;
         this.mailingDate = mailingDate;
     }
-
 }
