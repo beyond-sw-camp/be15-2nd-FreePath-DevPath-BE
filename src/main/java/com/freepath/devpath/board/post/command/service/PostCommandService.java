@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostCommandService {
     private final S3Service s3Service;
     private final PostRepository postRepository;
     private final AttachmentRepository attachmentRepository;

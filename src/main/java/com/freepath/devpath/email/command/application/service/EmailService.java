@@ -1,9 +1,9 @@
 package com.freepath.devpath.email.command.application.service;
 
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.email.command.application.Dto.EmailAuthPurpose;
 import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.email.exception.TempUserNotFoundException;
-import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +20,7 @@ import java.util.Random;
 @Service
 @Slf4j
 public class EmailService {
-
-    private final UserCommandRepository userCommandRepository;
     private final RedisUtil redisUtil;
-
     private final JavaMailSender mailSender;
     private int authNumber;
 
@@ -44,7 +41,7 @@ public class EmailService {
         makeRandomNumber();
         String setFrom = "leessjjgg123@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
         String toMail = email;
-        String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
+        String title = "[DevPath] 회원 가입 인증 이메일 입니다."; // 이메일 제목
         String content =
                 "DevPath를 방문해주셔서 감사합니다." + 	//html 형식으로 작성 !
                         "<br><br>" +
@@ -73,35 +70,46 @@ public class EmailService {
         redisUtil.setDataExpire(Integer.toString(authNumber),toMail,60*5L);
     }
 
-    public boolean checkAuthNum(String email, String authNum) {
-        if (redisUtil.getData(authNum) == null) return false;
-        if (!redisUtil.getData(authNum).equals(email)) return false;
+    public boolean checkAuthNum(String email, String authNum, EmailAuthPurpose purpose) {
+        // 인증 번호 유효성 확인
+        String savedEmail = redisUtil.getData(authNum);
+        if (savedEmail == null || !savedEmail.equals(email)) {
+            return false;
+        }
 
-        // TEMP_USER 있는지 확인
-        if (redisUtil.getData("TEMP_USER:" + email) == null) {
+        // 용도에 맞는 TEMP 키 확인
+        String tempKey = purpose.getTempKey(email);
+        if (redisUtil.getData(tempKey) == null) {
             throw new TempUserNotFoundException(ErrorCode.EMAIL_NOT_REGISTERED_TEMP);
         }
 
-        // 인증 상태 저장 (선택 사항)
-        redisUtil.setDataExpire("VERIFIED_USER:" + email, "true", 60 * 30L);
+        // 인증 완료 상태 저장 (30분간 유지)
+        String verifiedKey = purpose.getVerifiedKey(email);
+        redisUtil.setDataExpire(verifiedKey, "true", 60 * 30L);
 
+        // 인증번호는 일회성이므로 삭제
         redisUtil.deleteData(authNum);
+
         return true;
     }
-    public void sendCheckEmail(String email) {
+
+    public void sendCheckEmail(String email, EmailAuthPurpose purpose) {
         makeRandomNumber();
-        String setFrom = "leessjjgg123@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+
+        String setFrom = "leessjjgg123@gmail.com";
         String toMail = email;
-        String title = "[DevPath] 회원 인증 이메일입니다."; // 이메일 제목
+        String title = "[DevPath] 회원 인증 이메일입니다.";
         String content =
-                "<b>" + "DevPath" + "</b>" + "에서 발송한 회원 인증용 메일입니다." +    //html 형식으로 작성 !
+                "<b>DevPath</b>에서 발송한 회원 인증용 메일입니다." +
                         "<br><br>" +
                         "인증 번호는 " + authNumber + "입니다." +
                         "<br>" +
-                        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+                        "인증번호를 정확히 입력해주세요.";
+
         mailSend(setFrom, toMail, title, content);
 
-        redisUtil.setDataExpire("VERIFIED_USER:" + email, "true", 60 * 10L);
-        redisUtil.setDataExpire("TEMP_USER:" + email, email, 60 * 10L);
+        // 목적에 따라 TEMP, VERIFIED 키 구분하여 저장
+        redisUtil.setDataExpire(purpose.getTempKey(email), email, 60 * 10L);
+        redisUtil.setDataExpire(purpose.getVerifiedKey(email), "true", 60 * 10L);
     }
 }

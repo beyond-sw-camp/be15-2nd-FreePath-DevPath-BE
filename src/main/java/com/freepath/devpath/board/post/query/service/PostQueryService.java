@@ -1,0 +1,62 @@
+package com.freepath.devpath.board.post.query.service;
+
+import com.freepath.devpath.board.post.query.dto.request.PostSearchRequest;
+import com.freepath.devpath.board.post.query.dto.response.*;
+import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
+import com.freepath.devpath.board.post.query.mapper.PostMapper;
+import com.freepath.devpath.common.dto.Pagination;
+import com.freepath.devpath.common.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class PostQueryService {
+    private final PostMapper postMapper;
+
+    /* 게시글 상세 조회 */
+    @Transactional(readOnly = true)
+    public PostDetailResponse getPostById(int boardId) {
+
+        PostDetailDto postDetailDto = Optional.ofNullable(postMapper.selectPostById(boardId))
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
+
+        return PostDetailResponse.builder()
+                .postDetailDto(postDetailDto)
+                .build();
+    }
+
+    /* 카테고리와 검색어를 통한 게시글 리스트 조회 */
+    @Transactional(readOnly = true)
+    public PostListResponse getPostListByCategoryId(PostSearchRequest request) {
+        List<PostDto> posts = postMapper.selectPostListByCategoryId(request);
+        int totalItems = postMapper.countPostListByCategoryId(request);
+
+        int page = request.getPage();
+        int size = request.getSize();
+
+        Pagination pagination = Pagination.builder()
+                .currentPage(page)
+                .totalPage((int) Math.ceil((double) totalItems/size))
+                .totalItems(totalItems)
+                .build();
+
+        return PostListResponse.builder()
+                .posts(posts)
+                .pagination(pagination)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryListResponse getCategoryList(int categoryId) {
+        List<CatetgoryDto> categories = postMapper.selectCategoryListByParentCategoryId(categoryId);
+
+        return CategoryListResponse.builder()
+                .categories(categories)
+                .build();
+    }
+}

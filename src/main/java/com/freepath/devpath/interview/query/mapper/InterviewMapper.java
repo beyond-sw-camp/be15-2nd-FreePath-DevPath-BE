@@ -1,5 +1,6 @@
 package com.freepath.devpath.interview.query.mapper;
 
+import com.freepath.devpath.interview.query.dto.InterviewDetailDto;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,6 +9,13 @@ import java.util.List;
 @Mapper
 public interface InterviewMapper {
 
+    /* 사용자가 진행한 면접방 목록 조회 */
     List<InterviewRoomDto> selectInterviewRoomListByUserId(Long userId);
+
+    /* 면접방에 대한 정보 조회 */
+    InterviewRoomDto selectInterviewRoomByRoomId(Long interviewRoomId);
+
+    /* 면접방에 있는 면접 내역 조회 */
+    List<InterviewDetailDto> selectInterviewListByRoomId(Long interviewRoomId);
 
 }
