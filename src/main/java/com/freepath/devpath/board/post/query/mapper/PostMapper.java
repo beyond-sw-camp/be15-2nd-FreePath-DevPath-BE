@@ -1,6 +1,5 @@
 package com.freepath.devpath.board.post.query.mapper;
 
-import com.freepath.devpath.board.post.query.dto.request.MyPostRequest;
 import com.freepath.devpath.board.post.query.dto.request.PostSearchRequest;
 import com.freepath.devpath.board.post.query.dto.response.CatetgoryDto;
 import com.freepath.devpath.board.post.query.dto.response.PostDetailDto;
