@@ -8,9 +8,9 @@ import com.freepath.devpath.chatting.command.domain.repository.ChattingRepositor
 import com.freepath.devpath.chatting.command.domain.aggregate.ChatDTO;
 import com.freepath.devpath.chatting.command.domain.aggregate.Chatting;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
+import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.exception.InvalidMessageException;
 import com.freepath.devpath.chatting.exception.NoChattingJoinException;
-import com.freepath.devpath.chatting.exception.NoSuchChattingRoomException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -42,7 +42,7 @@ public class ChattingCommandService {
         //유효성 검사
         //유효한 채팅방인지
         if(chatDTO.getChattingRoomId()!=null && !chattingRoomRepository.existsById(chatDTO.getChattingRoomId())){
-            throw new NoSuchChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
+            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
         }
         //채팅방에 참여중인 유저인지
         Optional<ChattingJoin> join = chattingJoinRepository.findById(new ChattingJoinId(chatDTO.getChattingRoomId(),userId));
@@ -72,20 +72,4 @@ public class ChattingCommandService {
                         .build();
         messagingTemplate.convertAndSend("/topic/room/" + chatting.getChattingRoomId(), chattingResponse);
     }
-
-    @Transactional
-    public void sendSystemMessage(int roomId, String content) {
-        Chatting chatting = Chatting.builder()
-                .chattingRoomId(roomId)
-                .userId(1)
-                .chattingMessage(content)
-                .chattingCreatedAt(LocalDateTime.now())
-                .build();
-
-        chattingRepository.save(chatting);
-        messagingTemplate.convertAndSend("/topic/room/" + roomId, chatting);
-    }
-
-
-
 }

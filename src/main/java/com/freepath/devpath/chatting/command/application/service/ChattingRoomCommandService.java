@@ -6,6 +6,7 @@ import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
+import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.exception.NoChattingJoinException;
 import com.freepath.devpath.chatting.exception.NoSuchChattingRoomException;
 import com.freepath.devpath.common.exception.ErrorCode;
@@ -33,6 +34,11 @@ public class ChattingRoomCommandService {
             String username,
             int inviteeId
     ) {
+        int creatorId = Integer.parseInt(username);
+        //이미 생성되어 있는 일대일 채팅방의 경우 예외처리
+        if(chattingRoomRepository.findValidChattingRoom(creatorId, inviteeId).isPresent()){
+            throw new ChattingRoomException(ErrorCode.CHATTING_ROOM_ALREADY_EXISTS);
+        }
         ChattingRoom chattingRoom = ChattingRoom.builder()
                 .userCount(2)
                 .chattingRoomTitle("채팅방")
@@ -40,7 +46,7 @@ public class ChattingRoomCommandService {
                 .build();
         ChattingRoom savedChattingRoom = chattingRoomRepository.save(chattingRoom);
         int chattingRoomId = savedChattingRoom.getChattingRoomId();
-        int creatorId = Integer.parseInt(username);
+
         ChattingJoin chattingJoin1 = chattingJoinBuild(creatorId, chattingRoomId,ChattingRole.ONE);
         ChattingJoin chattingJoin2 = chattingJoinBuild(inviteeId, chattingRoomId,ChattingRole.ONE);
 
@@ -49,20 +55,21 @@ public class ChattingRoomCommandService {
         return new ChattingRoomCommandResponse(chattingRoomId);
     }
 
-
     private ChattingJoin chattingJoinBuild(int userId, int chattingRoomId, ChattingRole chattingRole) {
         return ChattingJoin.builder()
-                        .id(new ChattingJoinId(chattingRoomId, userId))
+                .id(new ChattingJoinId(chattingRoomId, userId))
                 .chattingRole(chattingRole)
                 .chattingJoinStatus('Y')
-                                .build();
-
+                .build();
     }
 
     @Transactional
     public ChattingRoomCommandResponse createGroupChattingRoom(
             String username, int boardId
     ) {
+        if(chattingRoomRepository.findByBoardId(boardId).isPresent()){
+            throw new ChattingRoomException(ErrorCode.CHATTING_ROOM_ALREADY_EXISTS);
+        }
         ChattingRoom chattingRoom = ChattingRoom.builder()
                 .userCount(1)
                 .chattingRoomTitle("채팅방")
@@ -83,14 +90,14 @@ public class ChattingRoomCommandService {
         int userId = Integer.parseInt(username);
         //유효성 검사
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
-                .orElseThrow(() -> new NoSuchChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
-        chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
+                .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
         ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
                 .orElseThrow(() -> new NoChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
         //퇴장 처리
         chattingJoin.setChattingJoinStatus('N');
         User user = userCommandRepository.findById((long)userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
         //채팅 생성
         Chatting chatting = Chatting.builder()
                 .chattingRoomId(chattingRoomId)
@@ -112,15 +119,10 @@ public class ChattingRoomCommandService {
     @Transactional
     public void deleteChattingRoom(String username, int chattingRoomId) {
         int userId = Integer.parseInt(username);
-        chattingRoomRepository.deleteById(chattingRoomId);
+        if(chattingRoomRepository.findById(chattingRoomId).isEmpty()){
+            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
+        }
+        //chattingRoomRepository.deleteById(chattingRoomId);
         chattingJoinRepository.deleteByChattingRoomId(chattingRoomId);
-    }
-
-    public boolean isChattingJoin(int userId, int chattingRoomId) {
-        return chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId, userId)).isPresent();
-    }
-
-    public boolean isChattingRoomExists(int roomId) {
-        return chattingRoomRepository.findById(roomId).isPresent();
     }
 }
