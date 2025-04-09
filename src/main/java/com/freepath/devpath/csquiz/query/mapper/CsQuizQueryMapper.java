@@ -13,5 +13,6 @@ public interface CsQuizQueryMapper {
     CsQuizDetailResultDTO findQuizById(Long csquizId);
     List<CsQuizDetailResultDTO> findAllQuizzes();
     int countCorrectAnswersByUserId(int userId);
+    List<CsQuizDetailResultDTO> findQuizResultsByUserId(int userId);
 }
 

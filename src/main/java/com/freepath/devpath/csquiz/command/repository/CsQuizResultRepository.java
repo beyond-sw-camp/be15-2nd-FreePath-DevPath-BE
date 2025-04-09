@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CsQuizResultRepository extends JpaRepository<CsQuizResult, Integer> {
+
+    void deleteAll();
 }

@@ -57,4 +57,34 @@
         AND is_csquiz_correct = 'Y'
     </select>
 
+    <resultMap id="QuizResultMap" type="com.freepath.devpath.csquiz.query.dto.response.CsQuizDetailResultDTO">
+        <id property="csquizId" column="csquiz_id" />
+        <result property="csquizContents" column="csquiz_contents" />
+        <result property="csquizAnswer" column="csquiz_answer" />
+        <result property="csquizExplanation" column="csquiz_explanation" />
+        <result property="userAnswer" column="user_answer" />
+        <result property="isCsquizCorrect" column="is_csquiz_correct" />
+        <collection property="options" ofType="com.freepath.devpath.csquiz.query.dto.response.CsQuizOptionDTO">
+            <result property="optionNo" column="option_no" />
+            <result property="optionContents" column="option_contents" />
+        </collection>
+    </resultMap>
+
+    <select id="findQuizResultsByUserId" resultMap="QuizResultMap">
+        SELECT
+        q.csquiz_id,
+        q.csquiz_contents,
+        q.csquiz_answer,
+        q.csquiz_explanation,
+        r.user_answer,
+        r.is_csquiz_correct,
+        o.option_no,
+        o.option_contents
+        FROM csquiz_result r
+        JOIN csquiz q ON r.csquiz_id = q.csquiz_id
+        LEFT JOIN csquiz_option o ON q.csquiz_id = o.csquiz_id
+        WHERE r.user_id = #{userId}
+        ORDER BY q.csquiz_id DESC
+    </select>
+
 </mapper>

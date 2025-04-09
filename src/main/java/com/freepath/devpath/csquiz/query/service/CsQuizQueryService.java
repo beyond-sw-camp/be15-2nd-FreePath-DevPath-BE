@@ -27,6 +27,9 @@ public class CsQuizQueryService {
     public int getCorrectAnswerCount(int userId) {
         return csQuizQueryMapper.countCorrectAnswersByUserId(userId);
     }
+    public List<CsQuizDetailResultDTO> getResultsByUserId(int userId) {
+        return csQuizQueryMapper.findQuizResultsByUserId(userId);
+    }
 
 }
 

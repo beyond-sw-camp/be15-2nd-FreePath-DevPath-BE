@@ -7,6 +7,8 @@ import com.freepath.devpath.csquiz.query.dto.response.CsQuizResponse;
 import com.freepath.devpath.csquiz.query.service.CsQuizQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,8 +37,16 @@ public class CsQuizQueryController {
         return csQuizQueryService.getAllQuizzes();
     }
     @GetMapping("/csquiz/result/correct-count")
-    public int getCorrectAnswerCount(@RequestParam int userId) {
+    public int getCorrectAnswerCount() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
         return csQuizQueryService.getCorrectAnswerCount(userId);
+    }
+    @GetMapping("/csquiz/result")
+    public List<CsQuizDetailResultDTO> getCorrectResults() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+        return csQuizQueryService.getResultsByUserId(userId);
     }
 
 
