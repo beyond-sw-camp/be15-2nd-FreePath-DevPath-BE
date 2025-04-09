@@ -23,12 +23,6 @@ public class PostQueryService {
     public PostDetailResponse getPostById(int boardId) {
 
         PostDetailDto postDetailDto = Optional.ofNullable(postMapper.selectPostById(boardId))
-                .map(dto -> {
-                    if ("Y".equals(dto.getIsBoardDeleted())) {
-                        throw new NoSuchPostException(ErrorCode.POST_ALREADY_DELETED);
-                    }
-                    return dto;
-                })
                 .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
 
         return PostDetailResponse.builder()
@@ -57,6 +51,7 @@ public class PostQueryService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public CategoryListResponse getCategoryList(int categoryId) {
         List<CatetgoryDto> categories = postMapper.selectCategoryListByParentCategoryId(categoryId);
 
