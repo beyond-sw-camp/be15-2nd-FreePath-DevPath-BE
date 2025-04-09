@@ -21,6 +21,7 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final UserCommandRepository userCommandRepository;
+    private final UserRepository userRepository;
     private final JavaMailSender mailSender;
 
     // 뉴스 저장만
@@ -73,4 +74,20 @@ public class NewsService {
         }
     }
 
+    // 뉴스 수정
+    public void updateNews(int newsId, NewsRequestDto dto) {
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 뉴스가 존재하지 않습니다."));
+
+        news.update(dto.getTitle(), dto.getLink(), dto.getContent(), dto.getMailingDate());
+        newsRepository.save(news);
+    }
+
+    // 뉴스 삭제
+    public void deleteNews(int newsId) {
+        if (!newsRepository.existsById(newsId)) {
+            throw new IllegalArgumentException("해당 뉴스가 존재하지 않습니다.");
+        }
+        newsRepository.deleteById(newsId);
+    }
 }

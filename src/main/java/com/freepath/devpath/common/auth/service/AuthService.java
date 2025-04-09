@@ -41,7 +41,6 @@ public class AuthService {
         // 로그인 성공 시 token 발급
         String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());
-        System.out.println(user.getUserId());
 
 
         // Redis에 value로 저장할 객체 생성

@@ -36,4 +36,17 @@ public class NewsController {
         newsService.sendNewsForToday();  // 스케줄링 메서드 수동 호출
         return "메일 전송 테스트 완료";
     }
+
+    @PutMapping("/news/{newsId}")
+    public ResponseEntity<ApiResponse<Void>> updateNews(@PathVariable int newsId, @RequestBody NewsRequestDto dto) {
+        newsService.updateNews(newsId, dto);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    // 뉴스 삭제
+    @DeleteMapping("/news/{newsId}")
+    public ResponseEntity<ApiResponse<Void>> deleteNews(@PathVariable int newsId) {
+        newsService.deleteNews(newsId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
 }
