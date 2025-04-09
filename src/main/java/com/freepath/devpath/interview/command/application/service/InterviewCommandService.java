@@ -41,7 +41,7 @@ public class InterviewCommandService {
 
 
         // 2. GPT로부터 첫 질문 생성
-        String firstQuestion = gptService.generateFirstQuestion(category);
+        String firstQuestion = gptService.generateQuestion(category);
 
         // 3. 질문 내용을 INTERVIEW 테이블에 저장
         interviewRepository.save(
@@ -93,7 +93,13 @@ public class InterviewCommandService {
         );
 
         // 2. GPT 평가 생성
-        String evaluation = gptService.evaluateAnswer(request.getUserAnswer());
+        Interview question
+                = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByMessageCreatedAtDesc(
+                            roomId, Interview.InterviewRole.AI)
+                    .orElseThrow(
+                            () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
+                    );
+        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer());
 
         // 3. GPT 평가 저장
         interviewRepository.save(
@@ -104,10 +110,10 @@ public class InterviewCommandService {
                         .build()
         );
 
-        // 4. 면접방 당 총 3회차의 면접 실행
+        // 4. 다음 질문 생성 (면접방 당 3회 면접 실행)
         String nextQuestion = null;
         if (interviewIndex < 3) {
-            nextQuestion = gptService.generateFirstQuestion(room.getInterviewCategory());
+            nextQuestion = gptService.generateQuestion(room.getInterviewCategory());
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
