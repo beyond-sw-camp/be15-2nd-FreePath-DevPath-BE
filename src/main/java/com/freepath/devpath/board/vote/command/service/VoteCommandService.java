@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
-public class VoteService {
+public class VoteCommandService {
 
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
@@ -50,9 +50,16 @@ public class VoteService {
     public void participateVote(VoteParticipateRequest voteParticipateRequest, int userId) {
         int voteItemId = voteParticipateRequest.getVoteItemId();
 
+        // 유저가 해당 투표 항목 id에 이미 투표한 경우 예외 발생
         if (voteHistoryRepository.existsByUserIdAndVoteItemId(userId, voteItemId)) {
             throw new VoteParticipateFailedException(ErrorCode.VOTE_ALREADY_VOTED);
         }
+
+        VoteItem voteItem = voteItemRepository.findById(voteItemId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 투표 항목입니다."));
+
+        // 투표 항목에 대해 반정규화로 관리되는 count 항목 +1
+        voteItem.increaseVoteCount();
 
         VoteHistory voteHistory = VoteHistory.builder()
                 .userId(userId)
