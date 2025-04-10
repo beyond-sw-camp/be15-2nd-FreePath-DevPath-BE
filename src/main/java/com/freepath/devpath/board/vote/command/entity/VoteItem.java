@@ -22,4 +22,8 @@ public class VoteItem {
     private String voteItemTitle;
 
     private int voteCount;
+
+    public void increaseVoteCount() {
+        this.voteCount++;
+    }
 }
