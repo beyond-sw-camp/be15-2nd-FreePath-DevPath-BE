@@ -58,7 +58,7 @@ public class GroupChattingRoomCommandService {
         }
 
     }
-
+    @Transactional
     public void requestRespond(GroupChattingRoomRequest request, String username) {
         int userId = Integer.parseInt(username);
         //방장 권한 조회

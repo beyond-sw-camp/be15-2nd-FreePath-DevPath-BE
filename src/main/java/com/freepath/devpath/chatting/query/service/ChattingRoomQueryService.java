@@ -15,6 +15,7 @@ import com.freepath.devpath.chatting.query.mapper.ChattingRoomMapper;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ChattingRoomQueryService {
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
 
+    @Transactional
     public ChattingRoomResponse getChattingRooms(String username) {
         int userId = Integer.parseInt(username);
         List<ChattingRoomDTO> chattingRooms = chattingRoomMapper.selectChattingRooms(userId);
@@ -32,7 +34,7 @@ public class ChattingRoomQueryService {
                 .chattingRooms(chattingRooms)
                 .build();
     }
-
+    @Transactional
     public GroupChattingWaitingRoomResponse getWaitingRoom(int chattingRoomId, String username) {
         int userId = Integer.parseInt(username);
         chattingRoomRepository.findById(chattingRoomId).orElseThrow(
