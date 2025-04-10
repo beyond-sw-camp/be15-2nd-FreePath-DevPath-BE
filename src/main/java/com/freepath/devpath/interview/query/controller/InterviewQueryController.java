@@ -23,6 +23,17 @@ public class InterviewQueryController {
 
     private final InterviewQueryService interviewQueryService;
 
+    /* 사용자가 면접을 진행할 카테고리를 선택 */
+    @PreAuthorize("hasAnyAuthority('USER')")
+    @GetMapping("/categories")
+    public ResponseEntity<ApiResponse<List<String>>> getInterviewCategories() {
+        List<String> categories = List.of(
+                "운영체제", "네트워크", "데이터베이스","자료구조&알고리즘", "디자인 패턴"
+                , "객체지향 프로그래밍", "CI/CD", "보안", "클라우드&인프라", "시스템 설계"
+        );
+        return ResponseEntity.ok(ApiResponse.success(categories));
+    }
+
     /* 사용자가 진행한 면접방 목록 조회 */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping
