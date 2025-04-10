@@ -7,6 +7,7 @@ import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.common.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class AttachmentService {
     private final S3Service s3Service;
     private final AttachmentRepository attachmentRepository;
 
+    @Transactional
     public void uploadAndSaveFiles(List<MultipartFile> files, int boardId, int userId) {
         if (files == null || files.isEmpty()) return;
 
