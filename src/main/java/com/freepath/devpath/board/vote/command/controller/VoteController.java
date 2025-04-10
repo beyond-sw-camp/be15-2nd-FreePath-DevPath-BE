@@ -1,6 +1,5 @@
 package com.freepath.devpath.board.vote.command.controller;
 
-import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.board.vote.command.dto.request.VoteParticipateRequest;
 import com.freepath.devpath.board.vote.command.exception.VoteParticipateFailedException;
 import com.freepath.devpath.board.vote.command.service.VoteService;
