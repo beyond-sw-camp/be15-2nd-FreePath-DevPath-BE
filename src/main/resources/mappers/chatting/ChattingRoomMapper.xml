@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.freepath.devpath.chatting.query.mapper.ChattingRoomMapper">
-    <select id="selectChattingRooms" resultType="com.freepath.devpath.chatting.query.dto.ChattingRoomDTO">
+    <select id="selectChattingRooms" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomDTO">
         SELECT
         cr.chatting_room_id,
         cr.chatting_room_title,
@@ -15,5 +15,17 @@
         WHERE
         cj.user_id = #{userId}
         AND cj.chatting_join_status = 'Y';
+    </select>
+    <select id = "selectWaitingUsers" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomWaitingDTO">
+        SELECT
+                u.user_id, nickname
+        FROM
+                users u
+        JOIN
+                chatting_join cj ON u.user_id = cj.user_id
+        WHERE
+                cj.chatting_room_id=#{chattingRoomId}
+        AND     cj.chatting_role = 'MEMBER'
+        AND	    cj.chatting_join_status = 'W';
     </select>
 </mapper>
