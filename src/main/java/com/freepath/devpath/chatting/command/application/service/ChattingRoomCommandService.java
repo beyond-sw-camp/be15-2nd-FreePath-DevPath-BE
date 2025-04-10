@@ -90,8 +90,9 @@ public class ChattingRoomCommandService {
         //유효성 검사
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
                 .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
-        ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
+        ChattingJoin chattingJoin= chattingJoinRepository.findByIdAndChattingJoinStatus(new ChattingJoinId(chattingRoomId,userId),new Character('N'))
                 .orElseThrow(() -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
+
         //퇴장 처리
         chattingJoin.setChattingJoinStatus('N');
         if(chattingJoin.getChattingRole()==ChattingRole.OWNER){
