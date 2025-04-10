@@ -44,10 +44,11 @@ public class SecurityConfig {
                         auth -> auth.requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
                                         "/user/find-id", "/user/verify-email", "/user/update-password").permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/user/info").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
+                                .requestMatchers("/user/info", "/mypage/**").authenticated()
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
+                                .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 // 커스텀 인증 필터(JWT 토큰 사용하여 확인)를 인증 필터 앞에 삽입

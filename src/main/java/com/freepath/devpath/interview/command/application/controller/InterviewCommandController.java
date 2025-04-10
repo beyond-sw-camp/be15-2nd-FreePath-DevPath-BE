@@ -48,6 +48,19 @@ public class InterviewCommandController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    /* 면접방 삭제 */
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<ApiResponse<Void>> deleteInterviewRoom(
+            @PathVariable Long roomId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        interviewCommandService.deleteInterviewRoom(userId, roomId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
     @ExceptionHandler(InterviewRoomCreationException.class)
@@ -105,5 +118,22 @@ public class InterviewCommandController {
                 .status(errorCode.getHttpStatus())
                 .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
     }
+
+    @ExceptionHandler(InterviewSummarizeCreationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewSummarizeCreationException(InterviewSummarizeCreationException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewRoomDeleteException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomDeleteException(InterviewRoomDeleteException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
 
 }

@@ -26,6 +26,11 @@ public enum ErrorCode {
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
 
+
+
+    // 투표 관련 오류
+    VOTE_ALREADY_VOTED("22001", "이미 해당 투표에 참여하셨습니다.", HttpStatus.BAD_REQUEST),
+
     // ITNews 관련 오류 : 30000번대
 
     // 이메일 인증 실패 추가
@@ -44,6 +49,9 @@ public enum ErrorCode {
     INTERVIEW_INDEX_INVALID("50005", "면접방의 질문 인덱스가 옳지 않습니다.", HttpStatus.BAD_REQUEST),
     INTERVIEW_ANSWER_EMPTY("50006", "면접 답변이 비어있습니다.", HttpStatus.BAD_REQUEST),
     INTERVIEW_EVALUATION_FAILED("50007", "면접 평가 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERVIEW_SUMMARY_NOT_FOUND("50008","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
+    INTERVIEW_ROOM_DELETE_FAILED("50009", "면접방 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+
 
     INTERVIEW_QUERY_CREATION_FAILED("51001", "면접 조회 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_ROOM_QUERY_NOT_FOUND("51002", "존재하지 않는 면접방을 조회할 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -52,7 +60,12 @@ public enum ErrorCode {
     INTERVIEW_HISTORY_NOT_FOUND("51005", "면접방에 대한 면접 이력이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
     // Chatting 관련 오류 : 60000번대
-
+    USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
+    USER_NOT_BLOCKED("60002","차단하지 않은 사용자입니다.",HttpStatus.NOT_FOUND),
+    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.NOT_FOUND),
+    NO_SUCH_CHATTING_ROOM("60004","유효한 채팅방이 아닙니다.", HttpStatus.NOT_FOUND),
+    CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
+    INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
     // Report 관련 오류 : 70000번대
 
 

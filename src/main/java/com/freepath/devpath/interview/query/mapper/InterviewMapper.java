@@ -12,10 +12,19 @@ public interface InterviewMapper {
     /* 사용자가 진행한 면접방 목록 조회 */
     List<InterviewRoomDto> selectInterviewRoomListByUserId(Long userId);
 
+    /* 특정 카테고리에 대한 면접방 목록만 조회 */
+    List<InterviewRoomDto> selectInterviewRoomListByUserIdAndCategory(Long userId, String category);
+
     /* 면접방에 대한 정보 조회 */
     InterviewRoomDto selectInterviewRoomByRoomId(Long interviewRoomId);
 
     /* 면접방에 있는 면접 내역 조회 */
     List<InterviewDetailDto> selectInterviewListByRoomId(Long interviewRoomId);
+
+    /* 면접방의 총평 조회 */
+    String selectInterviewSummaryByRoomId(Long roomId);
+
+    /* 모든 유저에 대한 면접방 목록 조회 */
+    List<InterviewRoomDto> selectAllInterviewRooms();
 
 }

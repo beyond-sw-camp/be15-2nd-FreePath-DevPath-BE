@@ -4,6 +4,7 @@ import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.query.dto.InterviewDetailDto;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
+import com.freepath.devpath.interview.query.dto.InterviewSummaryResponse;
 import com.freepath.devpath.interview.query.exception.InterviewQueryAccessException;
 import com.freepath.devpath.interview.query.exception.InterviewQueryHistoryNotFoundException;
 import com.freepath.devpath.interview.query.exception.InterviewRoomQueryCreationException;
@@ -33,6 +34,24 @@ public class InterviewQueryService {
         }
 
         if(response == null){
+            throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /* 특정 카테고리에 대한 면접방 목록만 조회 */
+    @Transactional(readOnly = true)
+    public List<InterviewRoomDto> getInterviewRoomListByCategory(Long userId, String category) {
+        List<InterviewRoomDto> response;
+
+        try {
+            response = interviewMapper.selectInterviewRoomListByUserIdAndCategory(userId, category);
+        } catch (Exception e) {
+            throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
+        }
+
+        if (response == null || response.isEmpty()) {
             throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
         }
 
@@ -78,6 +97,35 @@ public class InterviewQueryService {
         }
 
         return response;
+    }
+
+    /* 면접방의 총평 조회 */
+    @Transactional(readOnly = true)
+    public InterviewSummaryResponse getInterviewSummary(Long roomId, Long userId) {
+
+        InterviewRoomDto room = interviewMapper.selectInterviewRoomByRoomId(roomId);
+
+        // 유효한 면접방인지 검증
+        if (room == null) {
+            throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
+        }
+
+        // 면접방의 소유자 검증
+        if (!room.getUserId().equals(userId)) {
+            throw new InterviewQueryAccessException(ErrorCode.INTERVIEW_QUERY_ACCESS_DENIED);
+        }
+
+        // 면접방의 총평 생성
+        String summary = interviewMapper.selectInterviewSummaryByRoomId(roomId);
+        if (summary == null || summary.isEmpty()) {
+            throw new InterviewQueryHistoryNotFoundException(ErrorCode.INTERVIEW_SUMMARY_NOT_FOUND);
+        }
+
+        // 응답
+        return InterviewSummaryResponse.builder()
+                .interviewRoomId(String.valueOf(roomId))
+                .summary(summary)
+                .build();
     }
 
 }

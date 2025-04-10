@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class InterviewCommandService {
@@ -41,7 +43,7 @@ public class InterviewCommandService {
 
 
         // 2. GPT로부터 첫 질문 생성
-        String firstQuestion = gptService.generateFirstQuestion(category);
+        String firstQuestion = gptService.generateQuestion(category);
 
         // 3. 질문 내용을 INTERVIEW 테이블에 저장
         interviewRepository.save(
@@ -93,7 +95,13 @@ public class InterviewCommandService {
         );
 
         // 2. GPT 평가 생성
-        String evaluation = gptService.evaluateAnswer(request.getUserAnswer());
+        Interview question
+                = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByInterviewIdDesc(
+                            roomId, Interview.InterviewRole.AI)
+                    .orElseThrow(
+                            () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
+                    );
+        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer());
 
         // 3. GPT 평가 저장
         interviewRepository.save(
@@ -104,10 +112,10 @@ public class InterviewCommandService {
                         .build()
         );
 
-        // 4. 면접방 당 총 3회차의 면접 실행
+        // 4. 다음 질문 생성 (면접방 당 3회 면접 실행)
         String nextQuestion = null;
         if (interviewIndex < 3) {
-            nextQuestion = gptService.generateFirstQuestion(room.getInterviewCategory());
+            nextQuestion = gptService.generateQuestion(room.getInterviewCategory());
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
@@ -117,7 +125,25 @@ public class InterviewCommandService {
             );
         }
 
-        // 5. 응답
+        // 5. 마지막 답변이라면 면접 총평 생성
+        if(interviewIndex == 3){
+            List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
+                    .filter(interview -> interview.getInterviewRole() == Interview.InterviewRole.AI)
+                    .map(Interview::getInterviewMessage)
+                    .filter(msg -> msg.startsWith("[답변 평가]"))
+                    .toList();
+            String summary = gptService.summarizeInterview(gptEvaluations);
+
+            interviewRepository.save(
+                    Interview.builder()
+                            .interviewRoomId(roomId)
+                            .interviewRole(Interview.InterviewRole.AI)
+                            .interviewMessage("[총평]"+summary)
+                            .build()
+            );
+        }
+
+        // 6. 응답
         return InterviewAnswerCommandResponse.builder()
                 .interviewRoomId(roomId)
                 .userAnswer(request.getUserAnswer())
@@ -125,4 +151,30 @@ public class InterviewCommandService {
                 .nextQuestion(nextQuestion)
                 .build();
     }
+
+    /* 면접방 삭제 */
+    @Transactional
+    public void deleteInterviewRoom(Long userId, Long roomId) {
+
+        // 면접방 존재 여부 확인
+        InterviewRoom room = interviewRoomRepository.findById(roomId)
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 소유자 검증
+        if (!room.getUserId().equals(userId)) {
+            throw new InterviewRoomAccessException(ErrorCode.INTERVIEW_ROOM_ACCESS_DENIED);
+        }
+
+        try {
+            // 1. 면접 이력 삭제
+            interviewRepository.deleteByInterviewRoomId(roomId);
+
+            // 2. 면접방 삭제
+            interviewRoomRepository.deleteById(roomId);
+        } catch (Exception e) {
+            throw new InterviewRoomDeleteException(ErrorCode.INTERVIEW_ROOM_DELETE_FAILED);
+        }
+    }
+
+
 }
