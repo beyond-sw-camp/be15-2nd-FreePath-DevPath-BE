@@ -1,6 +1,5 @@
 package com.freepath.devpath.board.interaction.query.controller;
 
-import com.freepath.devpath.board.interaction.query.service.BookmarkQueryService;
 import com.freepath.devpath.board.interaction.query.service.LikeQueryService;
 import com.freepath.devpath.board.post.query.dto.response.PostDto;
 import com.freepath.devpath.common.dto.ApiResponse;
