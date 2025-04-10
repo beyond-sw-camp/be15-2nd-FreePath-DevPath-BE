@@ -48,4 +48,13 @@
         ORDER BY interview_room_created_at DESC
     </select>
 
+    <!-- 특정 카테고리에 대한 면접방 목록만 조회 -->
+    <select id="selectInterviewRoomListByUserIdAndCategory" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
+        SELECT *
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_category = #{category}
+        ORDER BY interview_room_created_at DESC
+    </select>
+
 </mapper>

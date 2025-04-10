@@ -23,7 +23,7 @@ public class InterviewQueryController {
 
     private final InterviewQueryService interviewQueryService;
 
-    /* 사용자가 면접을 진행할 카테고리를 선택 */
+    /* 사용자가 면접을 진행할 카테고리 목록 조회 */
     @PreAuthorize("hasAnyAuthority('USER')")
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse<List<String>>> getInterviewCategories() {
@@ -43,6 +43,18 @@ public class InterviewQueryController {
         Long userId = Long.valueOf(userDetails.getUsername());
         List<InterviewRoomDto> response = interviewQueryService.getInterviewRoomList(userId);
 
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /* 특정 카테고리에 대한 면접방 목록만 조회 */
+    @GetMapping(params = "category")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<ApiResponse<List<InterviewRoomDto>>> getInterviewRoomListByCategory(
+            @RequestParam String category,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        List<InterviewRoomDto> response = interviewQueryService.getInterviewRoomListByCategory(userId, category);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
