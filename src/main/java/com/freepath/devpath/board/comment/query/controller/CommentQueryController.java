@@ -1,8 +1,6 @@
 package com.freepath.devpath.board.comment.query.controller;
 
-import com.freepath.devpath.board.comment.query.dto.CommentTreeDto;
-import com.freepath.devpath.board.comment.query.dto.HierarchicalCommentDto;
-import com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto;
+import com.freepath.devpath.board.comment.query.dto.*;
 import com.freepath.devpath.board.comment.query.service.CommentQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +25,15 @@ public class CommentQueryController {
         return ResponseEntity.ok(ApiResponse.success(comments));
     }
 
-    @GetMapping("/my-comment")
-    public ResponseEntity<ApiResponse<List<MyCommentResponseDto>>> getMyComments(
+    @GetMapping("/my-comments")
+    public ResponseEntity<ApiResponse<MyCommentListResponse>> getMyComments(
+            MyCommentSearchRequest searchRequest,
             @AuthenticationPrincipal UserDetails userDetails) {
-        int userId = Integer.parseInt(userDetails.getUsername());
-        List<MyCommentResponseDto> comments = commentQueryService.getMyComments(userId);
 
-        return ResponseEntity.ok(ApiResponse.success(comments));
+        int userId = Integer.parseInt(userDetails.getUsername());
+
+        MyCommentListResponse response = commentQueryService.getMyComments(searchRequest, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
