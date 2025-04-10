@@ -49,14 +49,15 @@ public enum ErrorCode {
     INTERVIEW_INDEX_INVALID("50005", "면접방의 질문 인덱스가 옳지 않습니다.", HttpStatus.BAD_REQUEST),
     INTERVIEW_ANSWER_EMPTY("50006", "면접 답변이 비어있습니다.", HttpStatus.BAD_REQUEST),
     INTERVIEW_EVALUATION_FAILED("50007", "면접 평가 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-    INTERVIEW_SUMMARIZE_FAILED("50007", "면접 요약 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERVIEW_SUMMARY_NOT_FOUND("50008","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
+    INTERVIEW_ROOM_DELETE_FAILED("50009", "면접방 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+
 
     INTERVIEW_QUERY_CREATION_FAILED("51001", "면접 조회 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_ROOM_QUERY_NOT_FOUND("51002", "존재하지 않는 면접방을 조회할 수 없습니다.", HttpStatus.NOT_FOUND),
     INTERVIEW_ROOM_QUERY_NO_OWNER("51003", "소유자가 없는 면접방입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_QUERY_ACCESS_DENIED("51004", "조회할 수 없는 면접방입니다.", HttpStatus.FORBIDDEN),
     INTERVIEW_HISTORY_NOT_FOUND("51005", "면접방에 대한 면접 이력이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    INTERVIEW_SUMMARY_NOT_FOUND("51006","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
 
     // Chatting 관련 오류 : 60000번대
     USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
