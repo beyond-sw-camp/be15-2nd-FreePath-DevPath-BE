@@ -56,12 +56,13 @@ public enum ErrorCode {
     // Chatting 관련 오류 : 60000번대
     USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
     USER_NOT_BLOCKED("60002","차단하지 않은 사용자입니다.",HttpStatus.NOT_FOUND),
-    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.NOT_FOUND),
+    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.FORBIDDEN),
     NO_SUCH_CHATTING_ROOM("60004","유효한 채팅방이 아닙니다.", HttpStatus.NOT_FOUND),
     CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
     ALREADY_CHATTING_JOIN("60007","이미 참여중인 채팅방입니다.",HttpStatus.BAD_REQUEST),
-    NO_CHATTING_ROOM_AUTH("60008", "참여대기방 조회 권한이 없습니다.", HttpStatus.BAD_REQUEST),
+    NO_CHATTING_ROOM_AUTH("60008", "참여대기방 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    USER_NOT_WAITING("60009","참여 요청중이 아닙니다." ,HttpStatus.FORBIDDEN ),
     // Report 관련 오류 : 70000번대
 
 

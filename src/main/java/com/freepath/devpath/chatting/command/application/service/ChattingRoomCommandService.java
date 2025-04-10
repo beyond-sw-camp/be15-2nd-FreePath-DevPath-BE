@@ -112,7 +112,7 @@ public class ChattingRoomCommandService {
         ChattingResponse chattingResponse = ChattingResponse.builder()
                 .message(savedChatting.getChattingMessage())
                 .timestamp(savedChatting.getChattingCreatedAt().toString())
-                .nickname(user.getNickname())
+                .nickname("System")
                 .build();
         messagingTemplate.convertAndSend("/topic/room/" + chattingRoomId, chattingResponse);
 

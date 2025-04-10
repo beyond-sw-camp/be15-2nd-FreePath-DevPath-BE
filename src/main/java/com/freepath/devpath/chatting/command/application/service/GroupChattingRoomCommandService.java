@@ -1,18 +1,23 @@
 package com.freepath.devpath.chatting.command.application.service;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoin;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoinId;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingRole;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingRoom;
+import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomRequest;
+import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
+import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
+import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.user.command.entity.User;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
+import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -20,6 +25,9 @@ import java.util.Optional;
 public class GroupChattingRoomCommandService {
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final UserCommandRepository userCommandRepository;
+    private final ChattingRepository chattingRepository;
 
     @Transactional
     public void joinRequest(int chattingRoomId, String username) {
@@ -51,5 +59,48 @@ public class GroupChattingRoomCommandService {
             throw new ChattingJoinException(ErrorCode.ALREADY_CHATTING_JOIN);
         }
 
+    }
+
+    public void joinAccept(GroupChattingRoomRequest request, String username) {
+        int userId = Integer.parseInt(username);
+        //방장 권한 조회
+        Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository
+                .findById(new ChattingJoinId(request.getChattingRoomId(),userId));
+        if(optionalChattingJoin.isEmpty()){
+            throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
+        }
+        else if(!optionalChattingJoin.get().getChattingRole().equals(ChattingRole.OWNER)){
+            throw new ChattingJoinException(ErrorCode.NO_CHATTING_ROOM_AUTH);
+        }
+        if(!chattingRoomRepository.existsById(request.getChattingRoomId())){
+            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
+        }
+        // 참여 요청상태 확인
+        ChattingJoin chattingJoin = chattingJoinRepository
+                .findById(new ChattingJoinId(request.getChattingRoomId(),request.getInviteeId()))
+                .orElseThrow(
+                        () -> new ChattingJoinException(ErrorCode.ALREADY_CHATTING_JOIN)
+                );
+        if(chattingJoin.getChattingJoinStatus()!='W'){
+            throw new ChattingJoinException(ErrorCode.USER_NOT_WAITING);
+        }
+        //요청 수락
+        chattingJoin.setChattingJoinStatus('Y');
+        User user = userCommandRepository.findById((long)request.getInviteeId())
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        //채팅 저장 및 전송
+        Chatting chatting = Chatting.builder()
+                .chattingRoomId(request.getChattingRoomId())
+                .userId(1)
+                .chattingMessage(user.getNickname()+"님이 입장했습니다.")
+                .chattingCreatedAt(LocalDateTime.now())
+                .build();
+        chattingRepository.save(chatting);
+        ChattingResponse chattingResponse = ChattingResponse.builder()
+                .message(chatting.getChattingMessage())
+                .timestamp(chatting.getChattingCreatedAt().toString())
+                .nickname("SYSTEM")
+                .build();
+        messagingTemplate.convertAndSend("/topic/room/" +request.getChattingRoomId(), chattingResponse);
     }
 }

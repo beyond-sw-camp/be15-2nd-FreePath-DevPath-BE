@@ -1,5 +1,6 @@
 package com.freepath.devpath.chatting.command.application.controller;
 
+import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomRequest;
 import com.freepath.devpath.chatting.command.application.service.GroupChattingRoomCommandService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,15 @@ public class GroupChattingRoomCommandController {
             @AuthenticationPrincipal UserDetails userDetails
             ){
         groupChattingRoomCommandService.joinRequest(chattingRoomId, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("/chatting/waitingRoom/accept")
+    public ResponseEntity<ApiResponse<Void>> groupChattingAccept(
+            @RequestBody GroupChattingRoomRequest request,
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+        groupChattingRoomCommandService.joinAccept(request, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }
