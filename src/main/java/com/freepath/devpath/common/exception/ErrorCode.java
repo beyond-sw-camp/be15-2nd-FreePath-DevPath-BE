@@ -26,6 +26,11 @@ public enum ErrorCode {
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
 
+
+
+    // 투표 관련 오류
+    VOTE_ALREADY_VOTED("22001", "이미 해당 투표에 참여하셨습니다.", HttpStatus.BAD_REQUEST),
+
     // ITNews 관련 오류 : 30000번대
 
     // 이메일 인증 실패 추가
