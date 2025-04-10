@@ -76,6 +76,7 @@ public class GptService {
 
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
+                "temperature", 0.3,
                 "messages", List.of(
                         Map.of("role", "system", "content", """
                                 당신은 시니어 개발자로서 기술 면접관 역할을 맡고 있습니다. 지원자의 기술 답변을 아래 예시들을 참고하여 **구조적이고 일관된 평가**로 도출해 주세요. 각 항목별 평가 시에는 반드시 평가 기준을 기반으로 작성하고, 평가 내용은 구체적이고 서술적으로 작성합니다. 점수 기준은 명시된 0~20점, 5점 단위 기준을 따릅니다.
@@ -206,6 +207,7 @@ public class GptService {
     public String summarizeInterview(List<String> evaluations) {
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
+                "temperature", 0.3,
                 "messages", List.of(
                         Map.of("role", "system", "content", """
                                 당신은 사용자의 모의 기술 면접 결과를 분석하고 피드백을 제공하는 **전문 면접관**입니다.
