@@ -25,7 +25,14 @@ public interface UserCommandRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.password = :password WHERE u.email = :email AND u.userDeletedAt IS NULL")
-    int updatePasswordByEmail(String email, String password);
+    int updatePassword(String email, String password);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.email = :newEmail WHERE u.email = :email AND u.userDeletedAt IS NULL")
+    int updateEmail(String email, String newEmail);
 
     Optional<User> findByEmailAndLoginIdAndUserDeletedAtIsNull(String email, String loginId);
+
+    boolean existsByNicknameAndUserDeletedAtIsNull(String nickname);
 }

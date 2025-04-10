@@ -98,9 +98,9 @@ public class EmailService {
 
         String setFrom = "leessjjgg123@gmail.com";
         String toMail = email;
-        String title = "[DevPath] 회원 인증 이메일입니다.";
+        String title = "[DevPath] 회원 인증용 이메일입니다.";
         String content =
-                "<b>DevPath</b>에서 발송한 회원 인증용 메일입니다." +
+                "<b>DevPath</b>에서 발송한 회원 인증용 이메일입니다." +
                         "<br><br>" +
                         "인증 번호는 " + authNumber + "입니다." +
                         "<br>" +

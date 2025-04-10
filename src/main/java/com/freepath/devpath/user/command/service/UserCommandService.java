@@ -10,6 +10,8 @@ import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ public class UserCommandService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RedisUtil redisUtil;
+    @Qualifier("userRedisTemplate")
+    private final RedisTemplate<String, User> userRedisTemplate;
 
     public void saveTempUser(UserCreateRequest request) {
         String userJson = new Gson().toJson(request);
@@ -30,7 +34,7 @@ public class UserCommandService {
     public void registerUserFromRedis(String email) {
         String verified = redisUtil.getData("VERIFIED_USER:" + email);
         if (!"true".equals(verified)) {
-            throw new IllegalStateException("이메일 인증이 완료되지 않았습니다.");
+            throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
         }
 
         String userJson = redisUtil.getData("TEMP_USER:" + email);
@@ -55,15 +59,6 @@ public class UserCommandService {
 
         String encodedPassword = user.getPassword();
 
-        // 비밀번호 변경 요청이 있을 경우만 검증 및 인코딩 수행
-        if (request.getNewPassword() != null && !request.getNewPassword().isBlank()) {
-            if (request.getCurrentPassword() == null ||
-                    !passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-                throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
-            }
-            encodedPassword = passwordEncoder.encode(request.getNewPassword());
-        }
-
         user.update(request, encodedPassword);
         userCommandRepository.save(user);
     }
@@ -86,17 +81,66 @@ public class UserCommandService {
         User user = userCommandRepository.findByEmailAndLoginIdAndUserDeletedAtIsNull(email, loginId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
+        if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
+            throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
+        }
+
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new UserException(ErrorCode.SAME_AS_OLD_PASSWORD);
         }
 
         String encodedPassword = passwordEncoder.encode(newPassword);
-        int updatedCount = userCommandRepository.updatePasswordByEmail(email, encodedPassword);
+        int updatedCount = userCommandRepository.updatePassword(email, encodedPassword);
         if (updatedCount == 0) {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
 
         redisUtil.deleteData("TEMP_PASSWORD:" + email);
         redisUtil.deleteData("VERIFIED_PASSWORD:" + email);
+    }
+
+    public void updateEmail(String email, String newEmail) {
+        String verified = redisUtil.getData("VERIFIED_EMAIL:" + email);
+        if (!"true".equals(verified)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
+        }
+
+        userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        int updatedCount = userCommandRepository.updateEmail(email, newEmail);
+        if (updatedCount == 0) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        redisUtil.deleteData("TEMP_EMAIL:" + email);
+        redisUtil.deleteData("VERIFIED_EMAIL:" + email);
+    }
+
+    public void completeSocialSignup(String email, String nickname, String itNewsSubscription) {
+        // Redis에서 임시 유저 정보 조회
+        User tempUser = userRedisTemplate.opsForValue().get("SOCIAL_REGISTER:" + email);
+        if (tempUser == null) {
+            throw new UserException(ErrorCode.SOCIAL_SIGNUP_EXPIRED);
+        }
+
+        // 닉네임 중복 확인
+        if (userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(nickname)) {
+            throw new UserException(ErrorCode.NICKNAME_ALREADY_USED);
+        }
+
+        // 추가 정보 설정
+        tempUser.setNickname(nickname);
+        tempUser.setItNewsSubscription(itNewsSubscription);
+
+        // DB에 저장
+        userCommandRepository.save(tempUser);
+
+        // Redis에서 제거
+        userRedisTemplate.delete("SOCIAL_REGISTER:" + email);
+    }
+
+    public boolean isNicknameDuplicate(String nickname) {
+        return userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(nickname);
     }
 }

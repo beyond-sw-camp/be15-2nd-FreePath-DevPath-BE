@@ -1,12 +1,16 @@
 package com.freepath.devpath.user.command.controller;
 
+import com.freepath.devpath.common.auth.dto.LoginRequest;
+import com.freepath.devpath.common.auth.dto.TokenResponse;
+import com.freepath.devpath.common.auth.service.AuthService;
 import com.freepath.devpath.common.exception.ErrorCode;
-import com.freepath.devpath.user.command.dto.UserModifyRequest;
+import com.freepath.devpath.email.command.application.Dto.EmailRequestDto;
+import com.freepath.devpath.user.command.dto.*;
 import com.freepath.devpath.email.command.application.service.EmailService;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.command.service.UserCommandService;
-import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.freepath.devpath.common.dto.ApiResponse;
-import com.freepath.devpath.user.command.dto.UpdatePasswordRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,7 @@ import java.util.Map;
 public class UserCommandController {
     private final UserCommandService userCommandService;
     private final EmailService emailService;
+    private final AuthService authService;
 
     @PostMapping("/signup/temp")
     public ResponseEntity<ApiResponse<Void>> registTempUser(@RequestBody @Validated UserCreateRequest request) {
@@ -35,6 +40,12 @@ public class UserCommandController {
         if (userCommandService.isLoginIdDuplicate(request.getLoginId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(ApiResponse.failure(ErrorCode.LOGIN_ID_ALREADY_EXISTS.getCode(),
+                            ErrorCode.LOGIN_ID_ALREADY_EXISTS.getMessage()));
+        }
+
+        if(userCommandService.isNicknameDuplicate(request.getNickname())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.failure(ErrorCode.NICKNAME_ALREADY_USED.getCode(),
                             ErrorCode.LOGIN_ID_ALREADY_EXISTS.getMessage()));
         }
 
@@ -62,9 +73,32 @@ public class UserCommandController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @PostMapping("update-password")
-    public ResponseEntity<ApiResponse<Void>> findPassword(@RequestBody @Validated UpdatePasswordRequest request){
+    @PostMapping("/verify-email")
+    public ResponseEntity<ApiResponse<Void>> findLoginIdTemp(@RequestBody @Valid EmailRequestDto request) {
+        authService.validateUserStatusByEmail(request.getEmail()); // 제재 여부, 탈퇴 확인
+        emailService.sendCheckEmail(request.getEmail(), request.getPurpose());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(null));
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<ApiResponse<Void>> updatePassword(@RequestBody @Validated UpdatePasswordRequest request){
         userCommandService.updatePassword(request.getEmail(), request.getLoginId(), request.getNewPassword());
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("/update-email")
+    public ResponseEntity<ApiResponse<Void>> updateEmail(@RequestBody @Validated UpdateEmailRequest request){
+        userCommandService.updateEmail(request.getEmail(), request.getNewEmail());
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("/signup-social")
+    public ResponseEntity<ApiResponse<Void>> socialSignUp(@RequestBody @Validated GoogleSignUpRequest request){
+        userCommandService.completeSocialSignup(request.getEmail(), request.getNickname(), request.getItNewsSubscription());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

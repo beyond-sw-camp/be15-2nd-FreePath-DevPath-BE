@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UserModifyRequest {
-    private final String nickname;
-    private final String itNewsSubscription;
+public class GoogleSignUpRequest {
+    private String email;
+    private String nickname;
+    private String itNewsSubscription;
 }

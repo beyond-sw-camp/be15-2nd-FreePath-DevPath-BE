@@ -1,9 +1,7 @@
 package com.freepath.devpath.common.config;
 
-import com.freepath.devpath.common.jwt.JwtAuthenticationFilter;
-import com.freepath.devpath.common.jwt.JwtTokenProvider;
-import com.freepath.devpath.common.jwt.RestAccessDeniedHandler;
-import com.freepath.devpath.common.jwt.RestAuthenticationEntryPoint;
+import com.freepath.devpath.common.auth.service.GoogleOAuth2Service;
+import com.freepath.devpath.common.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +25,8 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final RestAccessDeniedHandler restAccessDeniedHandler;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final GoogleOAuth2Service googleOAuth2Service;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,13 +43,21 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
-                                        "/user/find-id", "/user/verify-email", "/user/update-password").permitAll()
+                                        "/user/find-id", "/user/verify-email").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
-                                .requestMatchers("/user/info", "/mypage/**").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
+                                .requestMatchers("/user/info", "/mypage/**", "/user/update-password", "/user/update-email").authenticated()
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
-                                .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
+                                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                                 .anyRequest().authenticated()
+                )
+
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2SuccessHandler) // 로그인 성공 시 토큰 리턴 처리
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(googleOAuth2Service) // 사용자 정보 처리 커스터마이징
+                        )
                 )
                 // 커스텀 인증 필터(JWT 토큰 사용하여 확인)를 인증 필터 앞에 삽입
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
