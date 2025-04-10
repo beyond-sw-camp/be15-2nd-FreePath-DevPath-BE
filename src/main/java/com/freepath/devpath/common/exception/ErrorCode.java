@@ -60,6 +60,7 @@ public enum ErrorCode {
     NO_SUCH_CHATTING_ROOM("60004","유효한 채팅방이 아닙니다.", HttpStatus.NOT_FOUND),
     CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
+    ALREADY_CHATTING_JOIN("60007","이미 참여중인 채팅방입니다.",HttpStatus.BAD_REQUEST),
     // Report 관련 오류 : 70000번대
 
 

@@ -7,7 +7,7 @@ import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepos
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
-import com.freepath.devpath.chatting.exception.NoChattingJoinException;
+import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -91,9 +91,12 @@ public class ChattingRoomCommandService {
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
                 .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
         ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
-                .orElseThrow(() -> new NoChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
+                .orElseThrow(() -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
         //퇴장 처리
         chattingJoin.setChattingJoinStatus('N');
+        if(chattingJoin.getChattingRole()==ChattingRole.OWNER){
+            chattingJoin.setChattingRole(ChattingRole.MEMBER);
+        }
         User user = userCommandRepository.findById((long)userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
         chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
