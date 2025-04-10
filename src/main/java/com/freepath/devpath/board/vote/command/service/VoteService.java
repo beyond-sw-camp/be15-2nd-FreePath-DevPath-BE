@@ -5,6 +5,7 @@ import com.freepath.devpath.board.vote.command.dto.request.VoteParticipateReques
 import com.freepath.devpath.board.vote.command.entity.Vote;
 import com.freepath.devpath.board.vote.command.entity.VoteHistory;
 import com.freepath.devpath.board.vote.command.entity.VoteItem;
+import com.freepath.devpath.board.vote.command.exception.VoteEndFailedException;
 import com.freepath.devpath.board.vote.command.exception.VoteParticipateFailedException;
 import com.freepath.devpath.board.vote.command.repository.VoteHistoryRepository;
 import com.freepath.devpath.board.vote.command.repository.VoteItemRepository;
@@ -13,6 +14,9 @@ import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
 
 @RequiredArgsConstructor
 @Service
@@ -44,7 +48,6 @@ public class VoteService {
 
     @Transactional
     public void participateVote(VoteParticipateRequest voteParticipateRequest, int userId) {
-
         int voteItemId = voteParticipateRequest.getVoteItemId();
 
         if (voteHistoryRepository.existsByUserIdAndVoteItemId(userId, voteItemId)) {
@@ -57,5 +60,26 @@ public class VoteService {
                 .build();
 
         voteHistoryRepository.save(voteHistory);
+    }
+
+    @Transactional
+    public void endVote(int voteId, int userId) {
+        Vote vote = voteRepository.findById(voteId).
+                orElseThrow(() -> new RuntimeException("존재하지 않는 투표입니다."));
+
+        if (vote.getIsVoteFinished() == 'Y') {
+            throw new VoteEndFailedException(ErrorCode.VOTE_ALREADY_ENDED);
+        }
+
+        int ownerId = voteRepository.findUserIdByVoteId(voteId);
+
+        // 게시글 작성자 확인
+        if (ownerId != userId) {
+            throw new VoteEndFailedException(ErrorCode.VOTE_END_FAILED);
+        }
+
+        // 투표 종료 처리
+        vote.changeVoteDueDate(LocalDateTime.now());
+        vote.setIsVoteFinished();
     }
 }

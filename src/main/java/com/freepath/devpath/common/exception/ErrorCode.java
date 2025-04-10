@@ -30,6 +30,8 @@ public enum ErrorCode {
 
     // 투표 관련 오류
     VOTE_ALREADY_VOTED("22001", "이미 해당 투표에 참여하셨습니다.", HttpStatus.BAD_REQUEST),
+    VOTE_END_FAILED("22002", "해당 투표를 생성한 회원이 아닙니다.", HttpStatus.BAD_REQUEST),
+    VOTE_ALREADY_ENDED("22003", "이미 종료된 투표입니다.", HttpStatus.BAD_REQUEST),
 
     // ITNews 관련 오류 : 30000번대
 
