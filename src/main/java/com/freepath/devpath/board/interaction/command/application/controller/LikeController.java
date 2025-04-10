@@ -46,6 +46,13 @@ public class LikeController {
         return new ResponseEntity<>(response, errorCode.getHttpStatus());
     }
 
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCommentNotFoundException(CommentNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ApiResponse<Void> response = ApiResponse.failure(errorCode.getCode(), errorCode.getMessage());
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+    }
+
     @ExceptionHandler(AlreadyLikedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAlreadyLikedException(AlreadyLikedException e) {
         ErrorCode errorCode = e.getErrorCode();
@@ -73,5 +80,6 @@ public class LikeController {
         ApiResponse<Void> response = ApiResponse.failure(errorCode.getCode(), errorCode.getMessage());
         return new ResponseEntity<>(response, errorCode.getHttpStatus());
     }
+
 
 }

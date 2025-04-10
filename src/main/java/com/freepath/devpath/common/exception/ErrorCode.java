@@ -29,9 +29,10 @@ public enum ErrorCode {
     // interaction 관련 오류 : 23000번대
     ALREADY_LIKED("23001","이미 좋아요를 했습니다.",HttpStatus.CONFLICT),
     BOARD_NOT_FOUND("23002","해당 게시글을 찾을 수 없어 좋아요할 수 없습니다.",HttpStatus.NOT_FOUND),
-    LIKE_NOT_FOUND("23003", "좋아요 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    CANNOT_LIKE_BOTH("23004", "게시글과 댓글에 동시에 좋아요를 할 수 없습니다.", HttpStatus.BAD_REQUEST),
-    INVALID_LIKE_TARGET("23005", "게시글 ID나 댓글 ID 중 하나는 필수입니다.", HttpStatus.BAD_REQUEST),
+    COMMENT_NOT_FOUND("23003","해당 댓글을 찾을 수 없어 좋아요할 수 없습니다.",HttpStatus.NOT_FOUND),
+    LIKE_NOT_FOUND("23004", "좋아요 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CANNOT_LIKE_BOTH("23005", "게시글과 댓글에 동시에 좋아요를 할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_LIKE_TARGET("23006", "게시글 ID나 댓글 ID 중 하나는 필수입니다.", HttpStatus.BAD_REQUEST),
 
 
     // ITNews 관련 오류 : 30000번대
