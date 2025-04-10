@@ -22,7 +22,7 @@ public class GroupChattingRoomCommandController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @PostMapping("/chatting/waitingRoom/respond")
+    @PutMapping("/chatting/waitingRoom/respond")
     public ResponseEntity<ApiResponse<Void>> groupChattingAccept(
             @RequestBody GroupChattingRoomRequest request,
             @AuthenticationPrincipal UserDetails userDetails
