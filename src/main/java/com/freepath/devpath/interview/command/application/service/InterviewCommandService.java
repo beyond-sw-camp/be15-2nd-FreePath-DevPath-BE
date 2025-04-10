@@ -96,7 +96,7 @@ public class InterviewCommandService {
 
         // 2. GPT 평가 생성
         Interview question
-                = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByMessageCreatedAtDesc(
+                = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByInterviewIdDesc(
                             roomId, Interview.InterviewRole.AI)
                     .orElseThrow(
                             () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)

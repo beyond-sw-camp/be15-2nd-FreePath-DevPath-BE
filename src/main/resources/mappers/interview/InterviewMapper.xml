@@ -9,7 +9,7 @@
         SELECT *
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
-        ORDER BY interview_room_created_at DESC
+        ORDER BY interview_room_id DESC
     </select>
 
     <!-- 면접방에 대한 정보 조회 -->
@@ -45,7 +45,7 @@
     <select id="selectAllInterviewRooms" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
         SELECT *
         FROM INTERVIEW_ROOM
-        ORDER BY interview_room_created_at DESC
+        ORDER BY interview_room_id DESC
     </select>
 
     <!-- 특정 카테고리에 대한 면접방 목록만 조회 -->
@@ -54,7 +54,7 @@
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
             AND interview_category = #{category}
-        ORDER BY interview_room_created_at DESC
+        ORDER BY interview_room_id DESC
     </select>
 
 </mapper>
