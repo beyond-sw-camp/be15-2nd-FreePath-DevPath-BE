@@ -26,6 +26,13 @@ public enum ErrorCode {
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
 
+
+
+    // 투표 관련 오류
+    VOTE_ALREADY_VOTED("22001", "이미 해당 투표에 참여하셨습니다.", HttpStatus.BAD_REQUEST),
+    VOTE_END_FAILED("22002", "해당 투표를 생성한 회원이 아닙니다.", HttpStatus.BAD_REQUEST),
+    VOTE_ALREADY_ENDED("22003", "이미 종료된 투표입니다.", HttpStatus.BAD_REQUEST),
+
     // ITNews 관련 오류 : 30000번대
 
     // 이메일 인증 실패 추가
@@ -44,14 +51,15 @@ public enum ErrorCode {
     INTERVIEW_INDEX_INVALID("50005", "면접방의 질문 인덱스가 옳지 않습니다.", HttpStatus.BAD_REQUEST),
     INTERVIEW_ANSWER_EMPTY("50006", "면접 답변이 비어있습니다.", HttpStatus.BAD_REQUEST),
     INTERVIEW_EVALUATION_FAILED("50007", "면접 평가 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-    INTERVIEW_SUMMARIZE_FAILED("50007", "면접 요약 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERVIEW_SUMMARY_NOT_FOUND("50008","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
+    INTERVIEW_ROOM_DELETE_FAILED("50009", "면접방 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+
 
     INTERVIEW_QUERY_CREATION_FAILED("51001", "면접 조회 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_ROOM_QUERY_NOT_FOUND("51002", "존재하지 않는 면접방을 조회할 수 없습니다.", HttpStatus.NOT_FOUND),
     INTERVIEW_ROOM_QUERY_NO_OWNER("51003", "소유자가 없는 면접방입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_QUERY_ACCESS_DENIED("51004", "조회할 수 없는 면접방입니다.", HttpStatus.FORBIDDEN),
     INTERVIEW_HISTORY_NOT_FOUND("51005", "면접방에 대한 면접 이력이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    INTERVIEW_SUMMARY_NOT_FOUND("51006","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
 
     // Chatting 관련 오류 : 60000번대
     USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
