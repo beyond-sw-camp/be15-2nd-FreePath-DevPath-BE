@@ -1,6 +1,7 @@
 package com.freepath.devpath.chatting.command.application.service;
 
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomRequest;
+import com.freepath.devpath.chatting.command.application.dto.request.WaitingRoomAction;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
 import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
@@ -39,9 +40,6 @@ public class GroupChattingRoomCommandService {
         if(chattingRoom.getBoardId() == null){
             throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
         }
-        if(chattingJoinRepository.existsById(new ChattingJoinId(chattingRoomId,userId))){
-            throw new ChattingJoinException(ErrorCode.ALREADY_CHATTING_JOIN);
-        }
         Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId));
         if(optionalChattingJoin.isEmpty()){
             ChattingJoin chattingJoin = ChattingJoin.builder()
@@ -61,7 +59,7 @@ public class GroupChattingRoomCommandService {
 
     }
 
-    public void joinAccept(GroupChattingRoomRequest request, String username) {
+    public void requestRespond(GroupChattingRoomRequest request, String username) {
         int userId = Integer.parseInt(username);
         //방장 권한 조회
         Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository
@@ -85,22 +83,29 @@ public class GroupChattingRoomCommandService {
             throw new ChattingJoinException(ErrorCode.USER_NOT_WAITING);
         }
         //요청 수락
-        chattingJoin.setChattingJoinStatus('Y');
-        User user = userCommandRepository.findById((long)request.getInviteeId())
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-        //채팅 저장 및 전송
-        Chatting chatting = Chatting.builder()
-                .chattingRoomId(request.getChattingRoomId())
-                .userId(1)
-                .chattingMessage(user.getNickname()+"님이 입장했습니다.")
-                .chattingCreatedAt(LocalDateTime.now())
-                .build();
-        chattingRepository.save(chatting);
-        ChattingResponse chattingResponse = ChattingResponse.builder()
-                .message(chatting.getChattingMessage())
-                .timestamp(chatting.getChattingCreatedAt().toString())
-                .nickname("SYSTEM")
-                .build();
-        messagingTemplate.convertAndSend("/topic/room/" +request.getChattingRoomId(), chattingResponse);
+        String message;
+        if(request.getAction().equals(WaitingRoomAction.ACCEPT)){
+            chattingJoin.setChattingJoinStatus('Y');
+            User user = userCommandRepository.findById((long)request.getInviteeId())
+                    .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+            //채팅 저장 및 전송
+            Chatting chatting = Chatting.builder()
+                    .chattingRoomId(request.getChattingRoomId())
+                    .userId(1)
+                    .chattingMessage(user.getNickname()+"님이 입장했습니다.")
+                    .chattingCreatedAt(LocalDateTime.now())
+                    .build();
+            chattingRepository.save(chatting);
+            ChattingResponse chattingResponse = ChattingResponse.builder()
+                    .message(chatting.getChattingMessage())
+                    .timestamp(chatting.getChattingCreatedAt().toString())
+                    .nickname("SYSTEM")
+                    .build();
+            messagingTemplate.convertAndSend("/topic/room/" +request.getChattingRoomId(), chattingResponse);
+        }//요청 거절
+        else if(request.getAction().equals(WaitingRoomAction.REJECT)){
+            chattingJoin.setChattingJoinStatus('N');
+        }
+
     }
 }

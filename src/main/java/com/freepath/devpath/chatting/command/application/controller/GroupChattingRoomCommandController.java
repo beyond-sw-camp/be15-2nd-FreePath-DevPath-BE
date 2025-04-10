@@ -22,12 +22,12 @@ public class GroupChattingRoomCommandController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @PostMapping("/chatting/waitingRoom/accept")
+    @PostMapping("/chatting/waitingRoom/respond")
     public ResponseEntity<ApiResponse<Void>> groupChattingAccept(
             @RequestBody GroupChattingRoomRequest request,
             @AuthenticationPrincipal UserDetails userDetails
     ){
-        groupChattingRoomCommandService.joinAccept(request, userDetails.getUsername());
+        groupChattingRoomCommandService.requestRespond(request, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

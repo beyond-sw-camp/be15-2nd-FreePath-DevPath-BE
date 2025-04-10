@@ -8,4 +8,5 @@ import lombok.Getter;
 public class GroupChattingRoomRequest {
     private int chattingRoomId;
     private int inviteeId;
+    private WaitingRoomAction action;
 }
