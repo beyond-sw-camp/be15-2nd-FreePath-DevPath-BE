@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
-public class VoteService {
+public class VoteCommandService {
 
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;

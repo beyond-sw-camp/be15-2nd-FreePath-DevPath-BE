@@ -54,6 +54,7 @@ public class PostQueryService {
                 .build();
     }
 
+    /* 카테고리의 하위 카테고리 리스트 조회 */
     @Transactional(readOnly = true)
     public CategoryListResponse getCategoryList(int categoryId) {
         List<CatetgoryDto> categories = postMapper.selectCategoryListByParentCategoryId(categoryId);
@@ -63,6 +64,8 @@ public class PostQueryService {
                 .build();
     }
 
+    /* 자신이 작성한 게시물 목록 조회 */
+    @Transactional(readOnly = true)
     public MyPostListResponse getPostByUserId(int userId, MyPostRequest request) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
