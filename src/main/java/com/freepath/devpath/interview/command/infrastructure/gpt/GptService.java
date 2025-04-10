@@ -176,7 +176,7 @@ public class GptService {
                     .doOnNext(res -> System.out.println("[GPT 총평 수신] " + res))
                     .block();
         } catch (Exception e) {
-            throw new InterviewSummarizeCreationException(ErrorCode.INTERVIEW_SUMMARIZE_FAILED);
+            throw new InterviewSummarizeCreationException(ErrorCode.INTERVIEW_SUMMARY_NOT_FOUND);
         }
     }
 
