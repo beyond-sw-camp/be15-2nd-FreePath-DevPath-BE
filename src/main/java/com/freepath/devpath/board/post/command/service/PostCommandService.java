@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostCommandService {
     private final S3Service s3Service;
     private final PostRepository postRepository;
     private final AttachmentRepository attachmentRepository;
@@ -125,10 +125,10 @@ public class PostService {
         }
 
         String modifiedTitle = postUpdateRequest.getTitle();
-        String modiifiedContents = postUpdateRequest.getContent();
+        String modifiedContents = postUpdateRequest.getContent();
 
         // 게시글 제목, 내용 수정
-        post.modifyTitleAndContent(modifiedTitle, modiifiedContents);
+        post.modifyTitleAndContent(modifiedTitle, modifiedContents);
     }
 }
 

@@ -6,6 +6,7 @@ import com.freepath.devpath.email.command.application.service.EmailService;
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.user.command.dto.UserCreateRequest;
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.user.command.dto.UpdatePasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,12 @@ public class UserCommandController {
                             ErrorCode.EMAIL_ALREADY_EXISTS.getMessage()));
         }
 
+        if (userCommandService.isLoginIdDuplicate(request.getLoginId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.failure(ErrorCode.LOGIN_ID_ALREADY_EXISTS.getCode(),
+                            ErrorCode.LOGIN_ID_ALREADY_EXISTS.getMessage()));
+        }
+
         userCommandService.saveTempUser(request);                       // 1. 유저 정보 Redis에 임시 저장
         emailService.joinEmail(request.getEmail());                     // 2. 입력된 이메일로 인증번호 발송
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -51,6 +58,13 @@ public class UserCommandController {
 
         Integer userId = Integer.valueOf(user.getUsername()); // 이제 username 은 userId
         userCommandService.modifyUser(request, userId);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("update-password")
+    public ResponseEntity<ApiResponse<Void>> findPassword(@RequestBody @Validated UpdatePasswordRequest request){
+        userCommandService.updatePassword(request.getEmail(), request.getLoginId(), request.getNewPassword());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

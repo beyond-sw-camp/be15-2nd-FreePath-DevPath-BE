@@ -1,0 +1,38 @@
+package com.freepath.devpath.board.comment.query.controller;
+
+import com.freepath.devpath.board.comment.query.dto.CommentTreeDto;
+import com.freepath.devpath.board.comment.query.dto.HierarchicalCommentDto;
+import com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto;
+import com.freepath.devpath.board.comment.query.service.CommentQueryService;
+import com.freepath.devpath.common.dto.ApiResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+public class CommentQueryController {
+
+    private final CommentQueryService commentQueryService;
+
+    @GetMapping("/board/{boardId}/comments")
+    public ResponseEntity<ApiResponse<List<CommentTreeDto>>> getCommentTree(@PathVariable int boardId) {
+        List<CommentTreeDto> comments = commentQueryService.getCommentsAsTree(boardId);
+        return ResponseEntity.ok(ApiResponse.success(comments));
+    }
+
+    @GetMapping("/my-comment")
+    public ResponseEntity<ApiResponse<List<MyCommentResponseDto>>> getMyComments(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        int userId = Integer.parseInt(userDetails.getUsername());
+        List<MyCommentResponseDto> comments = commentQueryService.getMyComments(userId);
+
+        return ResponseEntity.ok(ApiResponse.success(comments));
+    }
+}

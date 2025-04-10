@@ -1,6 +1,5 @@
 package com.freepath.devpath.user.command.dto;
 
-import com.freepath.devpath.user.command.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

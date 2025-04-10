@@ -26,7 +26,7 @@ public class NewsService {
     private final JavaMailSender mailSender;
 
     // 뉴스 저장만
-    public void saveNews(NewsRequestDto dto) {
+    public News saveNews(NewsRequestDto dto) {
         News news = News.builder()
                 .title(dto.getTitle())
                 .link(dto.getLink())
@@ -34,6 +34,7 @@ public class NewsService {
                 .mailingDate(dto.getMailingDate())
                 .build();
         newsRepository.save(news);
+        return news;
     }
 
     // 특정 뉴스 ID로 이메일 발송
