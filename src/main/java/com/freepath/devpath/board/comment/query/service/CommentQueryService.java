@@ -1,17 +1,16 @@
 package com.freepath.devpath.board.comment.query.service;
 
-import com.freepath.devpath.board.comment.query.dto.CommentTreeDto;
-import com.freepath.devpath.board.comment.query.dto.HierarchicalCommentDto;
-import com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto;
+import com.freepath.devpath.board.comment.query.dto.*;
 import com.freepath.devpath.board.comment.query.mapper.CommentMapper;
+import com.freepath.devpath.common.dto.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +18,16 @@ public class CommentQueryService {
 
     private final CommentMapper commentMapper;
 
+    @Transactional(readOnly = true)
     public List<CommentTreeDto> getCommentsAsTree(int boardId) {
         List<HierarchicalCommentDto> flatList = commentMapper.findHierarchicalComments(boardId);
 
         Map<Integer, CommentTreeDto> dtoMap = new HashMap<>();
         List<CommentTreeDto> result = new ArrayList<>();
 
-        for (HierarchicalCommentDto flat : flatList) {
+        for (int i = 0; i < flatList.size(); i++) {
+            HierarchicalCommentDto flat = flatList.get(i);
+
             CommentTreeDto node = CommentTreeDto.builder()
                     .commentId(flat.getCommentId())
                     .nickname(flat.getNickname())
@@ -50,7 +52,27 @@ public class CommentQueryService {
         return result;
     }
 
-    public List<MyCommentResponseDto> getMyComments(int userId) {
-        return commentMapper.findMyComments(userId);
+    @Transactional(readOnly = true)
+    public MyCommentListResponse getMyComments(MyCommentSearchRequest searchRequest, int userId) {
+
+        searchRequest.setUserId(userId);
+
+        List<MyCommentResponseDto> comments = commentMapper.selectMyComments(searchRequest);
+
+        long totalItems = commentMapper.countMyComments(searchRequest);
+
+        int page = searchRequest.getPage();
+        int size = searchRequest.getSize();
+
+        return MyCommentListResponse.builder()
+                .comments(comments)
+                .pagination(Pagination.builder()
+                        .currentPage(page)
+                        .totalPage((int) Math.ceil((double) totalItems / size))
+                        .totalItems(totalItems)
+                        .build())
+                .build();
     }
+
+
 }
