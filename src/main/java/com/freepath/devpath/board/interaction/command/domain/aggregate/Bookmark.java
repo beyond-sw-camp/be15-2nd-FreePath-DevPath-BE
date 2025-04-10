@@ -1,27 +1,21 @@
 package com.freepath.devpath.board.interaction.command.domain.aggregate;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "`like`")
-public class Like {
+@Table(name = "board_bookmark")
+public class Bookmark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long bookmarkId;
 
     private Long userId;
 
     private Long boardId;
-
-    private Long commentId;
 }
-

@@ -40,4 +40,18 @@
         AND board_id IS NULL
     </select>
 
+    <select id="selectLikedPostListByUserId" resultType="com.freepath.devpath.board.post.query.dto.response.PostDto">
+        SELECT b.board_id       AS boardId,
+        b.board_title    AS boardTitle,
+        u.nickname  ,
+        b.board_created_at AS boardCreatedAt
+        FROM `like` l
+        JOIN board b ON l.board_id = b.board_id
+        JOIN users u ON b.user_id = u.user_id
+        WHERE l.user_id = #{userId}
+        AND l.board_id IS NOT NULL
+        AND b.is_board_deleted = 'N'
+        ORDER BY l.like_id DESC
+    </select>
+
 </mapper>

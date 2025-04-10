@@ -33,7 +33,8 @@ public enum ErrorCode {
     LIKE_NOT_FOUND("23004", "좋아요 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     CANNOT_LIKE_BOTH("23005", "게시글과 댓글에 동시에 좋아요를 할 수 없습니다.", HttpStatus.BAD_REQUEST),
     INVALID_LIKE_TARGET("23006", "게시글 ID나 댓글 ID 중 하나는 필수입니다.", HttpStatus.BAD_REQUEST),
-
+    ALREADY_BOOKMARKED("23007", "이미 북마크를 했습니다.", HttpStatus.CONFLICT),
+    BOOKMARK_NOT_FOUND("23008","북마크 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // ITNews 관련 오류 : 30000번대
 
