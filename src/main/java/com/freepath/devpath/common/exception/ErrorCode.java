@@ -14,7 +14,7 @@ public enum ErrorCode {
     UNAUTHORIZED_EMAIL("10003", "이메일 인증이 완료되지 않았습니다.", HttpStatus.UNAUTHORIZED),
     EMAIL_ALREADY_EXISTS("10004", "이미 존재하는 이메일입니다.", HttpStatus.CONFLICT),
 
-    // 게시판 관련 오류
+    // 게시판 관련 오류  :  20000번대
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     POST_CREATION_FAILED("20002", "게시글 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_UPDATE_FAILED("20003", "게시글 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -23,6 +23,14 @@ public enum ErrorCode {
     FILE_DELETE_FAILED("20006", "첨부파일 삭제에 실패했습니다", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
+
+    // interaction 관련 오류 : 23000번대
+    ALREADY_LIKED("23001","이미 좋아요를 했습니다.",HttpStatus.CONFLICT),
+    BOARD_NOT_FOUND("23002","해당 게시글을 찾을 수 없어 좋아요할 수 없습니다.",HttpStatus.NOT_FOUND),
+    LIKE_NOT_FOUND("23003", "좋아요 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CANNOT_LIKE_BOTH("23004", "게시글과 댓글에 동시에 좋아요를 할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_LIKE_TARGET("23005", "게시글 ID나 댓글 ID 중 하나는 필수입니다.", HttpStatus.BAD_REQUEST),
+
 
     // ITNews 관련 오류 : 30000번대
 

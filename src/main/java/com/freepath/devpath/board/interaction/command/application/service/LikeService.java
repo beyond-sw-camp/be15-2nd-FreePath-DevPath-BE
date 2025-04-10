@@ -4,6 +4,9 @@ package com.freepath.devpath.board.interaction.command.application.service;
 import com.freepath.devpath.board.interaction.command.application.dto.LikeRequest;
 import com.freepath.devpath.board.interaction.command.domain.aggregate.Like;
 import com.freepath.devpath.board.interaction.command.domain.repository.LikeRepository;
+import com.freepath.devpath.board.interaction.exception.CannotLikeBothException;
+import com.freepath.devpath.board.interaction.exception.InvalidLikeTargetException;
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +19,11 @@ public class LikeService {
     @Transactional
     public void like(Long userId, LikeRequest request) {
         if (request.getBoardId() == null && request.getCommentId() == null) {
-            throw new IllegalArgumentException("게시글 ID나 댓글 ID 중 하나는 필수입니다.");
+            throw new InvalidLikeTargetException(ErrorCode.INVALID_LIKE_TARGET);
         }
 
         if (request.getBoardId() != null && request.getCommentId() != null) {
-            throw new IllegalArgumentException("게시글 ID와 댓글 ID는 동시에 보낼 수 없습니다.");
+            throw new CannotLikeBothException(ErrorCode.CANNOT_LIKE_BOTH);
         }
 
         if (request.getBoardId() != null) {
@@ -46,11 +49,11 @@ public class LikeService {
     @Transactional
     public void unlike(Long userId, LikeRequest request) {
         if (request.getBoardId() == null && request.getCommentId() == null) {
-            throw new IllegalArgumentException("게시글 ID나 댓글 ID 중 하나는 필수입니다.");
+            throw new InvalidLikeTargetException(ErrorCode.INVALID_LIKE_TARGET);
         }
 
         if (request.getBoardId() != null && request.getCommentId() != null) {
-            throw new IllegalArgumentException("게시글 ID와 댓글 ID는 동시에 보낼 수 없습니다.");
+            throw new CannotLikeBothException(ErrorCode.CANNOT_LIKE_BOTH);
         }
 
         if (request.getBoardId() != null) {
