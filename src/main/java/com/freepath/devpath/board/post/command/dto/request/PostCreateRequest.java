@@ -1,5 +1,7 @@
-package com.freepath.devpath.board.post.command.dto;
+package com.freepath.devpath.board.post.command.dto.request;
 
+import com.freepath.devpath.board.vote.command.dto.request.VoteCreateRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -16,4 +18,7 @@ public class PostCreateRequest {
 
     @NotBlank(message = "내용은 필수입니다.")
     private String boardContents;      // 내용
+
+    @Valid
+    private VoteCreateRequest vote;
 }

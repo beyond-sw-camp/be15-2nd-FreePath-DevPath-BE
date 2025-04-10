@@ -1,4 +1,4 @@
-package com.freepath.devpath.board.post.command.dto;
+package com.freepath.devpath.board.post.command.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
