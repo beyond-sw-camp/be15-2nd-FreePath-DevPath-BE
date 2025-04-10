@@ -10,7 +10,7 @@ import com.freepath.devpath.chatting.command.domain.aggregate.Chatting;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.exception.InvalidMessageException;
-import com.freepath.devpath.chatting.exception.NoChattingJoinException;
+import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -47,7 +47,7 @@ public class ChattingCommandService {
         //채팅방에 참여중인 유저인지
         Optional<ChattingJoin> join = chattingJoinRepository.findById(new ChattingJoinId(chatDTO.getChattingRoomId(),userId));
         if(join.isEmpty() || join.get().getChattingJoinStatus()=='N'){
-            throw new NoChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
+            throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
         }
         //유효한 메세지인지
         if(chatDTO.getChattingMessage()==null){
