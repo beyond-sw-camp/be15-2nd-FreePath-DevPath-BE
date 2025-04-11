@@ -8,7 +8,9 @@ import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,21 +22,23 @@ public class LikeController {
     // 게시글이나 댓글 좋아요
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> like(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
             @RequestBody LikeRequest request
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getName());
+
         likeService.like(userId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    // 게시글이나 댓글 좋아요 삭제
+    // 게시글이나 댓글 좋아요 취소
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> unlike(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
             @RequestBody LikeRequest request
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getName());
+
         likeService.unlike(userId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }

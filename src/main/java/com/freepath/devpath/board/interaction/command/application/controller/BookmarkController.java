@@ -9,7 +9,9 @@ import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,26 +21,29 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
+    // 게시글 북마크
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> bookmark(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
             @RequestBody BookmarkRequest request
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getName());
+
         bookmarkService.bookmark(userId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    // 게시글 북마크 취소
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> unbookmark(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
             @RequestBody BookmarkRequest request
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getName());
+
         bookmarkService.unbookmark(userId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
-
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
     @ExceptionHandler(BoardNotFoundException.class)

@@ -1,6 +1,6 @@
 package com.freepath.devpath.board.interaction.query.service;
 
-import com.freepath.devpath.board.comment.command.repository.CommentRepository;
+import com.freepath.devpath.board.comment.command.domain.repository.CommentRepository;
 import com.freepath.devpath.board.interaction.exception.BoardNotFoundException;
 import com.freepath.devpath.board.interaction.exception.CommentNotFoundException;
 import com.freepath.devpath.board.interaction.query.dto.LikedBoardSearchRequest;

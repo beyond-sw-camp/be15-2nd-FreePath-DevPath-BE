@@ -1,10 +1,10 @@
 package com.freepath.devpath.board.interaction.command.application.service;
 
+import com.freepath.devpath.board.comment.command.domain.repository.CommentRepository;
 import com.freepath.devpath.board.interaction.command.application.dto.LikeRequest;
 import com.freepath.devpath.board.interaction.command.domain.aggregate.Like;
 import com.freepath.devpath.board.interaction.command.domain.repository.LikeRepository;
 import com.freepath.devpath.board.interaction.exception.*;
-import com.freepath.devpath.board.comment.command.repository.CommentRepository;
 import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
