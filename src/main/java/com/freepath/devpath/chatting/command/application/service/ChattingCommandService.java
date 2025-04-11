@@ -34,6 +34,7 @@ public class ChattingCommandService {
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
     private final UserCommandRepository userCommandRepository;
+    private final ChattingJoinCommandService chattingJoinCommandService;
 
 
     @Transactional
@@ -45,10 +46,7 @@ public class ChattingCommandService {
             throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
         }
         //채팅방에 참여중인 유저인지
-        Optional<ChattingJoin> join = chattingJoinRepository.findById(new ChattingJoinId(chatDTO.getChattingRoomId(),userId));
-        if(join.isEmpty() || join.get().getChattingJoinStatus()=='N'){
-            throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
-        }
+        chattingJoinCommandService.checkStatus(chatDTO.getChattingRoomId(),userId);
         //유효한 메세지인지
         if(chatDTO.getChattingMessage()==null){
             throw new InvalidMessageException(ErrorCode.INVALID_MESSAGE);

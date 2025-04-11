@@ -24,12 +24,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class WaitingRoomCommandService {
-    private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserCommandRepository userCommandRepository;
     private final ChattingRepository chattingRepository;
-
+    private final ChattingJoinCommandService chattingJoinCommandService;
     @Transactional
     public void joinRequest(int chattingRoomId, String username) {
         int userId = Integer.parseInt(username);
@@ -40,53 +39,25 @@ public class WaitingRoomCommandService {
         if(chattingRoom.getBoardId() == null){
             throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
         }
-        Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId));
-        if(optionalChattingJoin.isEmpty()){
-            ChattingJoin chattingJoin = ChattingJoin.builder()
-                    .id(new ChattingJoinId(chattingRoomId,userId))
-                    .chattingRole(ChattingRole.MEMBER)
-                    .chattingJoinStatus('W')
-                    .build();
-            chattingJoinRepository.save(chattingJoin);
-        }
-        else if(optionalChattingJoin.get().getChattingJoinStatus()=='N'){
-            ChattingJoin chattingJoin = optionalChattingJoin.get();
-            chattingJoin.setChattingJoinStatus('W');
-        }
-        else{
-            throw new ChattingJoinException(ErrorCode.ALREADY_CHATTING_JOIN);
-        }
-
+        chattingJoinCommandService.setChattingJoinStatus(chattingRoomId,userId,'W');
     }
     @Transactional
     public void requestRespond(WaitingRoomActionRequest request, String username) {
         int userId = Integer.parseInt(username);
+        int chattingRoomId = request.getChattingRoomId();
+        int inviteeId = request.getInviteeId();
         //방장 권한 조회
-        Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository
-                .findById(new ChattingJoinId(request.getChattingRoomId(),userId));
-        if(optionalChattingJoin.isEmpty()){
-            throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
-        }
-        else if(!optionalChattingJoin.get().getChattingRole().equals(ChattingRole.OWNER)){
-            throw new ChattingJoinException(ErrorCode.NO_CHATTING_ROOM_AUTH);
-        }
-        ChattingRoom chattingRoom = chattingRoomRepository.findById(request.getChattingRoomId())
+        chattingJoinCommandService.checkOwner(chattingRoomId,userId);
+        ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
                 .orElseThrow(
-                        ( () -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM))
+                        (() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM))
                 );
         // 참여 요청상태 확인
-        ChattingJoin chattingJoin = chattingJoinRepository
-                .findById(new ChattingJoinId(request.getChattingRoomId(),request.getInviteeId()))
-                .orElseThrow(
-                        () -> new ChattingJoinException(ErrorCode.ALREADY_CHATTING_JOIN)
-                );
-        if(chattingJoin.getChattingJoinStatus()!='W'){
-            throw new ChattingJoinException(ErrorCode.USER_NOT_WAITING);
-        }
+        chattingJoinCommandService.checkWatingStatus(chattingRoomId, inviteeId);
         //요청 수락
         String message;
         if(request.getAction().equals(WaitingRoomAction.ACCEPT)){
-            chattingJoin.setChattingJoinStatus('Y');
+            chattingJoinCommandService.setChattingJoinStatus(chattingRoomId, inviteeId, 'Y');
             chattingRoom.setUserCount(chattingRoom.getUserCount()+1);
             User user = userCommandRepository.findById((long)request.getInviteeId())
                     .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
@@ -106,7 +77,7 @@ public class WaitingRoomCommandService {
             messagingTemplate.convertAndSend("/topic/room/" +request.getChattingRoomId(), chattingResponse);
         }//요청 거절
         else if(request.getAction().equals(WaitingRoomAction.REJECT)){
-            chattingJoin.setChattingJoinStatus('N');
+            chattingJoinCommandService.setChattingJoinStatus(chattingRoomId, inviteeId, 'N');
         }
 
     }
