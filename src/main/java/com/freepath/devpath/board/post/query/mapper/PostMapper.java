@@ -13,8 +13,11 @@ import java.util.Map;
 public interface PostMapper {
     PostDetailDto selectPostById(int boardId);
 
-    List<PostDto> selectPostListByCategoryId(PostSearchRequest request);
-    int countPostListByCategoryId(PostSearchRequest request);
+    // 게시물 내용을 제외한 필터 검색 (동적 쿼리)
+    List<PostDto> selectPostListByFilter(PostSearchRequest request);
+
+    // 필터 검색 시 전체 게시물 count 반환(페이징 처리를 위해)
+    int countPostListByFilter(PostSearchRequest request);
 
     List<CatetgoryDto> selectCategoryListByParentCategoryId(int categoryId);
 
