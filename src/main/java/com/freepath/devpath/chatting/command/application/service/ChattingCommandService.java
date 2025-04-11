@@ -1,16 +1,12 @@
 package com.freepath.devpath.chatting.command.application.service;
 
-import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoin;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoinId;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
+import com.freepath.devpath.chatting.command.application.dto.response.ChattingDto;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.aggregate.ChatDTO;
 import com.freepath.devpath.chatting.command.domain.aggregate.Chatting;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.exception.InvalidMessageException;
-import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -21,9 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.*;
 
 @Service
 @Slf4j
@@ -75,11 +69,11 @@ public class ChattingCommandService {
                 () -> new UserException(ErrorCode.USER_NOT_FOUND)
         );
 
-        ChattingResponse chattingResponse = ChattingResponse.builder()
+        ChattingDto chattingDto = ChattingDto.builder()
                 .message(savedChatting.getChattingMessage())
                 .timestamp(savedChatting.getChattingCreatedAt().toString())
                 .nickname(user.getNickname())
                         .build();
-        messagingTemplate.convertAndSend("/topic/room/" + chatting.getChattingRoomId(), chattingResponse);
+        messagingTemplate.convertAndSend("/topic/room/" + chatting.getChattingRoomId(), chattingDto);
     }
 }

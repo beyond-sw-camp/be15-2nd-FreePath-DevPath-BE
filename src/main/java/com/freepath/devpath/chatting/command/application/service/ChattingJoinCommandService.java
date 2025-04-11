@@ -76,7 +76,7 @@ public class ChattingJoinCommandService {
     @Transactional
     public void checkStatus(int chattingRoomId, int userId) {
         Optional<ChattingJoin> join = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId));
-        if(join.isEmpty() || join.get().getChattingJoinStatus()=='N'){
+        if(join.isEmpty() || join.get().getChattingJoinStatus()!='Y'){
             throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
         }
     }

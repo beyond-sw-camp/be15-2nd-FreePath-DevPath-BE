@@ -5,7 +5,6 @@ import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomCreateRequest;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomUpdateRequest;
-import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingRoomCommandResponse;
 import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
