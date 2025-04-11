@@ -43,10 +43,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
-                                        "/user/find-id", "/user/verify-email").permitAll()
+                                        "/user/find-id", "/user/verify-email", "/user/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
-                                .requestMatchers("/user/info", "/mypage/**", "/user/update-password", "/user/update-email").authenticated()
+                                .requestMatchers("/user/info", "/mypage/**", "/user/change-password","/user/update-email").authenticated()
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
                                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()

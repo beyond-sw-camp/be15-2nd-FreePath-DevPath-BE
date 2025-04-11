@@ -1,13 +1,10 @@
 package com.freepath.devpath.user.command.controller;
 
-import com.freepath.devpath.common.auth.dto.LoginRequest;
-import com.freepath.devpath.common.auth.dto.TokenResponse;
 import com.freepath.devpath.common.auth.service.AuthService;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.email.command.application.Dto.EmailRequestDto;
 import com.freepath.devpath.user.command.dto.*;
 import com.freepath.devpath.email.command.application.service.EmailService;
-import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -82,9 +79,16 @@ public class UserCommandController {
                 .body(ApiResponse.success(null));
     }
 
-    @PostMapping("/update-password")
-    public ResponseEntity<ApiResponse<Void>> updatePassword(@RequestBody @Validated UpdatePasswordRequest request){
-        userCommandService.updatePassword(request.getEmail(), request.getLoginId(), request.getNewPassword());
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody @Validated ResetPasswordRequest request){
+        userCommandService.resetPassword(request.getEmail(), request.getLoginId(), request.getNewPassword());
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePasword(@RequestBody @Validated ChaengePasswordRequest request){
+        userCommandService.changePassword(request.getEmail(), request.getCurrentPassword(), request.getNewPassword());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

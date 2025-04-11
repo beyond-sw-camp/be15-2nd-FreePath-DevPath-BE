@@ -3,8 +3,9 @@ package com.freepath.devpath.email.command.application.Dto;
 public enum EmailAuthPurpose {
     SIGN_UP("TEMP_USER:", "VERIFIED_USER:"),
     FIND_LOGINID("TEMP_LOGINID:", "VERIFIED_LOGINID:"),
-    UPDATE_PASSWORD("TEMP_PASSWORD:", "VERIFIED_PASSWORD:"),
-    UPDATE_EMAIL("TEMP_EMAIL:", "VERIFIED_EMAIL:");
+    RESET_PASSWORD("TEMP_R_PASSWORD:", "VERIFIED_R_PASSWORD:"),
+    CHANGE_PASSWORD("TEMP_C_PASSWORD:", "VERIFIED_C_PASSWORD:"),
+    CHANGE_EMAIL("TEMP_EMAIL:", "VERIFIED_EMAIL:");
 
     private final String tempPrefix;
     private final String verifiedPrefix;

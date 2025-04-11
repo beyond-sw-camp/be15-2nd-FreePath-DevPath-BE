@@ -61,12 +61,12 @@ public class UserCommandService {
         String inputItNewsSubscription = request.getItNewsSubscription();
         if (inputNickname != null) {
             if (inputNickname.trim().isEmpty()) {
-                throw new UserException(ErrorCode.INVALID_NICKNAME); // 공백 닉네임 예외
+                throw new UserException(ErrorCode.INVALID_NICKNAME);
             }
 
             if (!inputNickname.equals(user.getNickname()) &&
                     userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(inputNickname)) {
-                throw new UserException(ErrorCode.NICKNAME_ALREADY_USED); // 중복 닉네임 예외
+                throw new UserException(ErrorCode.NICKNAME_ALREADY_USED);
             }
 
             user.setNickname(inputNickname);
@@ -87,18 +87,18 @@ public class UserCommandService {
         return userCommandRepository.findByLoginId(loginId).isPresent();
     }
 
-    public void updatePassword(String email, String loginId, String newPassword) {
-        // 인증 여부 확인
-        String verified = redisUtil.getData("VERIFIED_PASSWORD:" + email);
-        if (!"true".equals(verified)) {
-            throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
-        }
-
+    public void resetPassword(String email, String loginId, String newPassword) {
         User user = userCommandRepository.findByEmailAndLoginIdAndUserDeletedAtIsNull(email, loginId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
         if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
             throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
+        }
+
+        // 인증 여부 확인
+        String verified = redisUtil.getData("VERIFIED_R_PASSWORD:" + email);
+        if (!"true".equals(verified)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
         }
 
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
@@ -111,8 +111,31 @@ public class UserCommandService {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
 
-        redisUtil.deleteData("TEMP_PASSWORD:" + email);
-        redisUtil.deleteData("VERIFIED_PASSWORD:" + email);
+        redisUtil.deleteData("TEMP_R_PASSWORD:" + email);
+        redisUtil.deleteData("VERIFIED_R_PASSWORD:" + email);
+    }
+
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        User user = userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
+            throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
+        }
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
+        }
+
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new UserException(ErrorCode.SAME_AS_OLD_PASSWORD);
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        int updatedCount = userCommandRepository.updatePassword(email, encodedPassword);
+        if (updatedCount == 0) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
     }
 
     public void updateEmail(String email, String newEmail) {

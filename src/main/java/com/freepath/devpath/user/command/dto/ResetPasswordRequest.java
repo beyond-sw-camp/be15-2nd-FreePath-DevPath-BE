@@ -7,11 +7,12 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class GoogleSignUpRequest {
+public class ResetPasswordRequest {
     @Email
-    private String email;
     @NotNull
-    private String nickname;
+    private final String email;
     @NotNull
-    private String itNewsSubscription;
+    private final String loginId;
+    @NotNull
+    private final String newPassword;
 }
