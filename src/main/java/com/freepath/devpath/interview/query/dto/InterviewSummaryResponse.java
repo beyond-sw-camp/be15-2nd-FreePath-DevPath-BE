@@ -10,5 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 public class InterviewSummaryResponse {
     private String interviewRoomId;
+    private String intervieRoomTitle;
     private String summary;
 }

@@ -9,7 +9,7 @@ import com.freepath.devpath.board.post.command.exception.InvalidPostAuthorExcept
 import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.command.dto.response.PostCreateResponse;
-import com.freepath.devpath.board.vote.command.service.VoteService;
+import com.freepath.devpath.board.vote.command.service.VoteCommandService;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.List;
 public class PostCommandService {
     private final PostRepository postRepository;
     private final AttachmentService attachmentService;
-    private final VoteService voteService;
+    private final VoteCommandService voteCommandService;
 
     @Transactional
     public PostCreateResponse createPost(PostCreateRequest postCreateRequest, List<MultipartFile> multipartFiles, int userId) {
@@ -41,7 +41,7 @@ public class PostCommandService {
 
         // 투표 저장
         if (postCreateRequest.getVote() != null) {
-            voteService.createVote(postCreateRequest.getVote(), saved.getBoardId());
+            voteCommandService.createVote(postCreateRequest.getVote(), saved.getBoardId());
         }
 
         return PostCreateResponse.builder()

@@ -3,12 +3,14 @@ package com.freepath.devpath.chatting.command.domain.aggregate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChattingJoinId implements Serializable {

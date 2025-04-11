@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,5 +13,5 @@ public class PostDto {
     private int boardId;
     private String boardTitle;
     private String nickname;
-    private Date boardCreatedAt;
+    private LocalDateTime boardCreatedAt;
 }

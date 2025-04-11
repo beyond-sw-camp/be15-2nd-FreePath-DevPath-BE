@@ -31,10 +31,13 @@ public enum ErrorCode {
     COMMENT_ACCESS_DENIED("25002", "수정 권한이 없습니다.", HttpStatus.FORBIDDEN),
     COMMENT_DELETE_DENIED("25003", "본인이 작성한 댓글만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN),
     COMMENT_INVALID_ARGUMENT("25004", "댓글 또는 대댓글 중 하나만 지정해야 합니다.", HttpStatus.BAD_REQUEST),
+    POST_SEARCH_FAILED("20009", "검색할 수 있는 기간은 최대 4주입니다.", HttpStatus.BAD_REQUEST),
 
 
     // 투표 관련 오류
     VOTE_ALREADY_VOTED("22001", "이미 해당 투표에 참여하셨습니다.", HttpStatus.BAD_REQUEST),
+    VOTE_END_FAILED("22002", "해당 투표를 생성한 회원이 아닙니다.", HttpStatus.BAD_REQUEST),
+    VOTE_ALREADY_ENDED("22003", "이미 종료된 투표입니다.", HttpStatus.BAD_REQUEST),
 
     // ITNews 관련 오류 : 30000번대
     INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
@@ -65,10 +68,14 @@ public enum ErrorCode {
     // Chatting 관련 오류 : 60000번대
     USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
     USER_NOT_BLOCKED("60002","차단하지 않은 사용자입니다.",HttpStatus.NOT_FOUND),
-    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.NOT_FOUND),
+    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.FORBIDDEN),
     NO_SUCH_CHATTING_ROOM("60004","유효한 채팅방이 아닙니다.", HttpStatus.NOT_FOUND),
     CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
+    ALREADY_CHATTING_JOIN("60007","이미 참여중인 채팅방입니다.",HttpStatus.BAD_REQUEST),
+    NO_CHATTING_ROOM_AUTH("60008", "채팅방 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    USER_NOT_WAITING("60009","참여 요청중이 아닙니다." ,HttpStatus.FORBIDDEN ),
+    INVALID_TITLE("60010","올바르지 않은 제목입니다." ,HttpStatus.BAD_REQUEST ),
     // Report 관련 오류 : 70000번대
 
 
