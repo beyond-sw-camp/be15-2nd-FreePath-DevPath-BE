@@ -1,0 +1,84 @@
+package com.freepath.devpath.board.comment.command.application.service;
+
+import com.freepath.devpath.board.comment.command.domain.domain.Comment;
+import com.freepath.devpath.board.comment.command.application.dto.CommentRequestDto;
+import com.freepath.devpath.board.comment.command.domain.repository.CommentRepository;
+import com.freepath.devpath.board.comment.command.exception.CommentAccessDeniedException;
+import com.freepath.devpath.board.comment.command.exception.CommentDeleteDeniedException;
+import com.freepath.devpath.board.comment.command.exception.CommentInvalidArgumentException;
+import com.freepath.devpath.board.comment.command.exception.CommentNotFoundException;
+import com.freepath.devpath.common.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+
+    private final CommentRepository commentRepository;
+
+    @Transactional
+    public Comment saveComment(CommentRequestDto dto, int userId) {
+        Integer boardId = dto.getBoardId();
+        Integer parentCommentId = dto.getParentCommentId();
+
+        // 댓글과 대댓글을 동시에 지정하면 오류
+        if ((boardId == null && parentCommentId == null) || (boardId != null && parentCommentId != null)) {
+            throw new CommentInvalidArgumentException(ErrorCode.COMMENT_INVALID_ARGUMENT);
+        }
+
+        if (parentCommentId != null) {
+            // 대댓글인 경우, 부모 댓글 가져오기
+            Comment parentComment = commentRepository.findById(parentCommentId)
+                    .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
+
+            // 부모 댓글도 대댓글인 경우 → 대대댓글 → 허용 X
+            if (parentComment.getParentCommentId() != null) {
+                throw new CommentInvalidArgumentException(ErrorCode.COMMENT_INVALID_ARGUMENT);
+            }
+
+            // 부모 댓글의 boardId로 설정
+            boardId = parentComment.getBoardId();
+        }
+
+        Comment comment = Comment.builder()
+                .userId(userId)
+                .boardId(boardId)
+                .parentCommentId(parentCommentId)
+                .contents(dto.getContents())
+                .createdAt(new Date())
+                .Deleted("N")
+                .build();
+
+        return commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void updateComment(int commentId, String newContent, int userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
+
+        if (comment.getUserId() != userId) {
+            throw new CommentAccessDeniedException(ErrorCode.COMMENT_ACCESS_DENIED);
+        }
+
+        comment.updateContent(newContent);
+        commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void deleteComment(int commentId, int userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
+
+        if (comment.getUserId() != userId) {
+            throw new CommentDeleteDeniedException(ErrorCode.COMMENT_DELETE_DENIED);
+        }
+
+        comment.softDelete();
+    }
+
+}

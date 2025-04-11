@@ -35,13 +35,15 @@ public class CsQuizQueryController {
         CsQuizListResponse quizzes = csQuizQueryService.getAllQuizzes(csQuizSearchRequest);
         return ResponseEntity.ok(ApiResponse.success(quizzes));
     }
-    @GetMapping("/csquiz/result/correct-count")
+
+    @GetMapping("/csquiz/result/correct-count") // 사용자의 이번주 CS퀴즈 정답 개수 조회
     public int getCorrectAnswerCount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int userId = Integer.parseInt(authentication.getName());
         return csQuizQueryService.getCorrectAnswerCount(userId);
     }
-    @GetMapping("/csquiz/result")
+
+    @GetMapping("/csquiz/result")   // 사용자의 이번 주 CS 퀴즈 결과 조회
     public List<CsQuizDetailResultDTO> getCorrectResults() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int userId = Integer.parseInt(authentication.getName());

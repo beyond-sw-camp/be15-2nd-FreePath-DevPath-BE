@@ -27,7 +27,7 @@ public class EmailController {
         try {
             purpose = EmailAuthPurpose.valueOf(emailCheckDto.getPurpose().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("유효하지 않은 인증 목적입니다: " + emailCheckDto.getPurpose());
+            throw new EmailAuthException(ErrorCode.INVALID_AUTH_PURPOSE);
         }
 
         boolean checked = emailService.checkAuthNum(
