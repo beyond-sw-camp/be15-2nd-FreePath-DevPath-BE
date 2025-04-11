@@ -1,4 +1,4 @@
-package com.freepath.devpath.board.post.command.entity;
+package com.freepath.devpath.board.interaction.command.domain.aggregate;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,21 +6,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "attachment")
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Attachment {
+@Entity
+@Table(name = "`like`")
+public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int attachmentId;
+    private Long likeId;
 
-    private int boardId;
+    private Long userId;
 
-    private String s3_key;
+    private Long boardId;
 
-    private String s3_url;
+    private Long commentId;
 }
+

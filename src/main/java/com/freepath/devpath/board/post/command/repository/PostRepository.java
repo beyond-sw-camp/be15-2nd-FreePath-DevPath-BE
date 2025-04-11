@@ -1,6 +1,6 @@
 package com.freepath.devpath.board.post.command.repository;
 
-import com.freepath.devpath.board.post.command.entity.Board;
+import com.freepath.devpath.board.post.command.domain.Board;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

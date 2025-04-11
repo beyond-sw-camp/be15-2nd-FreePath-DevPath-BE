@@ -15,6 +15,12 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS("10004", "이미 존재하는 이메일입니다.", HttpStatus.CONFLICT),
     SAME_AS_OLD_PASSWORD("10005", "이전 비밀번호와 같은 비밀번호는 사용할 수 없습니다.", HttpStatus.CONFLICT),
     LOGIN_ID_ALREADY_EXISTS("10006", "이미 사용중인 ID 입니다.", HttpStatus.CONFLICT),
+    SOCIAL_LOGIN_USER("10007", "소셜 로그인 사용자는 해당 기능을 사용할 수 없습니다.", HttpStatus.UNAUTHORIZED),
+    SOCIAL_SIGNUP_EXPIRED("10008", "소셜 회원가입 유효 시간이 만료되었습니다.", HttpStatus.BAD_REQUEST),
+    NICKNAME_ALREADY_USED("10009", "이미 사용중인 닉네임입니다.", HttpStatus.CONFLICT),
+    INVALID_NICKNAME("10010", "닉네임 공백일 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_CREDENTIALS("10011", "올바르지 않은 아이디 혹은 비밀번호입니다.", HttpStatus.UNAUTHORIZED),
+    RESTRICTED_USER("10012", "제재된 사용자입니다.", HttpStatus.FORBIDDEN),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -39,10 +45,22 @@ public enum ErrorCode {
     VOTE_END_FAILED("22002", "해당 투표를 생성한 회원이 아닙니다.", HttpStatus.BAD_REQUEST),
     VOTE_ALREADY_ENDED("22003", "이미 종료된 투표입니다.", HttpStatus.BAD_REQUEST),
 
+    // interaction 관련 오류 : 23000번대
+    ALREADY_LIKED("23001","이미 좋아요를 했습니다.",HttpStatus.CONFLICT),
+    BOARD_NOT_FOUND("23002","해당 게시글을 찾을 수 없습니다.",HttpStatus.NOT_FOUND),
+    LIKE_NOT_FOUND("23004", "좋아요 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CANNOT_LIKE_BOTH("23005", "게시글과 댓글에 동시에 좋아요를 할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_LIKE_TARGET("23006", "게시글 ID나 댓글 ID 중 하나는 필수입니다.", HttpStatus.BAD_REQUEST),
+    ALREADY_BOOKMARKED("23007", "이미 북마크를 했습니다.", HttpStatus.CONFLICT),
+    BOOKMARK_NOT_FOUND("23008","북마크 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
     // ITNews 관련 오류 : 30000번대
+
+    // 이메일 인증 실패 추가
     INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_REGISTERED_TEMP("30002", "인증은 성공했지만, 회원 정보가 없습니다.", HttpStatus.BAD_REQUEST),
     NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    INVALID_AUTH_PURPOSE("30004","유효하지 않은 인증 목적입니다", HttpStatus.BAD_REQUEST),
 
     // CSQuiz 관련 오류 : 40000번대
     CS_QUIZ_NOT_FOUND("40001","해당 CS 퀴즈를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -68,7 +86,7 @@ public enum ErrorCode {
     // Chatting 관련 오류 : 60000번대
     USER_ALREADY_BLOCKED("60001","이미 차단한 사용자입니다.",HttpStatus.CONFLICT),
     USER_NOT_BLOCKED("60002","차단하지 않은 사용자입니다.",HttpStatus.NOT_FOUND),
-    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.FORBIDDEN),
+    NO_CHATTING_JOIN("60003","참여중인 채팅방이 아닙니다.",HttpStatus.NOT_FOUND),
     NO_SUCH_CHATTING_ROOM("60004","유효한 채팅방이 아닙니다.", HttpStatus.NOT_FOUND),
     CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/csquiz")
 @RequiredArgsConstructor
@@ -17,11 +19,13 @@ public class UserCsQuizController {
 
     private final CsQuizResultService resultService;
 
+    // 사용자 답변 저장 (입력 받은 만큼씩)
     @PostMapping("/submit")
-    public ResponseEntity<ApiResponse<Void>> submitAnswer(@RequestBody @Valid CsQuizResultRequest request) {
-        resultService.submitAnswer(request);
+    public ResponseEntity<ApiResponse<Void>> submitAnswers(@RequestBody @Valid List<CsQuizResultRequest> requests) {
+        resultService.submitAnswers(requests);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
 
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
