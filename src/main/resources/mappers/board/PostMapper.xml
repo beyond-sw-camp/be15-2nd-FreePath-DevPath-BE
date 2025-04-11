@@ -142,5 +142,18 @@
         AND user_id = #{userId}
     </select>
 
+    <select id="findBoardByIds" resultType="com.freepath.devpath.board.post.query.dto.response.PostDto">
+        SELECT
+        b.board_id,
+        b.board_title,
+        u.nickname,
+        b.board_created_at
+        FROM board b
+        JOIN users u ON b.user_id = u.user_id
+        WHERE b.board_id IN
+        <foreach item="item" index="index" collection="boardIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>

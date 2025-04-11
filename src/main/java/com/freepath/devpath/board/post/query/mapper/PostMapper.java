@@ -24,4 +24,7 @@ public interface PostMapper {
     List<PostDto> selectPostListByUserId(Map<String, Object> request);
 
     int countMyPostList(Map<String, Object> request);
+
+    List<PostDto> findBoardByIds(List<Integer> boardIds);
+
 }

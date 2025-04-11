@@ -3,6 +3,11 @@ spring:
     activate:
       on-profile: local
 
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URL}
+    username: ${ELASTICSEARCH_USERNAME}
+    password: ${ELASTICSEARCH_PASSWORD}
+
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DB_URL}
@@ -30,6 +35,9 @@ spring:
           max-idle: 5  # 최대 유휴 연결 수
           min-idle: 1  # 최소 유휴 연결 수
           max-wait: 2000ms  # 최대 대기 시간
+    elasticsearch:
+      repositories:
+        enabled: true
 
 mybatis:
   configuration:
