@@ -58,3 +58,10 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: devpath
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet: DEBUG
+    com.freepath.devpath.board.comment.query.controller: DEBUG
+    org.mybatis: DEBUG
