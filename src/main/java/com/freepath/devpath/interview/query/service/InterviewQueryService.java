@@ -89,6 +89,7 @@ public class InterviewQueryService {
         InterviewRoomDetailResponse response = new InterviewRoomDetailResponse();
         try {
             response.setInterviewRoomId(room.getInterviewRoomId());
+            response.setUserId(room.getUserId());
             response.setInterviewRoomTitle(room.getInterviewRoomTitle());
             response.setInterviewCategory(room.getInterviewCategory());
             response.setInterviewRoomMemo(room.getInterviewRoomMemo());
