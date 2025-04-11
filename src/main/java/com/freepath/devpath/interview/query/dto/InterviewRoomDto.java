@@ -11,6 +11,7 @@ public class InterviewRoomDto {
     private Long interviewRoomId;
     private Long userId;
     private String interviewRoomTitle;
+    private String interviewRoomStatus;
     private String interviewCategory;
     private String interviewRoomMemo;
     private LocalDateTime interviewRoomCreatedAt;

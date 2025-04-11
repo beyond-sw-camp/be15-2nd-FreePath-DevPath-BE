@@ -91,6 +91,7 @@ public class InterviewQueryService {
             response.setInterviewRoomId(room.getInterviewRoomId());
             response.setInterviewRoomTitle(room.getInterviewRoomTitle());
             response.setInterviewCategory(room.getInterviewCategory());
+            response.setInterviewRoomMemo(room.getInterviewRoomMemo());
             response.setInterviewRomCreatedAt(room.getInterviewRoomCreatedAt());
             response.setInterviewList(interviews);
         } catch(Exception e){
