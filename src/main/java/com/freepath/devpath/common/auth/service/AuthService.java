@@ -12,7 +12,6 @@ import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,7 @@ public class AuthService {
 
         // 요청에 담긴 password를 encoding한 값이 DB에 저장된 값과 동일한지 확인
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호");
+            throw new UserException(ErrorCode.INVALID_CREDENTIALS);
         }
 
         // 로그인 성공 시 token 발급
@@ -150,12 +149,12 @@ public class AuthService {
 
 
     private void validateUserStatus(User user) {
-        if (user.getUserDeletedAt() != null) {
-            throw new DisabledException("탈퇴한 유저입니다.");
+        if ("Y".equals(user.getIsUserRestricted())) {
+            throw new UserException(ErrorCode.RESTRICTED_USER);
         }
 
-        if ("Y".equals(user.getIsUserRestricted())) {
-            throw new DisabledException("정지당한 유저입니다.");
+        if (user.getUserDeletedAt() != null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
     }
 

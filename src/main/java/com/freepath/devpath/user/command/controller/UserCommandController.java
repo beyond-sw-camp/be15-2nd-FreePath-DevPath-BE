@@ -31,9 +31,15 @@ public class UserCommandController {
 
     @PostMapping("/signup/temp")
     public ResponseEntity<ApiResponse<Void>> registTempUser(@RequestBody @Validated UserCreateRequest request) {
-        if (userCommandService.isEmailDuplicate(request.getEmail())) { // 이미 존재하는 이메일인지 확인 후 인증 절차 진행
+        if (userCommandService.isUserRestricted(request.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponse.failure(ErrorCode.RESTRICTED_USER.getCode(),
+                            ErrorCode.RESTRICTED_USER.getMessage()));
+        }
+
+        if(userCommandService.isEmailDuplicate(request.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.failure( ErrorCode.EMAIL_ALREADY_EXISTS.getCode(),
+                    .body(ApiResponse.failure(ErrorCode.EMAIL_ALREADY_EXISTS.getCode(),
                             ErrorCode.EMAIL_ALREADY_EXISTS.getMessage()));
         }
 
