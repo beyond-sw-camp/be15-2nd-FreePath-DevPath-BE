@@ -57,9 +57,25 @@ public class UserCommandService {
         User user = userCommandRepository.findByUserIdAndUserDeletedAtIsNull(userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
-        String encodedPassword = user.getPassword();
+        String inputNickname = request.getNickname();
+        String inputItNewsSubscription = request.getItNewsSubscription();
+        if (inputNickname != null) {
+            if (inputNickname.trim().isEmpty()) {
+                throw new UserException(ErrorCode.INVALID_NICKNAME); // 공백 닉네임 예외
+            }
 
-        user.update(request, encodedPassword);
+            if (!inputNickname.equals(user.getNickname()) &&
+                    userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(inputNickname)) {
+                throw new UserException(ErrorCode.NICKNAME_ALREADY_USED); // 중복 닉네임 예외
+            }
+
+            user.setNickname(inputNickname);
+        }
+
+        if (inputItNewsSubscription != null) {
+            user.setItNewsSubscription(inputItNewsSubscription);
+        }
+
         userCommandRepository.save(user);
     }
 

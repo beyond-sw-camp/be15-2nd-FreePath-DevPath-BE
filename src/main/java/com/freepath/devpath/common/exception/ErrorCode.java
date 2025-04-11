@@ -18,6 +18,7 @@ public enum ErrorCode {
     SOCIAL_LOGIN_USER("10007", "소셜 로그인 사용자입니다.", HttpStatus.UNAUTHORIZED),
     SOCIAL_SIGNUP_EXPIRED("10008", "소셜 회원가입 유효 시간이 만료되었습니다.", HttpStatus.BAD_REQUEST),
     NICKNAME_ALREADY_USED("10009", "이미 사용중인 닉네임입니다.", HttpStatus.CONFLICT),
+    INVALID_NICKNAME("10010", "닉네임 공백일 수 없습니다.", HttpStatus.BAD_REQUEST),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
