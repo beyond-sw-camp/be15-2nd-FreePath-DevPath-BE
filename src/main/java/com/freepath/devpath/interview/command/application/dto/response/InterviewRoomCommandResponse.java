@@ -9,4 +9,5 @@ public class InterviewRoomCommandResponse {
     private Long interviewRoomId;
     private String interviewRoomTitle;
     private String firstQuestion;
+    private String interviewRoomMemo;
 }

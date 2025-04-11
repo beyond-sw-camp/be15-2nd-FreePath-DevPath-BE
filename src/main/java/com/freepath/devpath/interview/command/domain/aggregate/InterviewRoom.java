@@ -23,6 +23,9 @@ public class InterviewRoom {
     @Column(nullable = false)
     private String interviewRoomTitle;
 
+    @Column
+    private String interviewRoomMemo;
+
     private LocalDateTime interviewRoomCreatedAt;
 
     @PrePersist
