@@ -8,7 +8,6 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
   jpa:
     show-sql: true
     hibernate:
@@ -17,6 +16,7 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+
 
   data:
     redis:
@@ -82,6 +82,13 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: devpath
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet: DEBUG
+    com.freepath.devpath.board.comment.query.controller: DEBUG
+    org.mybatis: DEBUG
 
 app:
   oauth2:

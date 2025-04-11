@@ -15,4 +15,8 @@ public interface CommentMapper {
     List<MyCommentResponseDto> selectMyComments(MyCommentSearchRequest searchRequest);
 
     long countMyComments(MyCommentSearchRequest searchRequest);
+
+    List<MyCommentResponseDto> selectReportedComments(MyCommentSearchRequest searchRequest);
+
+    long countReportedComments(MyCommentSearchRequest searchRequest);
 }
