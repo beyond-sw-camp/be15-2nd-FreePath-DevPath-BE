@@ -74,8 +74,9 @@ public enum ErrorCode {
     CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
     ALREADY_CHATTING_JOIN("60007","이미 참여중인 채팅방입니다.",HttpStatus.BAD_REQUEST),
-    NO_CHATTING_ROOM_AUTH("60008", "참여대기방 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    NO_CHATTING_ROOM_AUTH("60008", "채팅방 권한이 없습니다.", HttpStatus.FORBIDDEN),
     USER_NOT_WAITING("60009","참여 요청중이 아닙니다." ,HttpStatus.FORBIDDEN ),
+    INVALID_TITLE("60010","올바르지 않은 제목입니다." ,HttpStatus.BAD_REQUEST ),
     // Report 관련 오류 : 70000번대
 
 

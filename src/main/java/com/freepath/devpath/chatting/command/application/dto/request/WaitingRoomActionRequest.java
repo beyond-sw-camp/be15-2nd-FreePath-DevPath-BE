@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class GroupChattingRoomRequest {
+public class WaitingRoomActionRequest {
     private int chattingRoomId;
     private int inviteeId;
     private WaitingRoomAction action;
