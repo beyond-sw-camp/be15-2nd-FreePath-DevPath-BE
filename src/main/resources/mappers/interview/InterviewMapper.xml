@@ -77,9 +77,9 @@
     <!-- 면접 내역 조회 -->
     <select id="selectInterviewListByRoomId" resultMap="InterviewDetailResultMap">
         SELECT
-            interview_role AS interviewRole,
-            interview_message AS interviewMessage,
-            message_created_at AS messageCreatedAt
+            interview_role,
+            interview_message,
+            message_created_at
         FROM INTERVIEW
         WHERE interview_room_id = #{interviewRoomId}
         ORDER BY interview_id ASC
