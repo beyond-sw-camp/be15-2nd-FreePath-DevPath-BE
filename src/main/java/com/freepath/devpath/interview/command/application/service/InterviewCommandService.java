@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -30,11 +32,13 @@ public class InterviewCommandService {
 
         // 1. 면접방 생성 및 저장
         InterviewRoom room = null;
+        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
          try{
             room = interviewRoomRepository.save(
                     InterviewRoom.builder()
                             .userId(userId)
                             .interviewCategory(category)
+                            .interviewRoomTitle(title)
                             .build()
             );
          } catch(Exception e){
@@ -96,7 +100,7 @@ public class InterviewCommandService {
 
         // 2. GPT 평가 생성
         Interview question
-                = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByMessageCreatedAtDesc(
+                = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByInterviewIdDesc(
                             roomId, Interview.InterviewRole.AI)
                     .orElseThrow(
                             () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
@@ -151,4 +155,30 @@ public class InterviewCommandService {
                 .nextQuestion(nextQuestion)
                 .build();
     }
+
+    /* 면접방 삭제 */
+    @Transactional
+    public void deleteInterviewRoom(Long userId, Long roomId) {
+
+        // 면접방 존재 여부 확인
+        InterviewRoom room = interviewRoomRepository.findById(roomId)
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 소유자 검증
+        if (!room.getUserId().equals(userId)) {
+            throw new InterviewRoomAccessException(ErrorCode.INTERVIEW_ROOM_ACCESS_DENIED);
+        }
+
+        try {
+            // 1. 면접 이력 삭제
+            interviewRepository.deleteByInterviewRoomId(roomId);
+
+            // 2. 면접방 삭제
+            interviewRoomRepository.deleteById(roomId);
+        } catch (Exception e) {
+            throw new InterviewRoomDeleteException(ErrorCode.INTERVIEW_ROOM_DELETE_FAILED);
+        }
+    }
+
+
 }

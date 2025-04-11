@@ -7,6 +7,7 @@ import com.freepath.devpath.board.post.query.dto.response.CategoryListResponse;
 import com.freepath.devpath.board.post.query.dto.response.MyPostListResponse;
 import com.freepath.devpath.board.post.query.dto.response.PostDetailResponse;
 import com.freepath.devpath.board.post.query.dto.response.PostListResponse;
+import com.freepath.devpath.board.post.query.exception.InvalidDateIntervalException;
 import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.query.service.PostQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
@@ -34,12 +35,12 @@ public class PostQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-
-    @GetMapping("/board/category")
+    // 게시물 검색
+    @GetMapping("/board/search")
     public ResponseEntity<ApiResponse<PostListResponse>> getPostList(
             @ModelAttribute @Validated PostSearchRequest postSearchRequest
     ) {
-        PostListResponse response = postQueryService.getPostListByCategoryId(postSearchRequest);
+        PostListResponse response = postQueryService.searchPostList(postSearchRequest);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -67,6 +68,14 @@ public class PostQueryController {
 
     @ExceptionHandler(NoSuchPostException.class)
     public ResponseEntity<ApiResponse<Void>> handleNoSuchPostException(NoSuchPostException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidDateIntervalException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidDateIntervalException(InvalidDateIntervalException e) {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getHttpStatus())

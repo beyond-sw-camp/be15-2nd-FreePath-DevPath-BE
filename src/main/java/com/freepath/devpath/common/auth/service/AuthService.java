@@ -1,6 +1,7 @@
 package com.freepath.devpath.common.auth.service;
 
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.user.exception.UserException;
 import com.freepath.devpath.common.auth.dto.LoginRequest;
 import com.freepath.devpath.common.auth.dto.TokenResponse;
@@ -25,10 +26,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, RefreshToken> redisTemplate;
+    private final RedisUtil redisUtil;
+
 
     public TokenResponse login(LoginRequest request) {
         User user = userCommandRepository.findByLoginId(request.getLoginId())
-                .orElseThrow(() -> new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호"));
+                .orElseThrow(() -> new UserException(ErrorCode.INVALID_CREDENTIALS));
+
+        if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
+            throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
+        }
 
         // 유저 탈퇴 여부 확인
         validateUserStatus(user);
@@ -114,25 +121,33 @@ public class AuthService {
         redisTemplate.delete(userId);    // Redis에 저장된 refresh token 삭제
       }
 
-
-    public void deleteUser(String userId, String password) {
-        User user = userCommandRepository.findByUserIdAndUserDeletedAtIsNull(Integer.valueOf(userId))
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UserException(ErrorCode.PASSWORD_NOT_MATCHED);
+    public void deleteUser(String userId, String email) {
+        // 인증 여부 확인 (DELETE 용도)
+        String verified = redisUtil.getData("VERIFIED_DELETE:" + email);
+        if (!"true".equals(verified)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
         }
+
+        // 사용자 조회
+        User user = userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
         // 소프트 딜리트 처리
         user.markAsDeleted();
         userCommandRepository.save(user);
 
-        // Redis에서 해당 loginId에 해당하는 리프레시 토큰 삭제
+        // Redis에 저장된 인증 관련 정보 삭제
+        redisUtil.deleteData("TEMP_DELETE:" + email);
+        redisUtil.deleteData("VERIFIED_DELETE:" + email);
+
+        // Redis에 저장된 리프레시 토큰 삭제
+        userId = String.valueOf(user.getUserId());
         Boolean existed = redisTemplate.hasKey(userId);
         if (Boolean.TRUE.equals(existed)) {
             redisTemplate.delete(userId);
         }
     }
+
 
     private void validateUserStatus(User user) {
         if (user.getUserDeletedAt() != null) {

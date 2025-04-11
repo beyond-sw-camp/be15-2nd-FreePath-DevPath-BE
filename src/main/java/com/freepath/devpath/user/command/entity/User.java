@@ -2,15 +2,19 @@ package com.freepath.devpath.user.command.entity;
 
 import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Entity
-@Table(name = "users")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "users")
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,13 +64,20 @@ public class User{
         this.password = encodedPassword;
     }
 
-    public void update(UserModifyRequest request, String encodedPassword) {
-        this.password = encodedPassword;
+    public void update(UserModifyRequest request) {
         this.itNewsSubscription = request.getItNewsSubscription();
         this.nickname = request.getNickname();
     }
 
     public void markAsDeleted() {
         this.userDeletedAt = new Date();
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setItNewsSubscription(String itNewsSubscription) {
+        this.itNewsSubscription = itNewsSubscription;
     }
 }

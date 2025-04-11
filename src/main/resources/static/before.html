@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Google OAuth2 회원가입 or 로그인 테스트</title>
+</head>
+<body>
+  <h2>Google 회원가입 or 로그인</h2>
+  <button onclick="loginWithGoogle()">구글 회원가입 or 로그인</button>
+
+  <script>
+    function loginWithGoogle() {
+      // Spring Boot의 구글 OAuth2 로그인 URL
+      window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    }
+  </script>
+</body>
+</html>

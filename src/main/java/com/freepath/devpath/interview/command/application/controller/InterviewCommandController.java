@@ -1,6 +1,5 @@
 package com.freepath.devpath.interview.command.application.controller;
 
-import com.freepath.devpath.board.post.command.exception.FileUpdateFailedException;
 import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
@@ -47,6 +46,19 @@ public class InterviewCommandController {
         InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(userId, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    /* 면접방 삭제 */
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<ApiResponse<Void>> deleteInterviewRoom(
+            @PathVariable Long roomId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        interviewCommandService.deleteInterviewRoom(userId, roomId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
 
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
@@ -113,5 +125,14 @@ public class InterviewCommandController {
                 .status(errorCode.getHttpStatus())
                 .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
     }
+
+    @ExceptionHandler(InterviewRoomDeleteException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomDeleteException(InterviewRoomDeleteException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
 
 }

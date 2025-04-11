@@ -40,6 +40,24 @@ public class InterviewQueryService {
         return response;
     }
 
+    /* 특정 카테고리에 대한 면접방 목록만 조회 */
+    @Transactional(readOnly = true)
+    public List<InterviewRoomDto> getInterviewRoomListByCategory(Long userId, String category) {
+        List<InterviewRoomDto> response;
+
+        try {
+            response = interviewMapper.selectInterviewRoomListByUserIdAndCategory(userId, category);
+        } catch (Exception e) {
+            throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
+        }
+
+        if (response == null || response.isEmpty()) {
+            throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
+        }
+
+        return response;
+    }
+
     /* 면접방 정보 및 면접 이력 조회 */
     @Transactional(readOnly = true)
     public InterviewRoomDetailResponse getInterviewRoomByRoomId(Long interviewRoomId, Long userId) {
@@ -71,7 +89,9 @@ public class InterviewQueryService {
         InterviewRoomDetailResponse response = new InterviewRoomDetailResponse();
         try {
             response.setInterviewRoomId(room.getInterviewRoomId());
+            response.setInterviewRoomTitle(room.getInterviewRoomTitle());
             response.setInterviewCategory(room.getInterviewCategory());
+            response.setInterviewRoomMemo(room.getInterviewRoomMemo());
             response.setInterviewRomCreatedAt(room.getInterviewRoomCreatedAt());
             response.setInterviewList(interviews);
         } catch(Exception e){
@@ -106,9 +126,9 @@ public class InterviewQueryService {
         // 응답
         return InterviewSummaryResponse.builder()
                 .interviewRoomId(String.valueOf(roomId))
+                .intervieRoomTitle(room.getInterviewRoomTitle())
                 .summary(summary)
                 .build();
     }
-
 
 }
