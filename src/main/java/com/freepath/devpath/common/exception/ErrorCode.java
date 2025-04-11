@@ -25,7 +25,7 @@ public enum ErrorCode {
     FILE_DELETE_FAILED("20006", "첨부파일 삭제에 실패했습니다", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
-
+    POST_SEARCH_FAILED("20009", "검색할 수 있는 기간은 최대 4주입니다.", HttpStatus.BAD_REQUEST),
 
 
     // 투표 관련 오류
