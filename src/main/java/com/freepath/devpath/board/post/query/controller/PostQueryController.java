@@ -34,8 +34,8 @@ public class PostQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-
-    @GetMapping("/board/category")
+    // 게시물 검색
+    @GetMapping("/board/search")
     public ResponseEntity<ApiResponse<PostListResponse>> getPostList(
             @ModelAttribute @Validated PostSearchRequest postSearchRequest
     ) {
