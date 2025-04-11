@@ -2,6 +2,7 @@ package com.freepath.devpath.user.command.controller;
 
 import com.freepath.devpath.common.auth.service.AuthService;
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.email.command.application.Dto.EmailAuthPurpose;
 import com.freepath.devpath.email.command.application.Dto.EmailRequestDto;
 import com.freepath.devpath.user.command.dto.*;
 import com.freepath.devpath.email.command.application.service.EmailService;
@@ -9,6 +10,7 @@ import com.freepath.devpath.user.command.service.UserCommandService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Slf4j
 public class UserCommandController {
     private final UserCommandService userCommandService;
     private final EmailService emailService;
@@ -72,12 +75,18 @@ public class UserCommandController {
 
     @PostMapping("/verify-email")
     public ResponseEntity<ApiResponse<Void>> findLoginIdTemp(@RequestBody @Valid EmailRequestDto request) {
-        authService.validateUserStatusByEmail(request.getEmail()); // 제재 여부, 탈퇴 확인
+        log.debug("받은 이메일: {}, 목적: {}", request.getEmail(), request.getPurpose());
+
+        if (request.getPurpose() != EmailAuthPurpose.CHANGE_EMAIL) {
+            authService.validateUserStatusByEmail(request.getEmail()); // 제재 여부, 탈퇴 확인
+        }
+
         emailService.sendCheckEmail(request.getEmail(), request.getPurpose());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(null));
     }
+
 
     @PostMapping("/reset-password")
     public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody @Validated ResetPasswordRequest request){
@@ -93,9 +102,9 @@ public class UserCommandController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @PostMapping("/update-email")
-    public ResponseEntity<ApiResponse<Void>> updateEmail(@RequestBody @Validated UpdateEmailRequest request){
-        userCommandService.updateEmail(request.getEmail(), request.getNewEmail());
+    @PostMapping("/change-email")
+    public ResponseEntity<ApiResponse<Void>> changeEmail(@RequestBody @Validated ChangeEmailRequest request){
+        userCommandService.changeEmail(request.getCurrentEmail(), request.getNewEmail());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

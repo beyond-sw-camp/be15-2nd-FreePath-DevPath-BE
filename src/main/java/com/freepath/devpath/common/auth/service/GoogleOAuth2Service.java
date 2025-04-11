@@ -30,18 +30,17 @@ public class GoogleOAuth2Service extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
 
         // 기존 회원 여부 확인
-        User user = userRepository.findByEmailAndUserDeletedAtIsNull(email).orElse(null);
+        User user = userRepository.findByLoginIdAndLoginMethodAndUserDeletedAtIsNull(email, "GOOGLE").orElse(null);
 
         if (user != null) {
             validateUserStatus(user);
         } else {
             // 신규 회원이면 Redis에 임시 저장
-            String emailName = email.substring(0, email.indexOf('@'));
             String userName = oAuth2User.getAttribute("name");
 
             User tempUser = User.builder()
                     .email(email)
-                    .loginId(emailName)
+                    .loginId(email)
                     .password("") // 소셜 로그인은 비밀번호 없음
                     .loginMethod("GOOGLE")
                     .userRole(UserRole.USER)

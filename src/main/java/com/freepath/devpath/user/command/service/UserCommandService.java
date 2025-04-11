@@ -138,23 +138,27 @@ public class UserCommandService {
         }
     }
 
-    public void updateEmail(String email, String newEmail) {
-        String verified = redisUtil.getData("VERIFIED_EMAIL:" + email);
+    public void changeEmail(String currentEmail, String newEmail) {
+        // 새 이메일 인증 여부 확인
+        String verified = redisUtil.getData("VERIFIED_EMAIL:" + newEmail);
         if (!"true".equals(verified)) {
             throw new UserException(ErrorCode.UNAUTHORIZED_EMAIL);
         }
 
-        userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+        // 기존 이메일로 사용자 조회
+        userCommandRepository.findByEmailAndUserDeletedAtIsNull(currentEmail)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
-        int updatedCount = userCommandRepository.updateEmail(email, newEmail);
+        int updatedCount = userCommandRepository.updateEmail(currentEmail, newEmail);
         if (updatedCount == 0) {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
 
-        redisUtil.deleteData("TEMP_EMAIL:" + email);
-        redisUtil.deleteData("VERIFIED_EMAIL:" + email);
+        // 새 이메일 기준으로 Redis 키 삭제
+        redisUtil.deleteData("TEMP_EMAIL:" + newEmail);
+        redisUtil.deleteData("VERIFIED_EMAIL:" + newEmail);
     }
+
 
     public void completeSocialSignup(String email, String nickname, String itNewsSubscription) {
         // Redis에서 임시 유저 정보 조회

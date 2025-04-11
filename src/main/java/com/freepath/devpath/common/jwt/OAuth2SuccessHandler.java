@@ -2,7 +2,6 @@ package com.freepath.devpath.common.jwt;
 
 import com.freepath.devpath.common.auth.domain.RefreshToken;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
         String email = ((org.springframework.security.oauth2.core.user.DefaultOAuth2User) authentication.getPrincipal()).getAttribute("email");
 
-        userRepository.findByEmailAndUserDeletedAtIsNull(email).ifPresentOrElse(user -> {
+        userRepository.findByLoginIdAndLoginMethodAndUserDeletedAtIsNull(email, "GOOGLE").ifPresentOrElse(user -> {
             // DB에 유저가 존재하는 경우 → 토큰 발급
             String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getUserRole().name());
             String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUserId()), user.getUserRole().name());

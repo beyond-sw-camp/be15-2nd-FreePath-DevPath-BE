@@ -28,7 +28,11 @@ public class AuthService {
 
     public TokenResponse login(LoginRequest request) {
         User user = userCommandRepository.findByLoginId(request.getLoginId())
-                .orElseThrow(() -> new BadCredentialsException("올바르지 않은 아이디 혹은 비밀번호"));
+                .orElseThrow(() -> new UserException(ErrorCode.INVALID_CREDENTIALS));
+
+        if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
+            throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
+        }
 
         // 유저 탈퇴 여부 확인
         validateUserStatus(user);

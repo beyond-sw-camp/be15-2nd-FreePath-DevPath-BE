@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UpdateEmailRequest {
+public class ChangeEmailRequest {
     @Email
-    private final String email;
+    private final String currentEmail;
     private final String newEmail;
 }

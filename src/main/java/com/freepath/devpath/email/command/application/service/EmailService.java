@@ -99,6 +99,12 @@ public class EmailService {
     }
 
     public void sendCheckEmail(String email, EmailAuthPurpose purpose) {
+        if (purpose == EmailAuthPurpose.CHANGE_EMAIL) {
+            if (userCommandRepository.existsByEmail(email)) {
+                throw new UserException(ErrorCode.EMAIL_ALREADY_EXISTS);
+            }
+        }
+
         if (EnumSet.of(
                 EmailAuthPurpose.FIND_LOGINID,
                 EmailAuthPurpose.RESET_PASSWORD,
