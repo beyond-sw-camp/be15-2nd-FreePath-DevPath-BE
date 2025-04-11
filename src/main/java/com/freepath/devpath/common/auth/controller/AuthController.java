@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -45,7 +44,7 @@ public class AuthController {
             @RequestBody @Validated UserDeleteRequest request
     ) {
         String userId = user.getUsername();
-        authService.deleteUser(userId, request.getPassword());
+        authService.deleteUser(userId, request.getEmail());
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

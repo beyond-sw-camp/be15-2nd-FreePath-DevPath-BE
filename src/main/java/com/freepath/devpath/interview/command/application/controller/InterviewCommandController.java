@@ -1,6 +1,5 @@
 package com.freepath.devpath.interview.command.application.controller;
 
-import com.freepath.devpath.board.post.command.exception.FileUpdateFailedException;
 import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;

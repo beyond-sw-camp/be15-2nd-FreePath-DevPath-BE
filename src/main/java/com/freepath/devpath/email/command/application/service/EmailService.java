@@ -4,6 +4,9 @@ import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.email.command.application.Dto.EmailAuthPurpose;
 import com.freepath.devpath.email.config.RedisUtil;
 import com.freepath.devpath.email.exception.TempUserNotFoundException;
+import com.freepath.devpath.user.command.entity.User;
+import com.freepath.devpath.user.command.repository.UserCommandRepository;
+import com.freepath.devpath.user.exception.UserException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumSet;
 import java.util.Random;
 
 @Transactional
@@ -22,6 +26,7 @@ import java.util.Random;
 public class EmailService {
     private final RedisUtil redisUtil;
     private final JavaMailSender mailSender;
+    private final UserCommandRepository userCommandRepository;
     private int authNumber;
 
     //임의의 6자리 양수를 반환합니다.
@@ -94,13 +99,33 @@ public class EmailService {
     }
 
     public void sendCheckEmail(String email, EmailAuthPurpose purpose) {
+        if (purpose == EmailAuthPurpose.CHANGE_EMAIL) {
+            if (userCommandRepository.existsByEmail(email)) {
+                throw new UserException(ErrorCode.EMAIL_ALREADY_EXISTS);
+            }
+        }
+
+        if (EnumSet.of(
+                EmailAuthPurpose.FIND_LOGINID,
+                EmailAuthPurpose.RESET_PASSWORD,
+                EmailAuthPurpose.CHANGE_PASSWORD
+        ).contains(purpose)) {
+
+            User user = userCommandRepository.findByEmailAndUserDeletedAtIsNull(email)
+                    .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+            if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
+                throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
+            }
+        }
+
         makeRandomNumber();
 
         String setFrom = "leessjjgg123@gmail.com";
         String toMail = email;
-        String title = "[DevPath] 회원 인증 이메일입니다.";
+        String title = "[DevPath] 회원 인증용 이메일입니다.";
         String content =
-                "<b>DevPath</b>에서 발송한 회원 인증용 메일입니다." +
+                "<b>DevPath</b>에서 발송한 회원 인증용 이메일입니다." +
                         "<br><br>" +
                         "인증 번호는 " + authNumber + "입니다." +
                         "<br>" +

@@ -3,16 +3,12 @@ spring:
     activate:
       on-profile: local
 
-  elasticsearch:
-    uris: ${ELASTICSEARCH_URL}
-    username: ${ELASTICSEARCH_USERNAME}
-    password: ${ELASTICSEARCH_PASSWORD}
-
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
   jpa:
     show-sql: true
     hibernate:
@@ -21,7 +17,6 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
-
 
   data:
     redis:
@@ -35,9 +30,30 @@ spring:
           max-idle: 5  # 최대 유휴 연결 수
           min-idle: 1  # 최소 유휴 연결 수
           max-wait: 2000ms  # 최대 대기 시간
+
     elasticsearch:
       repositories:
         enabled: true
+
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URL}
+    username: ${ELASTICSEARCH_USERNAME}
+    password: ${ELASTICSEARCH_PASSWORD}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: profile, email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
 
 mybatis:
   configuration:
@@ -66,3 +82,7 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: devpath
+
+app:
+  oauth2:
+    redirect-url: ${REDIRECT_URL}

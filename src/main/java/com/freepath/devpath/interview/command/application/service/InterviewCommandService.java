@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -30,11 +32,13 @@ public class InterviewCommandService {
 
         // 1. 면접방 생성 및 저장
         InterviewRoom room = null;
+        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
          try{
             room = interviewRoomRepository.save(
                     InterviewRoom.builder()
                             .userId(userId)
                             .interviewCategory(category)
+                            .interviewRoomTitle(title)
                             .build()
             );
          } catch(Exception e){

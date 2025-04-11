@@ -15,6 +15,12 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS("10004", "이미 존재하는 이메일입니다.", HttpStatus.CONFLICT),
     SAME_AS_OLD_PASSWORD("10005", "이전 비밀번호와 같은 비밀번호는 사용할 수 없습니다.", HttpStatus.CONFLICT),
     LOGIN_ID_ALREADY_EXISTS("10006", "이미 사용중인 ID 입니다.", HttpStatus.CONFLICT),
+    SOCIAL_LOGIN_USER("10007", "소셜 로그인 사용자는 해당 기능을 사용할 수 없습니다.", HttpStatus.UNAUTHORIZED),
+    SOCIAL_SIGNUP_EXPIRED("10008", "소셜 회원가입 유효 시간이 만료되었습니다.", HttpStatus.BAD_REQUEST),
+    NICKNAME_ALREADY_USED("10009", "이미 사용중인 닉네임입니다.", HttpStatus.CONFLICT),
+    INVALID_NICKNAME("10010", "닉네임 공백일 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_CREDENTIALS("10011", "올바르지 않은 아이디 혹은 비밀번호입니다.", HttpStatus.UNAUTHORIZED),
+    RESTRICTED_USER("10012", "제재된 사용자입니다.", HttpStatus.FORBIDDEN),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -25,6 +31,12 @@ public enum ErrorCode {
     FILE_DELETE_FAILED("20006", "첨부파일 삭제에 실패했습니다", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
+
+    // 댓글 관련 오류
+    COMMENT_NOT_FOUND("25001", "댓글 또는 대댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    COMMENT_ACCESS_DENIED("25002", "수정 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    COMMENT_DELETE_DENIED("25003", "본인이 작성한 댓글만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN),
+    COMMENT_INVALID_ARGUMENT("25004", "댓글 또는 대댓글 중 하나만 지정해야 합니다.", HttpStatus.BAD_REQUEST),
     POST_SEARCH_FAILED("20009", "검색할 수 있는 기간은 최대 4주입니다.", HttpStatus.BAD_REQUEST),
 
 
@@ -34,11 +46,10 @@ public enum ErrorCode {
     VOTE_ALREADY_ENDED("22003", "이미 종료된 투표입니다.", HttpStatus.BAD_REQUEST),
 
     // ITNews 관련 오류 : 30000번대
-
-    // 이메일 인증 실패 추가
     INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_REGISTERED_TEMP("30002", "인증은 성공했지만, 회원 정보가 없습니다.", HttpStatus.BAD_REQUEST),
     NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    INVALID_AUTH_PURPOSE("30004","유효하지 않은 인증 목적입니다", HttpStatus.BAD_REQUEST),
 
     // CSQuiz 관련 오류 : 40000번대
     CS_QUIZ_NOT_FOUND("40001","해당 CS 퀴즈를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -69,8 +80,9 @@ public enum ErrorCode {
     CHATTING_ROOM_ALREADY_EXISTS("60005","이미 생성된 채팅방입니다.",HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("60006","유효한 메세지가 아닙니다.",HttpStatus.BAD_REQUEST),
     ALREADY_CHATTING_JOIN("60007","이미 참여중인 채팅방입니다.",HttpStatus.BAD_REQUEST),
-    NO_CHATTING_ROOM_AUTH("60008", "참여대기방 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    NO_CHATTING_ROOM_AUTH("60008", "채팅방 권한이 없습니다.", HttpStatus.FORBIDDEN),
     USER_NOT_WAITING("60009","참여 요청중이 아닙니다." ,HttpStatus.FORBIDDEN ),
+    INVALID_TITLE("60010","올바르지 않은 제목입니다." ,HttpStatus.BAD_REQUEST ),
     // Report 관련 오류 : 70000번대
 
 

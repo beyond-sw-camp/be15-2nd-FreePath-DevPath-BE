@@ -1,10 +1,14 @@
-package com.freepath.devpath.board.comment.command.service;
+package com.freepath.devpath.board.comment.command.application.service;
 
-import com.freepath.devpath.board.comment.command.domain.Comment;
-import com.freepath.devpath.board.comment.command.dto.CommentRequestDto;
-import com.freepath.devpath.board.comment.command.repository.CommentRepository;
+import com.freepath.devpath.board.comment.command.domain.domain.Comment;
+import com.freepath.devpath.board.comment.command.application.dto.CommentRequestDto;
+import com.freepath.devpath.board.comment.command.domain.repository.CommentRepository;
+import com.freepath.devpath.board.comment.command.exception.CommentAccessDeniedException;
+import com.freepath.devpath.board.comment.command.exception.CommentDeleteDeniedException;
+import com.freepath.devpath.board.comment.command.exception.CommentInvalidArgumentException;
+import com.freepath.devpath.board.comment.command.exception.CommentNotFoundException;
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,17 +27,17 @@ public class CommentService {
 
         // 댓글과 대댓글을 동시에 지정하면 오류
         if ((boardId == null && parentCommentId == null) || (boardId != null && parentCommentId != null)) {
-            throw new IllegalArgumentException("댓글 또는 대댓글 중 하나만 지정해야 합니다.");
+            throw new CommentInvalidArgumentException(ErrorCode.COMMENT_INVALID_ARGUMENT);
         }
 
         if (parentCommentId != null) {
             // 대댓글인 경우, 부모 댓글 가져오기
             Comment parentComment = commentRepository.findById(parentCommentId)
-                    .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
 
             // 부모 댓글도 대댓글인 경우 → 대대댓글 → 허용 X
             if (parentComment.getParentCommentId() != null) {
-                throw new IllegalArgumentException("대댓글의 대댓글은 허용되지 않습니다.");
+                throw new CommentInvalidArgumentException(ErrorCode.COMMENT_INVALID_ARGUMENT);
             }
 
             // 부모 댓글의 boardId로 설정
@@ -55,10 +59,10 @@ public class CommentService {
     @Transactional
     public void updateComment(int commentId, String newContent, int userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
 
         if (comment.getUserId() != userId) {
-            throw new AccessDeniedException("수정 권한이 없습니다.");
+            throw new CommentAccessDeniedException(ErrorCode.COMMENT_ACCESS_DENIED);
         }
 
         comment.updateContent(newContent);
@@ -68,10 +72,10 @@ public class CommentService {
     @Transactional
     public void deleteComment(int commentId, int userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
 
         if (comment.getUserId() != userId) {
-            throw new IllegalStateException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+            throw new CommentDeleteDeniedException(ErrorCode.COMMENT_DELETE_DENIED);
         }
 
         comment.softDelete();
