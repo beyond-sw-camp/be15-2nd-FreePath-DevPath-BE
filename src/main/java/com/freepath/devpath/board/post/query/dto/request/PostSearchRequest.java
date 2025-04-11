@@ -1,5 +1,7 @@
 package com.freepath.devpath.board.post.query.dto.request;
 
+import com.freepath.devpath.board.post.query.exception.InvalidDateIntervalException;
+import com.freepath.devpath.common.exception.ErrorCode;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -7,6 +9,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
@@ -31,6 +34,20 @@ public class PostSearchRequest {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
+
+    // 최대 검색 기간 (4주 = 28일)
+    private static final long MAX_DURATION_DAYS = 28;
+
+    public boolean validateDateInterval() {
+        if (startDate != null && endDate != null) {
+            long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+
+            if (daysBetween > MAX_DURATION_DAYS) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public int getOffset() {
         return (page - 1) * size;
