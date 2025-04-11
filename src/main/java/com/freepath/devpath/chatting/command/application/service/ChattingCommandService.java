@@ -31,15 +31,13 @@ import java.util.*;
 public class ChattingCommandService {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChattingRepository chattingRepository;
-    private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
     private final UserCommandRepository userCommandRepository;
     private final ChattingJoinCommandService chattingJoinCommandService;
 
 
     @Transactional
-    public void sendChatting(ChatDTO chatDTO, Principal principal) {
-        int userId = Integer.parseInt(principal.getName());
+    public void sendChatting(ChatDTO chatDTO, int userId) {
         //유효성 검사
         //유효한 채팅방인지
         if(chatDTO.getChattingRoomId()!=null && !chattingRoomRepository.existsById(chatDTO.getChattingRoomId())){
@@ -51,6 +49,20 @@ public class ChattingCommandService {
         if(chatDTO.getChattingMessage()==null){
             throw new InvalidMessageException(ErrorCode.INVALID_MESSAGE);
         }
+        send(chatDTO, userId);
+    }
+
+    @Transactional
+    public void sendSystemMessage(int chattingRoomId, String message){
+        send(ChatDTO.builder()
+                .chattingMessage(message)
+                .chattingRoomId(chattingRoomId)
+                .build(),1);
+    }
+
+
+    @Transactional
+    public void send(ChatDTO chatDTO, int userId) {
         Chatting chatting = Chatting.builder()
                 .chattingRoomId(chatDTO.getChattingRoomId())
                 .userId(userId)
@@ -59,7 +71,7 @@ public class ChattingCommandService {
                 .build();
 
         Chatting savedChatting = chattingRepository.save(chatting);
-        User user = userCommandRepository.findById((long)userId).orElseThrow(
+        User user = userCommandRepository.findById((long) userId).orElseThrow(
                 () -> new UserException(ErrorCode.USER_NOT_FOUND)
         );
 

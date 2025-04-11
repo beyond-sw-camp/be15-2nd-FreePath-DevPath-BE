@@ -40,6 +40,8 @@ public class ChattingJoinCommandService {
     public void setQuit(int chattingRoomId, int userId) {
         ChattingJoin chattingJoin = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
                 .orElseThrow(() -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
+        if(chattingJoin.getChattingJoinStatus()!='Y')
+            throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
         chattingJoin.setChattingJoinStatus('N');
         if(chattingJoin.getChattingRole()== ChattingRole.OWNER){
             chattingJoin.setChattingRole(ChattingRole.MEMBER);
@@ -80,7 +82,7 @@ public class ChattingJoinCommandService {
     }
 
     @Transactional
-    public void checkWatingStatus(int chattingRoomId, int userId){
+    public void checkWaitingStatus(int chattingRoomId, int userId){
         Optional<ChattingJoin> join = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId));
         if(join.isEmpty() || join.get().getChattingJoinStatus()!='W'){
             throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
@@ -88,7 +90,7 @@ public class ChattingJoinCommandService {
     }
 
     @Transactional
-    public void setChattingJoinStatus(int chattingRoomId, int userId, char joinStatus) {
+    public void setWaitingStatus(int chattingRoomId, int userId) {
         Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId));
         if(optionalChattingJoin.isEmpty()){
             ChattingJoin chattingJoin = ChattingJoin.builder()
@@ -105,5 +107,14 @@ public class ChattingJoinCommandService {
         else{
             throw new ChattingJoinException(ErrorCode.ALREADY_CHATTING_JOIN);
         }
+    }
+
+    @Transactional
+    public void setStatus(int chattingRoomId, int userId, char joinStatus){
+        ChattingJoin chattingJoin = chattingJoinRepository
+                .findById(new ChattingJoinId(chattingRoomId,userId)).orElseThrow(
+                        () -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN)
+                );
+        chattingJoin.setChattingJoinStatus(joinStatus);
     }
 }

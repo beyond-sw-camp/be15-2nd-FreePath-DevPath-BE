@@ -11,27 +11,24 @@ import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
-import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class ChattingRoomCommandService {
-    private final SimpMessagingTemplate messagingTemplate;
+
     private final ChattingJoinCommandService chattingJoinCommandService;
     private final ChattingRoomRepository chattingRoomRepository;
     private final UserCommandRepository userCommandRepository;
     private final ChattingRepository chattingRepository;
     private final PostRepository postRepository;
+    private final ChattingCommandService chattingCommandService;
 
     @Transactional
     public ChattingRoomCommandResponse createChattingRoom(
@@ -100,22 +97,8 @@ public class ChattingRoomCommandService {
         User user = userCommandRepository.findById((long)userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
         chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
-        //채팅 생성
-        Chatting chatting = Chatting.builder()
-                .chattingRoomId(chattingRoomId)
-                .userId(1)
-                .chattingMessage(user.getNickname()+"님이 퇴장했습니다.")
-                .chattingCreatedAt(LocalDateTime.now())
-                .build();
-        Chatting savedChatting = chattingRepository.save(chatting);
-        //메세지 처리
-        ChattingResponse chattingResponse = ChattingResponse.builder()
-                .message(savedChatting.getChattingMessage())
-                .timestamp(savedChatting.getChattingCreatedAt().toString())
-                .nickname("System")
-                .build();
-        messagingTemplate.convertAndSend("/topic/room/" + chattingRoomId, chattingResponse);
-
+        String message = user.getNickname()+"님이 퇴장했습니다.";
+       chattingCommandService.sendSystemMessage(chattingRoomId,message);
     }
 
     @Transactional
