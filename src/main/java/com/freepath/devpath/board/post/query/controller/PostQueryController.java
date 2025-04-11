@@ -2,6 +2,7 @@ package com.freepath.devpath.board.post.query.controller;
 
 
 import com.freepath.devpath.board.post.query.dto.request.MyPostRequest;
+import com.freepath.devpath.board.post.query.dto.request.PostContentSearchRequest;
 import com.freepath.devpath.board.post.query.dto.request.PostSearchRequest;
 import com.freepath.devpath.board.post.query.dto.response.CategoryListResponse;
 import com.freepath.devpath.board.post.query.dto.response.MyPostListResponse;
@@ -65,6 +66,16 @@ public class PostQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+
+    // 게시물 내용 키워드 검색
+    @GetMapping("/board/search/content")
+    public ResponseEntity<ApiResponse<PostListResponse>> getPostListByContent(
+            @ModelAttribute @Validated PostContentSearchRequest postContentSearchRequest
+    ) {
+        PostListResponse response = postQueryService.searchBoardContentByKeyword(postContentSearchRequest);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 
     @ExceptionHandler(NoSuchPostException.class)
     public ResponseEntity<ApiResponse<Void>> handleNoSuchPostException(NoSuchPostException e) {

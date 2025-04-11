@@ -1,4 +1,4 @@
-package com.freepath.devpath.board.post.command.entity;
+package com.freepath.devpath.board.post.command.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
