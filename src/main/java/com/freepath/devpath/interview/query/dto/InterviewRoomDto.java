@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class InterviewRoomDto {
     private Long interviewRoomId;
     private Long userId;
+    private String interviewRoomTitle;
     private String interviewCategory;
     private LocalDateTime interviewRoomCreatedAt;
 }

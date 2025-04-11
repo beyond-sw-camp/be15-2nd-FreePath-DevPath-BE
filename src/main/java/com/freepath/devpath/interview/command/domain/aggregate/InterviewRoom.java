@@ -20,6 +20,9 @@ public class InterviewRoom {
 
     private String interviewCategory;
 
+    @Column(nullable = false)
+    private String interviewRoomTitle;
+
     private LocalDateTime interviewRoomCreatedAt;
 
     @PrePersist
