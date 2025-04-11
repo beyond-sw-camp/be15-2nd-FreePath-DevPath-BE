@@ -11,8 +11,5 @@ public class CsQuizResultRequest {
     private final int csquizId;
 
     @NotNull
-    private final int userId;
-
-    @NotNull
     private final int userAnswer;
 }
