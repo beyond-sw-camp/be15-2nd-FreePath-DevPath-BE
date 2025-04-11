@@ -20,6 +20,7 @@ public enum ErrorCode {
     NICKNAME_ALREADY_USED("10009", "이미 사용중인 닉네임입니다.", HttpStatus.CONFLICT),
     INVALID_NICKNAME("10010", "닉네임 공백일 수 없습니다.", HttpStatus.BAD_REQUEST),
     INVALID_CREDENTIALS("10011", "올바르지 않은 아이디 혹은 비밀번호입니다.", HttpStatus.UNAUTHORIZED),
+    RESTRICTED_USER("10012", "제재된 사용자입니다.", HttpStatus.FORBIDDEN),
 
     // 게시판 관련 오류
     POST_NOT_FOUND("20001", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -44,6 +45,7 @@ public enum ErrorCode {
     INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_REGISTERED_TEMP("30002", "인증은 성공했지만, 회원 정보가 없습니다.", HttpStatus.BAD_REQUEST),
     NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    INVALID_AUTH_PURPOSE("30004","유효하지 않은 인증 목적입니다", HttpStatus.BAD_REQUEST),
 
     // CSQuiz 관련 오류 : 40000번대
     CS_QUIZ_NOT_FOUND("40001","해당 CS 퀴즈를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

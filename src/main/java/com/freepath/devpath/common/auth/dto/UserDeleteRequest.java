@@ -9,5 +9,5 @@ import lombok.RequiredArgsConstructor;
 public class UserDeleteRequest {
     private final String refreshToken;
     @NotBlank
-    private String password;
+    private String email;
 }

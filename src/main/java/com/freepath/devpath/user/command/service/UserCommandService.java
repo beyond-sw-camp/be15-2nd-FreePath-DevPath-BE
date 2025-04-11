@@ -80,7 +80,12 @@ public class UserCommandService {
     }
 
     public boolean isEmailDuplicate(String email) {
-        return userCommandRepository.existsByEmailAndUserDeletedAtIsNull(email);
+        boolean isPreviouslyRestrictedUser = userCommandRepository.existsByEmailAndIsUserRestricted(email, "Y");
+
+        if(isPreviouslyRestrictedUser) {
+            return true;
+        } else
+            throw new UserException(ErrorCode.RESTRICTED_USER);
     }
 
     public boolean isLoginIdDuplicate(String loginId) {
