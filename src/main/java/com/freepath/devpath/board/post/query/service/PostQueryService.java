@@ -36,7 +36,7 @@ public class PostQueryService {
 
     /* 카테고리와 검색어를 통한 게시글 리스트 조회 */
     @Transactional(readOnly = true)
-    public PostListResponse getPostListByCategoryId(PostSearchRequest request) {
+    public PostListResponse searchPostList(PostSearchRequest request) {
         if (!request.validateDateInterval()) {
             throw new InvalidDateIntervalException(ErrorCode.POST_SEARCH_FAILED);
         }
