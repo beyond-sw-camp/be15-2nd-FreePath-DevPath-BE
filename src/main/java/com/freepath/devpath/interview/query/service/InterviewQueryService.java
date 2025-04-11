@@ -89,7 +89,9 @@ public class InterviewQueryService {
         InterviewRoomDetailResponse response = new InterviewRoomDetailResponse();
         try {
             response.setInterviewRoomId(room.getInterviewRoomId());
+            response.setInterviewRoomTitle(room.getInterviewRoomTitle());
             response.setInterviewCategory(room.getInterviewCategory());
+            response.setInterviewRoomMemo(room.getInterviewRoomMemo());
             response.setInterviewRomCreatedAt(room.getInterviewRoomCreatedAt());
             response.setInterviewList(interviews);
         } catch(Exception e){
@@ -124,6 +126,7 @@ public class InterviewQueryService {
         // 응답
         return InterviewSummaryResponse.builder()
                 .interviewRoomId(String.valueOf(roomId))
+                .intervieRoomTitle(room.getInterviewRoomTitle())
                 .summary(summary)
                 .build();
     }
