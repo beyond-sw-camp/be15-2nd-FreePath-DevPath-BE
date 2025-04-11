@@ -4,10 +4,12 @@ import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomCommandRequest;
+import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomUpdateCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.application.service.InterviewCommandService;
 import com.freepath.devpath.interview.command.exception.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,6 +58,19 @@ public class InterviewCommandController {
 
         Long userId = Long.valueOf(userDetails.getUsername());
         interviewCommandService.deleteInterviewRoom(userId, roomId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    /* 면접방 정보 수정 */
+    @PatchMapping("/{roomId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<ApiResponse<Void>> updateInterviewRoomInfo(
+            @PathVariable Long roomId,
+            @RequestBody @Valid InterviewRoomUpdateCommandRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        interviewCommandService.updateInterviewRoom(userId, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
@@ -128,6 +143,14 @@ public class InterviewCommandController {
 
     @ExceptionHandler(InterviewRoomDeleteException.class)
     public ResponseEntity<ApiResponse<Void>> handleInterviewRoomDeleteException(InterviewRoomDeleteException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(InterviewRoomTitleInvalidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInterviewRoomTitleInvalidException(InterviewRoomTitleInvalidException e) {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getHttpStatus())

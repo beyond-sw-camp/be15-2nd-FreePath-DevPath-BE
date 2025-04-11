@@ -53,6 +53,7 @@ public enum ErrorCode {
     INTERVIEW_EVALUATION_FAILED("50007", "면접 평가 생성에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     INTERVIEW_SUMMARY_NOT_FOUND("50008","면접 총평이 생성되지 않았습니다.", HttpStatus.NOT_FOUND),
     INTERVIEW_ROOM_DELETE_FAILED("50009", "면접방 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERVIEW_ROOM_TITLE_INVALID("50010", "면접방 제목은 빈 값이 될 수 없습니다.", HttpStatus.BAD_REQUEST),
 
 
     INTERVIEW_QUERY_CREATION_FAILED("51001", "면접 조회 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
