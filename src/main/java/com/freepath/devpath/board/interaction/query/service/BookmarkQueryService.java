@@ -1,7 +1,6 @@
 package com.freepath.devpath.board.interaction.query.service;
 
 import com.freepath.devpath.board.interaction.query.dto.BookmarkedBoardSearchRequest;
-import com.freepath.devpath.board.interaction.query.dto.MypagePostListResponse;
 import com.freepath.devpath.board.interaction.query.mapper.BookmarkQueryMapper;
 import com.freepath.devpath.board.post.query.dto.response.PostDto;
 import com.freepath.devpath.board.post.query.dto.response.PostListResponse;
