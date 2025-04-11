@@ -26,14 +26,17 @@ public enum ErrorCode {
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
 
+    // 댓글 관련 오류
+    COMMENT_NOT_FOUND("25001", "댓글 또는 대댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    COMMENT_ACCESS_DENIED("25002", "수정 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    COMMENT_DELETE_DENIED("25003", "본인이 작성한 댓글만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN),
+    COMMENT_INVALID_ARGUMENT("25004", "댓글 또는 대댓글 중 하나만 지정해야 합니다.", HttpStatus.BAD_REQUEST),
 
 
     // 투표 관련 오류
     VOTE_ALREADY_VOTED("22001", "이미 해당 투표에 참여하셨습니다.", HttpStatus.BAD_REQUEST),
 
     // ITNews 관련 오류 : 30000번대
-
-    // 이메일 인증 실패 추가
     INVALID_EMAIL_AUTH_CODE("30001", "이메일 인증번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_REGISTERED_TEMP("30002", "인증은 성공했지만, 회원 정보가 없습니다.", HttpStatus.BAD_REQUEST),
     NEWS_NOT_FOUND("30003", "해당 뉴스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

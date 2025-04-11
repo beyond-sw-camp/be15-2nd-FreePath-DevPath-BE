@@ -1,4 +1,4 @@
-package com.freepath.devpath.board.comment.command.dto;
+package com.freepath.devpath.board.comment.command.application.dto;
 
 import lombok.Builder;
 import lombok.Getter;
