@@ -1,7 +1,5 @@
 package com.freepath.devpath.board.post.query.dto.request;
 
-import com.freepath.devpath.board.post.query.exception.InvalidDateIntervalException;
-import com.freepath.devpath.common.exception.ErrorCode;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -46,6 +44,16 @@ public class PostSearchRequest {
                 return false;
             }
         }
+
+        else if (startDate == null && endDate != null) {
+            return false;
+        }
+
+        else if (startDate != null) {
+            return false;
+        }
+
+        // startDate와 endDate가 모두 비어있거나, 기간 차이가 4주 이내면 true 반환
         return true;
     }
 
