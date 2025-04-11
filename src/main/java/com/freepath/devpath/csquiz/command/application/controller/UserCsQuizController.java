@@ -17,6 +17,7 @@ public class UserCsQuizController {
 
     private final CsQuizResultService resultService;
 
+    // 사용자 답변 저장 (1개 씩)
     @PostMapping("/submit")
     public ResponseEntity<ApiResponse<Void>> submitAnswer(@RequestBody @Valid CsQuizResultRequest request) {
         resultService.submitAnswer(request);

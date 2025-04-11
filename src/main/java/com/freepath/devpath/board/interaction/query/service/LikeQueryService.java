@@ -61,4 +61,22 @@ public class LikeQueryService {
         return likeQueryMapper.hasUserLikedComment(userId, commentId);
     }
 
+
+    @Transactional(readOnly = true)
+    public int countLikesByBoardId(int boardId) {
+        if (!postRepository.existsById(boardId)) {
+            throw new BoardNotFoundException(ErrorCode.POST_NOT_FOUND);
+        }
+        return likeQueryMapper.countLikesByBoardId(boardId);
+    }
+
+    @Transactional(readOnly = true)
+    public int countLikesByCommentId(int commentId) {
+        if (!commentRepository.existsById(commentId)) {
+            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
+        }
+        return likeQueryMapper.countLikesByCommentId(commentId);
+    }
+
+
 }

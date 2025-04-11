@@ -13,13 +13,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/mypage")
 @RequiredArgsConstructor
 public class BookmarkQueryController {
 
     private final BookmarkQueryService bookmarkQueryService;
 
-    @GetMapping("/bookmark")
+    // 내가 북마크한 글 모아보기 (최신순)
+    @GetMapping("/mypage/bookmark")
     public ResponseEntity<ApiResponse<PostListResponse>> getBookmarkedPosts(
             @ModelAttribute BookmarkedBoardSearchRequest request
     ) {
@@ -30,7 +30,17 @@ public class BookmarkQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    // 게시글에 북마크 여부 조회
+    @GetMapping("/board/{boardId}/bookmark")
+    public ResponseEntity<ApiResponse<Boolean>> hasUserBookmarkedPost(
+            @PathVariable int boardId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
 
+        boolean bookmarked = bookmarkQueryService.hasUserBookmarkedPost(userId, boardId);
+        return ResponseEntity.ok(ApiResponse.success(bookmarked));
+    }
 
 
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //

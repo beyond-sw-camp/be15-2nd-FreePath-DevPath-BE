@@ -1,10 +1,13 @@
 package com.freepath.devpath.board.interaction.query.service;
 
+import com.freepath.devpath.board.interaction.exception.BoardNotFoundException;
 import com.freepath.devpath.board.interaction.query.dto.BookmarkedBoardSearchRequest;
 import com.freepath.devpath.board.interaction.query.mapper.BookmarkQueryMapper;
+import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.query.dto.response.PostDto;
 import com.freepath.devpath.board.post.query.dto.response.PostListResponse;
 import com.freepath.devpath.common.dto.Pagination;
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import java.util.List;
 public class BookmarkQueryService {
 
     private final BookmarkQueryMapper bookmarkQueryMapper;
+    private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
     public PostListResponse getBookmarkedPosts(int userId, BookmarkedBoardSearchRequest request) {
@@ -36,9 +40,15 @@ public class BookmarkQueryService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public boolean hasUserBookmarkedPost(int userId, int boardId) {
+        if (!postRepository.existsById(boardId)) {
+            throw new BoardNotFoundException(ErrorCode.POST_NOT_FOUND);
+        }
 
-
-    public long getTotalBookmarks(int userId) {
-        return bookmarkQueryMapper.countBookmarksByUserId(userId);
+        return bookmarkQueryMapper.hasUserBookmarkedPost(userId, boardId);
     }
+
+
+
 }
