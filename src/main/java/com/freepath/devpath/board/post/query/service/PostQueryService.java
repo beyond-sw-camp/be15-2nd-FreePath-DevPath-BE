@@ -36,8 +36,8 @@ public class PostQueryService {
     /* 카테고리와 검색어를 통한 게시글 리스트 조회 */
     @Transactional(readOnly = true)
     public PostListResponse getPostListByCategoryId(PostSearchRequest request) {
-        List<PostDto> posts = postMapper.selectPostListByCategoryId(request);
-        int totalItems = postMapper.countPostListByCategoryId(request);
+        List<PostDto> posts = postMapper.selectPostListByFilter(request);
+        int totalItems = postMapper.countPostListByFilter(request);
 
         int page = request.getPage();
         int size = request.getSize();
