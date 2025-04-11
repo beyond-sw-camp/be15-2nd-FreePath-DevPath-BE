@@ -1,6 +1,6 @@
 package com.freepath.devpath.chatting.command.application.service;
 
-import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomRequest;
+import com.freepath.devpath.chatting.command.application.dto.request.WaitingRoomActionRequest;
 import com.freepath.devpath.chatting.command.application.dto.request.WaitingRoomAction;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
 import com.freepath.devpath.chatting.command.domain.aggregate.*;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GroupChattingRoomCommandService {
+public class WaitingRoomCommandService {
     private final ChattingJoinRepository chattingJoinRepository;
     private final ChattingRoomRepository chattingRoomRepository;
     private final SimpMessagingTemplate messagingTemplate;
@@ -59,7 +59,7 @@ public class GroupChattingRoomCommandService {
 
     }
     @Transactional
-    public void requestRespond(GroupChattingRoomRequest request, String username) {
+    public void requestRespond(WaitingRoomActionRequest request, String username) {
         int userId = Integer.parseInt(username);
         //방장 권한 조회
         Optional<ChattingJoin> optionalChattingJoin = chattingJoinRepository
@@ -70,9 +70,10 @@ public class GroupChattingRoomCommandService {
         else if(!optionalChattingJoin.get().getChattingRole().equals(ChattingRole.OWNER)){
             throw new ChattingJoinException(ErrorCode.NO_CHATTING_ROOM_AUTH);
         }
-        if(!chattingRoomRepository.existsById(request.getChattingRoomId())){
-            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
-        }
+        ChattingRoom chattingRoom = chattingRoomRepository.findById(request.getChattingRoomId())
+                .orElseThrow(
+                        ( () -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM))
+                );
         // 참여 요청상태 확인
         ChattingJoin chattingJoin = chattingJoinRepository
                 .findById(new ChattingJoinId(request.getChattingRoomId(),request.getInviteeId()))
@@ -86,6 +87,7 @@ public class GroupChattingRoomCommandService {
         String message;
         if(request.getAction().equals(WaitingRoomAction.ACCEPT)){
             chattingJoin.setChattingJoinStatus('Y');
+            chattingRoom.setUserCount(chattingRoom.getUserCount()+1);
             User user = userCommandRepository.findById((long)request.getInviteeId())
                     .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
             //채팅 저장 및 전송
