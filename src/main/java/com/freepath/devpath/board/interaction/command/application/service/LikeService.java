@@ -76,11 +76,24 @@ public class LikeService {
             if (!postRepository.existsById(request.getBoardId().intValue())) {
                 throw new BoardNotFoundException(ErrorCode.POST_NOT_FOUND);
             }
+
+            boolean exists = likeRepository.existsByUserIdAndBoardId(userId, request.getBoardId());
+            if (!exists) {
+                throw new LikeNotFoundException(ErrorCode.LIKE_NOT_FOUND);
+            }
+
             likeRepository.deleteByUserIdAndBoardId(userId, request.getBoardId());
+
         } else {
             if (!commentRepository.existsById(request.getCommentId().intValue())) {
                 throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
             }
+
+            boolean exists = likeRepository.existsByUserIdAndCommentId(userId, request.getCommentId());
+            if (!exists) {
+                throw new LikeNotFoundException(ErrorCode.LIKE_NOT_FOUND);
+            }
+
             likeRepository.deleteByUserIdAndCommentId(userId, request.getCommentId());
         }
     }

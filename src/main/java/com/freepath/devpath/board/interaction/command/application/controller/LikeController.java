@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
     private final LikeService likeService;
 
+    // 게시글이나 댓글 좋아요
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> like(
             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
@@ -27,6 +28,7 @@ public class LikeController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    // 게시글이나 댓글 좋아요 삭제
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> unlike(
             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
