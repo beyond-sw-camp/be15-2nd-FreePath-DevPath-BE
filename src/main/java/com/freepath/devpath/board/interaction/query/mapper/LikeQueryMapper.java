@@ -17,7 +17,9 @@ public interface LikeQueryMapper {
 
     int countLikesByCommentId(@Param("commentId") Integer commentId);
 
-    List<PostDto> selectLikedPostListByUserId(int userId);
+    List<PostDto> selectLikedPostListByUserId(@Param("userId") int userId,
+                                              @Param("offset") int offset,
+                                              @Param("limit") int limit);
 
-
+    long countLikedPostsByUserId(int userId);
 }

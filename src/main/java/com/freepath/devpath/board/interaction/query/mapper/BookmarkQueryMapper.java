@@ -11,6 +11,11 @@ public interface BookmarkQueryMapper {
 
     boolean hasUserBookmarkedPost(@Param("userId") int userId, @Param("boardId") int boardId);
 
-    List<PostDto> selectBookmarkedPostListByUserId(int userId);
+    List<PostDto> selectBookmarkedPostListByUserId(
+            @Param("userId") int userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
 
+    long countBookmarksByUserId(@Param("userId") int userId);
 }
