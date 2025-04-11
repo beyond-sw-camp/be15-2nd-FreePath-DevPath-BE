@@ -13,7 +13,6 @@ import com.freepath.devpath.chatting.command.domain.repository.ChattingRepositor
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.exception.ChattingJoinException;
-import com.freepath.devpath.chatting.exception.InvalidMessageException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -22,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 
 @Service
