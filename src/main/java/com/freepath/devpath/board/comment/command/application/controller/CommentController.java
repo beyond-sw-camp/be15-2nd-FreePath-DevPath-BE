@@ -1,8 +1,8 @@
-package com.freepath.devpath.board.comment.command.controller;
+package com.freepath.devpath.board.comment.command.application.controller;
 
-import com.freepath.devpath.board.comment.command.domain.Comment;
-import com.freepath.devpath.board.comment.command.dto.CommentRequestDto;
-import com.freepath.devpath.board.comment.command.service.CommentService;
+import com.freepath.devpath.board.comment.command.domain.domain.Comment;
+import com.freepath.devpath.board.comment.command.application.dto.CommentRequestDto;
+import com.freepath.devpath.board.comment.command.application.service.CommentService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

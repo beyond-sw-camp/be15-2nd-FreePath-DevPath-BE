@@ -1,8 +1,10 @@
 package com.freepath.devpath.board.comment.query.service;
 
+import com.freepath.devpath.board.comment.command.exception.CommentNotFoundException;
 import com.freepath.devpath.board.comment.query.dto.*;
 import com.freepath.devpath.board.comment.query.mapper.CommentMapper;
 import com.freepath.devpath.common.dto.Pagination;
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,10 @@ public class CommentQueryService {
     @Transactional(readOnly = true)
     public List<CommentTreeDto> getCommentsAsTree(int boardId) {
         List<HierarchicalCommentDto> flatList = commentMapper.findHierarchicalComments(boardId);
+
+        if (flatList.isEmpty()) {
+            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
+        }
 
         Map<Integer, CommentTreeDto> dtoMap = new HashMap<>();
         List<CommentTreeDto> result = new ArrayList<>();
@@ -59,7 +65,15 @@ public class CommentQueryService {
 
         List<MyCommentResponseDto> comments = commentMapper.selectMyComments(searchRequest);
 
+        if (comments.isEmpty()) {
+            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
+        }
+
         long totalItems = commentMapper.countMyComments(searchRequest);
+
+        if (totalItems == 0) {
+            throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
+        }
 
         int page = searchRequest.getPage();
         int size = searchRequest.getSize();
@@ -73,6 +87,4 @@ public class CommentQueryService {
                         .build())
                 .build();
     }
-
-
 }
