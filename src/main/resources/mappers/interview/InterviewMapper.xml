@@ -56,7 +56,7 @@
     </select>
 
     <!-- 면접방 목록 조회 : 사용자&카테고리별 -->
-    <select id="selectInterviewRoomListByUserIdAndCategory" resultMap="InterviewRoomDtoResultMap">
+    <select id="selectInterviewRoomListByUserIdAndCategoryExcludingExpired" resultMap="InterviewRoomDtoResultMap">
         SELECT
             interview_room_id,
             user_id,
