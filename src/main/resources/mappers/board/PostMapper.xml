@@ -32,6 +32,21 @@
         AND b.is_board_deleted = 'N'
     </select>
 
+    <!-- 신고된 게시글 조회 쿼리 -->
+    <select id="selectReportedPostById" resultMap="PostWithAttachmentsMap">
+        SELECT
+        u.nickname,
+        b.board_title,
+        b.board_contents,
+        b.board_created_at,
+        b.board_modified_at,
+        b.is_board_deleted,
+        b.board_id
+        FROM board b
+        JOIN users u ON b.user_id = u.user_id
+        WHERE b.board_id = #{ boardId }
+        AND b.is_board_deleted = 'R'
+    </select>
 
     <!-- 첨부파일 URL 리스트 조회 쿼리 (List<String>) -->
     <select id="selectAttachmentsByBoardId" resultType="string">
