@@ -1,8 +1,10 @@
 package com.freepath.devpath.board.comment.query.controller;
 
 import com.freepath.devpath.board.comment.query.dto.*;
+import com.freepath.devpath.board.comment.query.exception.NoSuchCommentException;
 import com.freepath.devpath.board.comment.query.service.CommentQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,4 +47,11 @@ public class CommentQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @ExceptionHandler(NoSuchCommentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoSuchCommentException(NoSuchCommentException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
 }

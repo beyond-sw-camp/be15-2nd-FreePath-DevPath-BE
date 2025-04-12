@@ -1,5 +1,6 @@
 package com.freepath.devpath.board.comment.query.mapper;
 
+import com.freepath.devpath.board.comment.query.dto.CommentDetailDto;
 import com.freepath.devpath.board.comment.query.dto.HierarchicalCommentDto;
 import com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto;
 import com.freepath.devpath.board.comment.query.dto.MyCommentSearchRequest;
@@ -19,4 +20,6 @@ public interface CommentMapper {
     List<MyCommentResponseDto> selectReportedComments(MyCommentSearchRequest searchRequest);
 
     long countReportedComments(MyCommentSearchRequest searchRequest);
+
+    CommentDetailDto selectCommentById(int commentId);
 }

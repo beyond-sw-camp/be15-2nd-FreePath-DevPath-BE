@@ -95,8 +95,10 @@ public enum ErrorCode {
     NO_CHATTING_ROOM_AUTH("60008", "채팅방 권한이 없습니다.", HttpStatus.FORBIDDEN),
     USER_NOT_WAITING("60009","참여 요청중이 아닙니다." ,HttpStatus.FORBIDDEN ),
     INVALID_TITLE("60010","올바르지 않은 제목입니다." ,HttpStatus.BAD_REQUEST ),
-    // Report 관련 오류 : 70000번대
 
+    // Report 관련 오류 : 70000번대
+    REPORT_NOT_FOUND("70001", "해당 신고 내역이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    REPORT_ALREADY_CHECKED("70002", "이미 처리된 신고 검토 내역입니다", HttpStatus.BAD_REQUEST),
 
     // 공통 오류
     VALIDATION_ERROR("90001", "입력 값 검증 오류입니다.", HttpStatus.BAD_REQUEST),
