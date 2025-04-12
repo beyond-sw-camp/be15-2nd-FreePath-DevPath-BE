@@ -7,6 +7,7 @@ import com.freepath.devpath.interview.command.application.dto.response.Interview
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.domain.aggregate.Interview;
 import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
+import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoomStatus;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRepository;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRoomRepository;
 import com.freepath.devpath.interview.command.exception.*;
@@ -147,7 +148,7 @@ public class InterviewCommandService {
                             .build()
             );
 
-            room.updateStatus(InterviewRoom.InterviewRoomStatus.COMPLETED);
+            room.updateStatus(InterviewRoomStatus.COMPLETED);
         }
 
         // 6. 응답

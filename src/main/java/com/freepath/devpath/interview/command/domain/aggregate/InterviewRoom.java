@@ -27,6 +27,14 @@ public class InterviewRoom {
     @Column(nullable = false)
     private InterviewRoomStatus interviewRoomStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DifficultyLevel difficultyLevel; // EASY, MEDIUM, HARD
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EvaluationStrictness evaluationStrictness; // LENIENT, NORMAL, STRICT
+
     @Column
     private String interviewRoomMemo;
 
@@ -53,7 +61,4 @@ public class InterviewRoom {
         this.interviewRoomMemo = memo;
     }
 
-    public enum InterviewRoomStatus {
-        PROGRESS, COMPLETED, EXPIRED
-    }
 }
