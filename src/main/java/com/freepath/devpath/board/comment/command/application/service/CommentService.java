@@ -50,7 +50,7 @@ public class CommentService {
                 .parentCommentId(parentCommentId)
                 .contents(dto.getContents())
                 .createdAt(new Date())
-                .Deleted("N")
+                .deleted("N")
                 .build();
 
         return commentRepository.save(comment);

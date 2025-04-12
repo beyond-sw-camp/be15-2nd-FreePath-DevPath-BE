@@ -79,13 +79,12 @@ public class UserCommandService {
         userCommandRepository.save(user);
     }
 
-    public boolean isEmailDuplicate(String email) {
-        boolean isPreviouslyRestrictedUser = userCommandRepository.existsByEmailAndIsUserRestricted(email, "Y");
+    public boolean isUserRestricted(String email) {
+        return userCommandRepository.existsByEmailAndIsUserRestricted(email, "Y");
+    }
 
-        if(isPreviouslyRestrictedUser) {
-            return true;
-        } else
-            throw new UserException(ErrorCode.RESTRICTED_USER);
+    public boolean isEmailDuplicate(String email) {
+        return userCommandRepository.existsByEmailAndUserDeletedAtIsNull(email);
     }
 
     public boolean isLoginIdDuplicate(String loginId) {
@@ -164,27 +163,32 @@ public class UserCommandService {
         redisUtil.deleteData("VERIFIED_EMAIL:" + newEmail);
     }
 
-
     public void completeSocialSignup(String email, String nickname, String itNewsSubscription) {
-        // Redis에서 임시 유저 정보 조회
+        // 1. 제재 유저 여부 확인
+        boolean isRestricted = userCommandRepository.existsByEmailAndIsUserRestricted(email, "Y");
+        if (isRestricted) {
+            throw new UserException(ErrorCode.RESTRICTED_USER);
+        }
+
+        // 2. Redis에서 임시 유저 정보 조회
         User tempUser = userRedisTemplate.opsForValue().get("SOCIAL_REGISTER:" + email);
         if (tempUser == null) {
             throw new UserException(ErrorCode.SOCIAL_SIGNUP_EXPIRED);
         }
 
-        // 닉네임 중복 확인
+        // 3. 닉네임 중복 확인
         if (userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(nickname)) {
             throw new UserException(ErrorCode.NICKNAME_ALREADY_USED);
         }
 
-        // 추가 정보 설정
+        // 4. 추가 정보 설정
         tempUser.setNickname(nickname);
         tempUser.setItNewsSubscription(itNewsSubscription);
 
-        // DB에 저장
+        // 5. DB에 저장
         userCommandRepository.save(tempUser);
 
-        // Redis에서 제거
+        // 6. Redis에서 제거
         userRedisTemplate.delete("SOCIAL_REGISTER:" + email);
     }
 

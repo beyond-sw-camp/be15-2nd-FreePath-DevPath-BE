@@ -31,7 +31,7 @@ public class Comment {
     @Column(name = "comment_modified_at")
     private Date modifiedAt;
     @Column(name = "is_comment_deleted")
-    private String Deleted;
+    private String deleted;
 
     public void updateContent(String newContent) {
         this.contents = newContent;
@@ -39,7 +39,7 @@ public class Comment {
     }
 
     public void softDelete() {
-        this.Deleted = "Y";
+        this.deleted = "Y";
         this.modifiedAt = new Date();
     }
 
