@@ -13,6 +13,7 @@ public class InterviewRoomDetailResponse {
     private Long userId;
     private String interviewRoomTitle;
     private String interviewCategory;
+    private String interviewRoomStatus;
     private String interviewRoomMemo;
     private LocalDateTime interviewRoomCreatedAt;
     private List<InterviewDetailDto> interviewList;

@@ -130,7 +130,7 @@ public class InterviewCommandService {
             );
         }
 
-        // 5. 마지막 답변이라면 면접 총평 생성
+        // 5. 마지막 답변이라면 면접 총평 생성하고 면접방 상태 변경
         if(interviewIndex == 3){
             List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
                     .filter(interview -> interview.getInterviewRole() == Interview.InterviewRole.AI)
@@ -146,6 +146,8 @@ public class InterviewCommandService {
                             .interviewMessage("[총평]"+summary)
                             .build()
             );
+
+            room.updateStatus(InterviewRoom.InterviewRoomStatus.COMPLETED);
         }
 
         // 6. 응답
