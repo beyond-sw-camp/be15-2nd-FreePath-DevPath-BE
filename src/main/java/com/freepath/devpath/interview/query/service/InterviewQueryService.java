@@ -27,7 +27,7 @@ public class InterviewQueryService {
         int offset = (page - 1) * size;
 
         try{
-            response = interviewMapper.selectInterviewRoomListByUserId(userId, size, offset);
+            response = interviewMapper.selectInterviewRoomListByUserIdExcludingExpired(userId, size, offset);
         } catch(Exception e){
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
@@ -38,7 +38,7 @@ public class InterviewQueryService {
 
 
         // 페이징 처리
-        int totalItems = interviewMapper.countInterviewRoomListByUserId(userId);
+        int totalItems = interviewMapper.countInterviewRoomListByUserIdExcludingExpired(userId);
         Pagination pagination = Pagination.builder()
                 .currentPage(page)
                 .totalPage((int) Math.ceil((double) totalItems / size))
@@ -49,6 +49,7 @@ public class InterviewQueryService {
         return InterviewRoomListResponse.builder()
                 .interviewRooms(response)
                 .pagination(pagination)
+                .totalInterviewRoomCount(totalItems)
                 .build();
     }
 
@@ -59,7 +60,7 @@ public class InterviewQueryService {
         int offset = (page - 1) * size;
 
         try {
-            response = interviewMapper.selectInterviewRoomListByUserIdAndCategory(userId, category, size, offset);
+            response = interviewMapper.selectInterviewRoomListByUserIdAndCategoryExcludingExpired(userId, category, size, offset);
         } catch (Exception e) {
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
@@ -69,7 +70,7 @@ public class InterviewQueryService {
         }
 
         // 페이징 처리
-        int totalItems = interviewMapper.countInterviewRoomListByUserIdAndCategory(userId, category);
+        int totalItems = interviewMapper.countInterviewRoomListByUserIdAndCategoryExcludingExpired(userId, category);
 
         Pagination pagination = Pagination.builder()
                 .currentPage(page)
@@ -80,6 +81,7 @@ public class InterviewQueryService {
         return InterviewRoomListResponse.builder()
                 .interviewRooms(response)
                 .pagination(pagination)
+                .totalInterviewRoomCount(totalItems)
                 .build();
     }
 

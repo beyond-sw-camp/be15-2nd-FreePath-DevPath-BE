@@ -13,12 +13,12 @@ public interface InterviewMapper {
 
     /* InterviewQueryService */
     /* 사용자가 진행한 면접방 목록 조회 */
-    List<InterviewRoomDto> selectInterviewRoomListByUserId(Long userId, int size, int offset);
-    int countInterviewRoomListByUserId(Long userId);
+    List<InterviewRoomDto> selectInterviewRoomListByUserIdExcludingExpired(Long userId, int size, int offset);
+    int countInterviewRoomListByUserIdExcludingExpired(Long userId);
 
     /* 특정 카테고리에 대한 면접방 목록만 조회 */
-    List<InterviewRoomDto> selectInterviewRoomListByUserIdAndCategory(Long userId, String category, int size, int offset);
-    int countInterviewRoomListByUserIdAndCategory(Long userId, String category);
+    List<InterviewRoomDto> selectInterviewRoomListByUserIdAndCategoryExcludingExpired(Long userId, String category, int size, int offset);
+    int countInterviewRoomListByUserIdAndCategoryExcludingExpired(Long userId, String category);
 
     /* 면접방에 대한 정보 조회 */
     InterviewRoomDetailResponse selectInterviewRoomByRoomId(Long interviewRoomId);
@@ -35,5 +35,8 @@ public interface InterviewMapper {
     List<InterviewRoomDto> selectAllInterviewRooms(int page, int size, int offset);
     int countAllInterviewRooms();
 
+    /* 특정 상태에 대한 면접방 목록 조회*/
+    List<InterviewRoomDto> selectAllInterviewRoomsByStatus(String status, int size, int offset);
+    int countAllInterviewRoomsByStatus(String status);
 
 }
