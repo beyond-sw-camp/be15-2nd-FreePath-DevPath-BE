@@ -1,10 +1,8 @@
 package com.freepath.devpath.interview.query.service;
 
+import com.freepath.devpath.common.dto.Pagination;
 import com.freepath.devpath.common.exception.ErrorCode;
-import com.freepath.devpath.interview.query.dto.InterviewDetailDto;
-import com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse;
-import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
-import com.freepath.devpath.interview.query.dto.InterviewSummaryResponse;
+import com.freepath.devpath.interview.query.dto.*;
 import com.freepath.devpath.interview.query.exception.InterviewQueryAccessException;
 import com.freepath.devpath.interview.query.exception.InterviewQueryHistoryNotFoundException;
 import com.freepath.devpath.interview.query.exception.InterviewRoomQueryCreationException;
@@ -24,11 +22,12 @@ public class InterviewQueryService {
 
     /* 사용자가 진행한 면접방 목록 조회 */
     @Transactional(readOnly = true)
-    public List<InterviewRoomDto> getInterviewRoomList(Long userId) {
+    public InterviewRoomListResponse getInterviewRoomList(Long userId, int page, int size) {
         List<InterviewRoomDto> response = null;
+        int offset = (page - 1) * size;
 
         try{
-            response = interviewMapper.selectInterviewRoomListByUserId(userId);
+            response = interviewMapper.selectInterviewRoomListByUserId(userId, size, offset);
         } catch(Exception e){
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
@@ -37,16 +36,30 @@ public class InterviewQueryService {
             throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
         }
 
-        return response;
+
+        // 페이징 처리
+        int totalItems = interviewMapper.countInterviewRoomListByUserId(userId);
+        Pagination pagination = Pagination.builder()
+                .currentPage(page)
+                .totalPage((int) Math.ceil((double) totalItems / size))
+                .totalItems(totalItems)
+                .build();
+
+
+        return InterviewRoomListResponse.builder()
+                .interviewRooms(response)
+                .pagination(pagination)
+                .build();
     }
 
     /* 특정 카테고리에 대한 면접방 목록만 조회 */
     @Transactional(readOnly = true)
-    public List<InterviewRoomDto> getInterviewRoomListByCategory(Long userId, String category) {
+    public InterviewRoomListResponse getInterviewRoomListByCategory(Long userId, String category, int page, int size) {
         List<InterviewRoomDto> response;
+        int offset = (page - 1) * size;
 
         try {
-            response = interviewMapper.selectInterviewRoomListByUserIdAndCategory(userId, category);
+            response = interviewMapper.selectInterviewRoomListByUserIdAndCategory(userId, category, size, offset);
         } catch (Exception e) {
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
@@ -55,7 +68,19 @@ public class InterviewQueryService {
             throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
         }
 
-        return response;
+        // 페이징 처리
+        int totalItems = interviewMapper.countInterviewRoomListByUserIdAndCategory(userId, category);
+
+        Pagination pagination = Pagination.builder()
+                .currentPage(page)
+                .totalPage((int) Math.ceil((double) totalItems / size))
+                .totalItems(totalItems)
+                .build();
+
+        return InterviewRoomListResponse.builder()
+                .interviewRooms(response)
+                .pagination(pagination)
+                .build();
     }
 
     /* 면접방 정보 및 면접 이력 조회 */
