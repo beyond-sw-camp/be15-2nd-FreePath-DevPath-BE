@@ -38,9 +38,19 @@ public class InterviewRoom {
         this.interviewRoomStatus = InterviewRoomStatus.PROGRESS;
     }
 
+    /* 면접방 제목을 변경 */
+    public void updateTitle(String title) {
+        this.interviewRoomTitle = title;
+    }
+
     /* 면접방 상태를 변경 */
     public void updateStatus(InterviewRoomStatus status) {
         this.interviewRoomStatus = status;
+    }
+
+    /* 면접방 메모를 변경*/
+    public void updateMemo(String memo) {
+        this.interviewRoomMemo = memo;
     }
 
     public enum InterviewRoomStatus {
