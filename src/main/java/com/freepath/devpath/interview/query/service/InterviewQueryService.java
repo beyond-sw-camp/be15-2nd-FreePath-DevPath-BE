@@ -55,15 +55,18 @@ public class InterviewQueryService {
                 .build();
     }
 
-    /* 특정 카테고리에 대한 면접방 목록만 조회 */
+    /* 사용자가 면접방 목록 조회 시 필터 적용 */
     @Transactional(readOnly = true)
-    public InterviewRoomListResponse getInterviewRoomListByCategory(Long userId, String category, int page, int size) {
+    public InterviewRoomListResponse getFilteredInterviewRoomList(
+            Long userId, String category, String difficultyLevel, String evaluationStrictness,
+            int page, int size
+    ) {
         List<InterviewRoomDto> response;
         int offset = (page - 1) * size;
 
-        // 면접방 정보 불러오기
+        // 면접방 불러오기
         try {
-            response = interviewMapper.selectInterviewRoomListByUserIdAndCategoryExcludingExpired(userId, category, size, offset);
+            response = interviewMapper.selectInterviewRoomListByFilter(userId, category, difficultyLevel, evaluationStrictness, size, offset);
         } catch (Exception e) {
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
@@ -74,8 +77,7 @@ public class InterviewQueryService {
         }
 
         // 페이징 처리
-        int totalItems = interviewMapper.countInterviewRoomListByUserIdAndCategoryExcludingExpired(userId, category);
-
+        int totalItems = interviewMapper.countInterviewRoomListByFilter(userId, category, difficultyLevel, evaluationStrictness);
         Pagination pagination = Pagination.builder()
                 .currentPage(page)
                 .totalPage((int) Math.ceil((double) totalItems / size))

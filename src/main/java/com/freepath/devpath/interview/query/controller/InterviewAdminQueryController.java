@@ -32,15 +32,21 @@ public class InterviewAdminQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    /* 모든 유저의 면접방 목록 상태 필터링 조회 */
+    /* 모든 유저의 면접방 목록에 필터링 적용 조회 */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping(value = "/all", params = "status")
-    public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getAllInterviewRoomsByStatus(
-            @RequestParam String status,
+    @GetMapping("/filter")
+    public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getAdminFilteredInterviewRoomList(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String difficultyLevel,
+            @RequestParam(required = false) String evaluationStrictness,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        InterviewRoomListResponse response = interviewQueryAdminService.getAllInterviewRoomsByStatus(status, page, size);
+        InterviewRoomListResponse response = interviewQueryAdminService.getAdminFilteredInterviewRoomList(
+                status, category, difficultyLevel, evaluationStrictness, page, size);
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
 }
