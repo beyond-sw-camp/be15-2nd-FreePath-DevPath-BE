@@ -23,6 +23,13 @@ public class ReportCheck {
     private int reportId;
     private Integer adminId;    // 기본값 NULL로 설정될 수 있게 Integer로 둠
     private Date checkedAt;
-    private String checkResult;
+    private Character checkResult;
     private String checkReason;
+
+    public void processReportCheck(int adminId, Date checkedAt, char checkResult, String checkReason) {
+        this.adminId = adminId;
+        this.checkedAt = checkedAt;
+        this.checkResult = checkResult;
+        this.checkReason = checkReason;
+    }
 }

@@ -35,15 +35,19 @@ public class Board {
     private Date boardModifiedAt;
 
     @Column(insertable = false)
-    private String isBoardDeleted;
+    private Character isBoardDeleted;
 
 
     public void delete() {
-        this.isBoardDeleted = "Y";
+        this.isBoardDeleted = 'Y';
+        this.boardModifiedAt = new Date();
     }
+
+    public void restore() { this.isBoardDeleted = 'N';}
 
     public void modifyTitleAndContent(String modifiedTitle, String modiifiedContents) {
         this.boardTitle = modifiedTitle;
         this.boardContents = modiifiedContents;
+        this.boardModifiedAt = new Date();
     }
 }
