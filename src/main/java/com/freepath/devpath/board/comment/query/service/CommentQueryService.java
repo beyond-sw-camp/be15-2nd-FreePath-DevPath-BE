@@ -2,6 +2,7 @@ package com.freepath.devpath.board.comment.query.service;
 
 import com.freepath.devpath.board.comment.command.exception.CommentNotFoundException;
 import com.freepath.devpath.board.comment.query.dto.*;
+import com.freepath.devpath.board.comment.query.exception.NoSuchCommentException;
 import com.freepath.devpath.board.comment.query.mapper.CommentMapper;
 import com.freepath.devpath.common.dto.Pagination;
 import com.freepath.devpath.common.exception.ErrorCode;
@@ -9,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -137,5 +135,11 @@ public class CommentQueryService {
                         .totalItems(totalItems)
                         .build())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public CommentDetailDto getReportedCommentById(int commentId) {
+        return Optional.ofNullable(commentMapper.selectCommentById(commentId))
+                .orElseThrow(() -> new NoSuchCommentException(ErrorCode.COMMENT_NOT_FOUND));
     }
 }

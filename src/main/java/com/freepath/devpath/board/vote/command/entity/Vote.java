@@ -25,7 +25,7 @@ public class Vote {
 
     private LocalDateTime voteDuedate;
 
-    private char isVoteFinished;
+    private Character isVoteFinished;
 
     public void changeVoteDueDate(LocalDateTime localDateTime) {
         this.voteDuedate = localDateTime;

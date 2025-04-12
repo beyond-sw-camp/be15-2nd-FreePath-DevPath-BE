@@ -133,4 +133,14 @@ public class PostQueryService {
                 .pagination(pagination)
                 .build();
     }
+
+    /* 게시글 상세 조회 */
+    @Transactional(readOnly = true)
+    public PostDetailDto getReportedPostById(int boardId) {
+
+        PostDetailDto postDetailDto = Optional.ofNullable(postMapper.selectReportedPostById(boardId))
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
+
+        return postDetailDto;
+    }
 }

@@ -88,5 +88,18 @@
     </select>
 
 
+    <!-- 신고된 댓글 조회 쿼리 -->
+    <select id="selectCommentById" resultType="com.freepath.devpath.board.comment.query.dto.CommentDetailDto">
+        SELECT
+            u.nickname,
+            c.comment_contents,
+            c.comment_created_at,
+            c.comment_modified_at,
+            c.is_comment_deleted
+        FROM comment c
+                 JOIN users u ON c.user_id = u.user_id
+        WHERE c.comment_id = #{commentId}
+          AND c.is_comment_deleted = 'R'
+    </select>
 
 </mapper>

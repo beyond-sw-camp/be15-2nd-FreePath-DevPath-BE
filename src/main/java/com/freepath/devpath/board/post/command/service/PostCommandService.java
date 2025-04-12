@@ -73,7 +73,7 @@ public class PostCommandService {
         }
 
         // 이미 삭제된 경우
-        if ("Y".equals(post.getIsBoardDeleted())) {
+        if (post.getIsBoardDeleted() == 'Y') {
             throw new FileDeleteFailedException(ErrorCode.POST_ALREADY_DELETED);
         }
 
@@ -95,7 +95,7 @@ public class PostCommandService {
         }
 
         // 이미 삭제되어있는 게시물을 삭제하려는 경우 에러 반환
-        if (post.getIsBoardDeleted().equals("Y")) {
+        if (post.getIsBoardDeleted() == 'Y') {
             throw new FileUpdateFailedException(ErrorCode.POST_ALREADY_DELETED);
         }
 
@@ -114,6 +114,22 @@ public class PostCommandService {
                 .build();
 
         postElasticRepository.save(elasticPost);
+    }
+
+    @Transactional
+    public void updatePostDeletedStatus(Integer postId, char checkResult) {
+        // 게시글 조회
+        Board post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
+
+        // 삭제 상태를 'Y' 또는 'N'에 맞게 업데이트
+        if (checkResult == 'Y') {
+            post.delete(); // 삭제 처리
+        } else if (checkResult == 'N') {
+            post.restore(); // 복구 처리
+        }
+
+        // JPA dirty checking을 통해 자동으로 업데이트됨
     }
 }
 
