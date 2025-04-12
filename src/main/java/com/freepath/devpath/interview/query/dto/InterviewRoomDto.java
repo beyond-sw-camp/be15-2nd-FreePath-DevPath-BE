@@ -12,7 +12,9 @@ public class InterviewRoomDto {
     private Long interviewRoomId;
     private Long userId;
     private String interviewRoomTitle;
-    private String interviewRoomStatus;
     private String interviewCategory;
+    private String difficultyLevel;
+    private String evaluationStrictness;
+    private String interviewRoomStatus;
     private LocalDateTime interviewRoomCreatedAt;
 }

@@ -9,14 +9,16 @@
     <resultMap id="InterviewRoomDtoResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
         <result property="interviewRoomId" column="interview_room_id"/>
         <result property="userId" column="user_id"/>
-        <result property="interviewCategory" column="interview_category"/>
         <result property="interviewRoomTitle" column="interview_room_title"/>
+        <result property="interviewCategory" column="interview_category"/>
+        <result property="difficultyLevel" column="difficulty_level" />
+        <result property="evaluationStrictness" column="evaluation_strictness" />
         <result property="interviewRoomStatus" column="interview_room_status"/>
         <result property="interviewRoomCreatedAt" column="interview_room_created_at"/>
     </resultMap>
 
     <!-- 상세 조회용 -->
-    <resultMap id="InterviewRoomDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDto" extends="InterviewRoomDtoResultMap">
+    <resultMap id="InterviewRoomDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse" extends="InterviewRoomDtoResultMap">
         <result property="interviewRoomMemo" column="interview_room_memo"/>
     </resultMap>
 
@@ -36,8 +38,10 @@
         SELECT
             interview_room_id,
             user_id,
-            interview_category,
             interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
             interview_room_status,
             interview_room_created_at
         FROM INTERVIEW_ROOM
@@ -60,8 +64,10 @@
         SELECT
             interview_room_id,
             user_id,
-            interview_category,
             interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
             interview_room_status,
             interview_room_created_at
         FROM INTERVIEW_ROOM
@@ -86,8 +92,10 @@
         SELECT
             interview_room_id,
             user_id,
-            interview_category,
             interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
             interview_room_status,
             interview_room_memo,
             interview_room_created_at
@@ -124,8 +132,10 @@
         SELECT
             interview_room_id,
             user_id,
-            interview_category,
             interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
             interview_room_status,
             interview_room_created_at
         FROM INTERVIEW_ROOM
@@ -142,12 +152,14 @@
     <!-- 관리자 용 면접방 목록 조회 : 상태 필터 -->
     <select id="selectAllInterviewRoomsByStatus" resultMap="InterviewRoomDtoResultMap">
         SELECT
-        interview_room_id,
-        user_id,
-        interview_category,
-        interview_room_title,
-        interview_room_status,
-        interview_room_created_at
+            interview_room_id,
+            user_id,
+            interview_room_title,
+            interview_category,
+            difficulty_level,
+            evaluation_strictness,
+            interview_room_status,
+            interview_room_created_at
         FROM INTERVIEW_ROOM
         WHERE interview_room_status = #{status}
         ORDER BY interview_room_id DESC
