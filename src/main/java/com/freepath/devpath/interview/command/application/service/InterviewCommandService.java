@@ -5,9 +5,7 @@ import com.freepath.devpath.interview.command.application.dto.request.InterviewA
 import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomUpdateCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
-import com.freepath.devpath.interview.command.domain.aggregate.Interview;
-import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
-import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoomStatus;
+import com.freepath.devpath.interview.command.domain.aggregate.*;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRepository;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRoomRepository;
 import com.freepath.devpath.interview.command.exception.*;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,17 +29,30 @@ public class InterviewCommandService {
 
     /* 카테고리 선택으로 면접방 생성하고 첫 질문 도출*/
     @Transactional
-    public InterviewRoomCommandResponse createRoomAndFirstQuestion(Long userId, String category) {
+    public InterviewRoomCommandResponse createRoomAndFirstQuestion(
+            Long userId,
+            String category,
+            DifficultyLevel difficultyLevel,
+            EvaluationStrictness evaluationStrictness
+    ) {
+
+        // 0. 면접방 기본 정보 생성
+        difficultyLevel = Optional.ofNullable(difficultyLevel)
+                .orElse(DifficultyLevel.MEDIUM);
+        evaluationStrictness = Optional.ofNullable(evaluationStrictness)
+                .orElse(EvaluationStrictness.NORMAL);
+        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
 
         // 1. 면접방 생성 및 저장
         InterviewRoom room = null;
-        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
          try{
             room = interviewRoomRepository.save(
                     InterviewRoom.builder()
                             .userId(userId)
                             .interviewCategory(category)
                             .interviewRoomTitle(title)
+                            .difficultyLevel(difficultyLevel)
+                            .evaluationStrictness(evaluationStrictness)
                             .build()
             );
          } catch(Exception e){
@@ -49,7 +61,7 @@ public class InterviewCommandService {
 
 
         // 2. GPT로부터 첫 질문 생성
-        String firstQuestion = gptService.generateQuestion(category);
+        String firstQuestion = gptService.generateQuestion(category, difficultyLevel);
 
         // 3. 질문 내용을 INTERVIEW 테이블에 저장
         interviewRepository.save(
@@ -121,7 +133,7 @@ public class InterviewCommandService {
         // 4. 다음 질문 생성 (면접방 당 3회 면접 실행)
         String nextQuestion = null;
         if (interviewIndex < 3) {
-            nextQuestion = gptService.generateQuestion(room.getInterviewCategory());
+            nextQuestion = gptService.generateQuestion(room.getInterviewCategory(), room.getDifficultyLevel());
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
