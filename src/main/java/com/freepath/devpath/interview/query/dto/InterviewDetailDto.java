@@ -6,7 +6,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 public class InterviewDetailDto {
     private String interviewRole;
     private String interviewMessage;
