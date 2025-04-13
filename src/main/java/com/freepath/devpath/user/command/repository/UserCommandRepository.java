@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,4 +44,6 @@ public interface UserCommandRepository extends JpaRepository<User, Long> {
     boolean existsByEmailAndUserDeletedAtIsNull(String email);
 
     boolean existsByLoginIdAndLoginMethodAndIsUserRestricted(String email, String google, String y);
+
+    List<User> findByUserIdIn(Collection<Integer> userIds);
 }

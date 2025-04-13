@@ -1,10 +1,17 @@
 package com.freepath.devpath.chatting.command.application.controller;
 
 import com.freepath.devpath.chatting.command.application.service.ChattingCommandService;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChatDTO;
+import com.freepath.devpath.chatting.command.application.dto.request.ChattingRequest;
+import com.freepath.devpath.chatting.command.application.dto.response.ChattingListResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -21,9 +28,20 @@ public class ChattingCommandController {
     private final ChattingCommandService chattingService;
     //실제 요청은 app이 선행되어야 한다.
     @MessageMapping("/chatting/send")
-    public void send(ChatDTO chatDTO, Principal principal) {
-        log.info(principal.getName()+" : "+chatDTO.toString());
+    public void send(ChattingRequest chattingRequest, Principal principal) {
+        log.info(principal.getName()+" : "+ chattingRequest.toString());
         int userId = Integer.parseInt(principal.getName());
-        chattingService.sendChatting(chatDTO,userId);
+        chattingService.sendChatting(chattingRequest,userId);
+    }
+
+    @GetMapping("/chatting/list/{chattingRoomId}")
+    public ResponseEntity<ApiResponse<ChattingListResponse>> loadChattingList(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable int chattingRoomId
+    ){
+        int userId = Integer.parseInt(userDetails.getUsername());
+        ChattingListResponse chattingListResponse = chattingService.getChattingList(userId, chattingRoomId);
+
+        return ResponseEntity.ok(ApiResponse.success(chattingListResponse));
     }
 }

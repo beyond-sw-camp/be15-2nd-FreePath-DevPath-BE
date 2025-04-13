@@ -19,6 +19,8 @@ spring:
 
 
   data:
+    mongodb:
+      uri: mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_URL}
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}

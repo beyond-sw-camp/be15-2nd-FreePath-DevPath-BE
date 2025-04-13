@@ -1,6 +1,6 @@
-package com.freepath.devpath.chatting.query.dto.response;
+package com.freepath.devpath.chatting.command.application.dto.response;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.Chatting;
+import com.freepath.devpath.chatting.query.dto.response.ChattingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.freepath.devpath.chatting.command.application.service;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.UserBlock;
-import com.freepath.devpath.chatting.command.domain.repository.UserBlockRepository;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.UserBlock;
+import com.freepath.devpath.chatting.command.domain.jpa.repository.UserBlockRepository;
 import com.freepath.devpath.chatting.exception.UserAlreadyBlockedException;
 import com.freepath.devpath.chatting.exception.UserNotBlockedException;
 import com.freepath.devpath.common.exception.ErrorCode;

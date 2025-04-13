@@ -1,6 +1,5 @@
 package com.freepath.devpath.chatting.query.controller;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.Chatting;
 import com.freepath.devpath.chatting.query.dto.response.ChattingRoomJoinUsersResponse;
 import com.freepath.devpath.chatting.query.dto.response.GroupChattingWaitingRoomResponse;
 import com.freepath.devpath.chatting.query.dto.response.ChattingRoomResponse;

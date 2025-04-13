@@ -1,9 +1,9 @@
 package com.freepath.devpath.chatting.command.application.service;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoin;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoinId;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingRole;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingJoin;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingJoinId;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingRole;
+import com.freepath.devpath.chatting.command.domain.jpa.repository.ChattingJoinRepository;
 import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.common.exception.ErrorCode;

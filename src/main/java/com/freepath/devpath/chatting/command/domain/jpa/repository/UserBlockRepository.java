@@ -1,6 +1,6 @@
-package com.freepath.devpath.chatting.command.domain.repository;
+package com.freepath.devpath.chatting.command.domain.jpa.repository;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.UserBlock;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.UserBlock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
