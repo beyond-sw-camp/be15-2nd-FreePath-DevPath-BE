@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserCommandRepository extends JpaRepository<User, Long> {
-    Optional<User> findByLoginId(String loginId);
 
     List<User> findByItNewsSubscription(String y);
 
@@ -43,4 +42,8 @@ public interface UserCommandRepository extends JpaRepository<User, Long> {
     boolean existsByEmailAndUserDeletedAtIsNull(String email);
 
     boolean existsByLoginIdAndLoginMethodAndIsUserRestricted(String email, String google, String y);
+
+    boolean existsByLoginIdAndUserDeletedAtIsNull(String loginId);
+
+    Optional<User> findByLoginIdAndUserDeletedAtIsNull(String loginId);
 }
