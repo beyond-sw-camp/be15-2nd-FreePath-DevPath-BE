@@ -88,7 +88,11 @@ public class UserCommandService {
     }
 
     public boolean isLoginIdDuplicate(String loginId) {
-        return userCommandRepository.findByLoginId(loginId).isPresent();
+        return userCommandRepository.existsByLoginIdAndUserDeletedAtIsNull(loginId);
+    }
+
+    public boolean isNicknameDuplicate(String nickname) {
+        return userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(nickname);
     }
 
     public void resetPassword(String email, String loginId, String newPassword) {
@@ -190,9 +194,5 @@ public class UserCommandService {
 
         // 6. Redis에서 제거
         userRedisTemplate.delete("SOCIAL_REGISTER:" + email);
-    }
-
-    public boolean isNicknameDuplicate(String nickname) {
-        return userCommandRepository.existsByNicknameAndUserDeletedAtIsNull(nickname);
     }
 }
