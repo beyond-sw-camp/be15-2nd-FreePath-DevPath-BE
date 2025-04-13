@@ -50,7 +50,9 @@ public class InterviewCommandController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(userId, roomId, request);
+        InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(
+                userId, roomId, request, request.getEvaluationStrictness());
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

@@ -2,6 +2,7 @@ package com.freepath.devpath.interview.command.infrastructure.gpt;
 
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.domain.aggregate.DifficultyLevel;
+import com.freepath.devpath.interview.command.domain.aggregate.EvaluationStrictness;
 import com.freepath.devpath.interview.command.exception.InterviewEvaluationCreationException;
 import com.freepath.devpath.interview.command.exception.InterviewQuestionCreationException;
 import com.freepath.devpath.interview.command.exception.InterviewSummarizeCreationException;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import software.amazon.awssdk.services.s3.endpoints.internal.Eval;
 
 import java.util.List;
 import java.util.Map;
@@ -68,15 +70,16 @@ public class GptService {
     }
 
     /* 면접 답변에 대한 평가 */
-    public String evaluateAnswer(String question, String userAnswer) {
+    public String evaluateAnswer(String question, String userAnswer, EvaluationStrictness evaluationStrictness) {
         System.out.println("[GPT 요청 전송] 사용자 답변: " + userAnswer);
 
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
                 "temperature", 0.3,
                 "messages", List.of(
-                        Map.of("role", "system", "content", evaluationSystemPrompt()),
-                        Map.of("role", "user", "content", """
+                        Map.of("role", "system", "content", evaluationSystemPrompt(evaluationStrictness)),
+                        Map.of("role", "user", "content", evaluationUserPrompt(question, userAnswer, evaluationStrictness)+
+                                """
                                 아래 질문과 답변을 위의 기준과 형식에 따라 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.
     
                                 [질문]
@@ -147,7 +150,7 @@ public class GptService {
         }
     }
 
-    /* 질문 생성 프롬프트 */
+    /* 질문 생성 프롬프트 : system */
     private String questionGenerationSystemPrompt() {
         return """
             당신은 시니어 개발자이자 기술 면접관입니다.
@@ -236,6 +239,7 @@ public class GptService {
             """;
     }
 
+    /* 질문 생성 프롬프트 : user */
     private String questionGenerationUserPrompt(String category, DifficultyLevel difficultyLevel){
         String questionDifficultyLevel = switch (difficultyLevel) {
             case EASY -> "EASY";
@@ -254,10 +258,26 @@ public class GptService {
         """.formatted(category, questionDifficultyLevel);
     }
 
-    /* 답변에 대한 평가 추출 프롬프트 */
-    private String evaluationSystemPrompt(){
-        return """
-                당신은 시니어 개발자로서 기술 면접관 역할을 맡고 있습니다.
+    /* 답변에 대한 평가 추출 프롬프트 : system */
+    private String evaluationSystemPrompt(EvaluationStrictness evaluationStrictness){
+        String strictnessIntro = switch (evaluationStrictness) {
+            case LENIENT -> """
+                당신은 **초급 개발자 면접에 맞춘 평가자**입니다.
+                핵심 개념이 제시되었는지 중심으로 평가하고, 너무 세세한 깊이나 실무 경험은 강하게 요구하지 않아도 됩니다.
+                하지만 개념이 명확하지 않거나 오류가 있다면 반드시 지적하세요.
+                """;
+            case NORMAL -> """
+                당신은 **1~3년차 개발자 대상의 일반적인 기술 면접관**입니다.
+                평가 기준은 정확성, 깊이, 예시, 구조, 명확성을 기반으로 하며, 실무 상황에 대한 이해를 강조합니다.
+                """;
+            case STRICT -> """
+                당신은 **시니어 수준의 고난도 면접을 보는 평가자**입니다.
+                개념의 깊이, 적용 사례, 설계적 사고를 매우 엄격히 평가해야 하며, 단편적인 설명만 있는 경우 감점합니다.
+                전문 용어, 구조적 표현, 시스템 관점 설명이 필수입니다.
+                """;
+        };
+
+        return strictnessIntro + """
                 
                 지원자의 기술 답변을 아래 예시들을 참고하여 **구조적이고 일관된 평가**로 도출해 주세요.
                 
@@ -363,6 +383,21 @@ public class GptService {
                 다음은 면접 질문과 사용자의 답변입니다. 위 지침과 예시를 참고하여 답변에 대한 평가를 작성해주세요.
                 """;
 
+    }
+
+    private String evaluationUserPrompt(String question, String userAnswer, EvaluationStrictness evaluationStrictness){
+        return """
+        아래 질문과 답변을 위의 기준과 형식에 따라 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.
+        
+        [질문]
+        %s
+        
+        [답변]
+        %s
+        
+        [평가 엄격도]
+        %s
+        """.formatted(question, userAnswer, evaluationStrictness);
     }
 
     /* 면접방 총평 추출 프롬프트 */

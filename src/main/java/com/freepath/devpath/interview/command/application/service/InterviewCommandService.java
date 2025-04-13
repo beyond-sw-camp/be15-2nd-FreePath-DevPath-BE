@@ -81,7 +81,10 @@ public class InterviewCommandService {
 
     /* 질문에 대한 답변, 답변에 대한 평가, 다음 질문 도출 */
     @Transactional
-    public InterviewAnswerCommandResponse answerAndEvaluate(Long userId, Long roomId, InterviewAnswerCommandRequest request) {
+    public InterviewAnswerCommandResponse answerAndEvaluate(
+            Long userId, Long roomId,
+            InterviewAnswerCommandRequest request,
+            EvaluationStrictness evaluationStrictness) {
 
         // 0-1. 면접방 존재 여부 확인
         InterviewRoom room = interviewRoomRepository.findById(roomId)
@@ -119,7 +122,7 @@ public class InterviewCommandService {
                     .orElseThrow(
                             () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
                     );
-        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer());
+        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer(), evaluationStrictness);
 
         // 3. GPT 평가 저장
         interviewRepository.save(
