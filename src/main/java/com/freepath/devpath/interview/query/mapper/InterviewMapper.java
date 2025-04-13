@@ -16,9 +16,12 @@ public interface InterviewMapper {
     List<InterviewRoomDto> selectInterviewRoomListByUserIdExcludingExpired(Long userId, int size, int offset);
     int countInterviewRoomListByUserIdExcludingExpired(Long userId);
 
-    /* 특정 카테고리에 대한 면접방 목록만 조회 */
-    List<InterviewRoomDto> selectInterviewRoomListByUserIdAndCategoryExcludingExpired(Long userId, String category, int size, int offset);
-    int countInterviewRoomListByUserIdAndCategoryExcludingExpired(Long userId, String category);
+    /* 사용자가 면접방 목록 조회 시 필터 적용 */
+    List<InterviewRoomDto> selectInterviewRoomListByFilter(
+            Long userId, String category, String difficultyLevel, String evaluationStrictness,
+            int size, int offset);
+    int countInterviewRoomListByFilter(
+            Long userId, String category, String difficultyLevel, String evaluationStrictness);
 
     /* 면접방에 대한 정보 조회 */
     InterviewRoomDetailResponse selectInterviewRoomByRoomId(Long interviewRoomId);
@@ -35,8 +38,9 @@ public interface InterviewMapper {
     List<InterviewRoomDto> selectAllInterviewRooms(int page, int size, int offset);
     int countAllInterviewRooms();
 
-    /* 특정 상태에 대한 면접방 목록 조회*/
-    List<InterviewRoomDto> selectAllInterviewRoomsByStatus(String status, int size, int offset);
-    int countAllInterviewRoomsByStatus(String status);
+    /* 전체 유저 면접방 목록 조회에 필터 적용 */
+    List<InterviewRoomDto> selectAdminInterviewRoomListByFilter(String status, String category, String difficultyLevel, String evaluationStrictness, int size, int offset    );
+    int countAdminInterviewRoomListByFilter( String status, String category, String difficultyLevel, String evaluationStrictness );
+
 
 }

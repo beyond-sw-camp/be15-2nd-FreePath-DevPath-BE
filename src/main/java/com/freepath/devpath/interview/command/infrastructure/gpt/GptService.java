@@ -1,6 +1,8 @@
 package com.freepath.devpath.interview.command.infrastructure.gpt;
 
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.interview.command.domain.aggregate.DifficultyLevel;
+import com.freepath.devpath.interview.command.domain.aggregate.EvaluationStrictness;
 import com.freepath.devpath.interview.command.exception.InterviewEvaluationCreationException;
 import com.freepath.devpath.interview.command.exception.InterviewQuestionCreationException;
 import com.freepath.devpath.interview.command.exception.InterviewSummarizeCreationException;
@@ -23,17 +25,17 @@ public class GptService {
     private final WebClient webClient;
 
     /* 카테고리에 대한 첫 질문 도출*/
-    public String generateQuestion(String category) {
+    public String generateQuestion(String category, DifficultyLevel difficultyLevel) {
         System.out.println("[GPT 질문 생성 요청] 카테고리: " + category);
 
         // 1. GPT에게 전달할 프롬프트 작성
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
+                "temperature", 0.7,
                 "messages", List.of(
                         Map.of("role", "system", "content",questionGenerationSystemPrompt()),
                         Map.of("role", "user", "content",
-                                category + "와 관련된 핵심 기술 또는 개념을 바탕으로, "
-                                        + "경력 1~3년차 개발자에게 던질 수준의 실무형 면접 질문을 하나만 생성해주세요.")
+                                questionGenerationUserPrompt(category, difficultyLevel))
                 )
         );
 
@@ -67,15 +69,16 @@ public class GptService {
     }
 
     /* 면접 답변에 대한 평가 */
-    public String evaluateAnswer(String question, String userAnswer) {
+    public String evaluateAnswer(String question, String userAnswer, EvaluationStrictness evaluationStrictness) {
         System.out.println("[GPT 요청 전송] 사용자 답변: " + userAnswer);
 
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
                 "temperature", 0.3,
                 "messages", List.of(
-                        Map.of("role", "system", "content", evaluationSystemPrompt()),
-                        Map.of("role", "user", "content", """
+                        Map.of("role", "system", "content", evaluationSystemPrompt(evaluationStrictness)),
+                        Map.of("role", "user", "content", evaluationUserPrompt(question, userAnswer, evaluationStrictness)+
+                                """
                                 아래 질문과 답변을 위의 기준과 형식에 따라 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.
     
                                 [질문]
@@ -115,15 +118,17 @@ public class GptService {
     }
 
     /* 면접방의 면접 답변에 대한 총평 */
-    public String summarizeInterview(List<String> evaluations) {
+    public String summarizeInterview(
+            List<String> evaluations,
+            EvaluationStrictness evaluationStrictness,
+            DifficultyLevel difficultyLevel
+    ) {
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
                 "temperature", 0.3,
                 "messages", List.of(
-                        Map.of("role", "system", "content", summarizeSystemPrompt()),
-                        Map.of("role", "user", "content",
-                                String.join("\n\n", evaluations) +
-                                        "\n\n이 면접 내용을 위의 기준에 따라 정리하고 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.")
+                        Map.of("role", "system", "content", summarizeSystemPrompt(evaluationStrictness, difficultyLevel)),
+                        Map.of("role", "user", "content", summarizeUserPrompt(evaluations))
                 )
         );
 
@@ -146,20 +151,134 @@ public class GptService {
         }
     }
 
-    /* 질문 생성 프롬프트 */
-    private String questionGenerationSystemPrompt(){
+    /* 질문 생성 프롬프트 : system */
+    private String questionGenerationSystemPrompt() {
         return """
-                당신은 시니어 개발자 또는 TPM 급의 고급 IT 인력이며, 기술 면접관입니다.
-                지원자의 실무 능력과 문제 해결 역량을 파악할 수 있도록 질문을 구성하세요.
-                질문은 심층적이며, 이론뿐 아니라 실제 개발 상황에서 어떻게 적용되는지를 확인할 수 있어야 합니다.
-                질문은 오직 하나만 생성하세요. 질문 외의 텍스트는 포함하지 마세요.
-                """;
+            당신은 시니어 개발자이자 기술 면접관입니다.
+            당신의 목표는 지원자의 실무 능력, 문제 해결 역량, 핵심 개념 이해도를 평가하기 위해 **하나의 깊이 있는 면접 질문**을 생성하는 것입니다.
+            질문은 심층적이며, 이론뿐 아니라 실제 개발 상황에서 어떻게 적용되는지를 확인할 수 있어야 합니다.
+
+            ### 질문 생성 가이드라인:
+            - [난이도 기반] EASY / MEDIUM / HARD 에 따라 수준을 조절하세요.
+            - [형식 제한] **반드시 하나의 문장**으로 질문을 생성하세요.
+            - [핵심 초점] 지식보다는 실무적 응용 능력, 설계, 문제 해결력을 확인하세요.
+            - [금지 사항] 질문 외 텍스트는 생성하지 마세요.
+
+            =====================================
+            [난이도 기준 설명]
+
+            ▸ [EASY]
+              - 개념/정의 위주 질문
+              - 용어 설명, 주요 기능, 구조 이해 등
+              - 초급 개발자에게 적합
+
+            ▸ [MEDIUM]
+              - 실무 적용 기반 질문
+              - 기술 간 비교, 상황별 대응, 에러 처리 방식
+              - 1~3년차 개발자 수준
+
+            ▸ [HARD]
+              - 설계 기반 질문
+              - 성능 최적화, 아키텍처 선택, 병목 해결, 기술 선택 이유
+              - 시니어 혹은 기술 리더 관점
+
+            =====================================
+            [카테고리별 예시 질문]
+
+            ▶ 운영체제
+              - EASY: 스레드와 프로세스의 차이는 무엇인가요?
+              - MEDIUM: 데드락이 발생하는 4가지 조건은 무엇이며, 어떻게 회피할 수 있나요?
+              - HARD: 컨텍스트 스위칭 최소화를 위한 커널 스케줄링 전략을 설계한다면 어떻게 접근하시겠습니까?
+
+            ▶ 네트워크
+              - EASY: TCP와 UDP의 차이를 설명해주세요.
+              - MEDIUM: TLS는 어떻게 동작하며, HTTPS와 어떤 관계인가요?
+              - HARD: 대규모 분산 시스템에서 발생하는 네트워크 병목 현상을 어떻게 해결하시겠습니까?
+
+            ▶ 데이터베이스
+              - EASY: 정규화란 무엇인가요?
+              - MEDIUM: 인덱스는 어떤 경우에 오히려 성능을 저하시킬 수 있나요?
+              - HARD: 수억 건 이상의 트래픽 로그 데이터를 분석하기 위한 DB 아키텍처를 설계해보세요.
+
+            ▶ 자료구조&알고리즘
+              - EASY: 스택과 큐의 차이를 설명해주세요.
+              - MEDIUM: 해시 충돌이 발생했을 때 어떤 해결 방식을 사용할 수 있나요?
+              - HARD: 대용량 트리 데이터를 실시간으로 탐색해야 한다면 어떤 알고리즘과 구조를 선택하겠습니까?
+
+            ▶ 디자인 패턴
+              - EASY: 싱글톤 패턴이란 무엇인가요?
+              - MEDIUM: 팩토리 패턴과 추상 팩토리 패턴의 차이를 설명해주세요.
+              - HARD: 대규모 서비스에서 전략 패턴을 활용해 장애 허용성을 높이는 구조를 설계해보세요.
+
+            ▶ 객체지향 프로그래밍
+              - EASY: 캡슐화란 무엇인가요?
+              - MEDIUM: 상속보다 조합(Composition)이 선호되는 이유는 무엇인가요?
+              - HARD: SOLID 원칙 중 OCP(Open-Closed Principle)를 위반한 예시를 찾아 개선 방안을 제시해보세요.
+
+            ▶ CI/CD
+              - EASY: CI/CD가 무엇인지 설명해주세요.
+              - MEDIUM: GitHub Actions와 Jenkins의 차이점과 각각의 장단점을 비교해주세요.
+              - HARD: 대규모 배포 환경에서 Canary Release와 Blue-Green 전략을 어떻게 운영하시겠습니까?
+
+            ▶ 보안
+              - EASY: XSS 공격이란 무엇인가요?
+              - MEDIUM: CSRF와 XSS의 차이점은 무엇이며 방지 방법은 무엇인가요?
+              - HARD: 보안이 중요한 서비스에서 Zero Trust Architecture를 어떻게 설계하시겠습니까?
+
+            ▶ 클라우드&인프라
+              - EASY: 클라우드 컴퓨팅이란 무엇인가요?
+              - MEDIUM: Auto Scaling과 Load Balancer는 어떤 차이점이 있나요?
+              - HARD: 고가용성을 고려한 Kubernetes 기반 서비스 아키텍처를 설계해보세요.
+
+            ▶ 시스템 설계
+              - EASY: RESTful API란 무엇인가요?
+              - MEDIUM: 캐시(Cache)를 효과적으로 활용할 수 있는 상황은 어떤 경우인가요?
+              - HARD: 초당 10만 건 이상의 요청을 처리할 수 있는 분산 시스템을 설계해보세요.
+
+            =====================================
+            위의 예시와 가이드를 참고하여 질문을 생성하세요.
+            """;
     }
 
-    /* 답변에 대한 평가 추출 프롬프트 */
-    private String evaluationSystemPrompt(){
+    /* 질문 생성 프롬프트 : user */
+    private String questionGenerationUserPrompt(String category, DifficultyLevel difficultyLevel){
+        String questionDifficultyLevel = switch (difficultyLevel) {
+            case EASY -> "EASY";
+            case MEDIUM -> "MEDIUM";
+            case HARD -> "HARD";
+        };
+
         return """
-                당신은 시니어 개발자로서 기술 면접관 역할을 맡고 있습니다.
+        카테고리: %s
+        
+        난이도 조건: %s
+
+        위 조건에 맞는 질문을 하나 생성해 주세요.
+        구체적인 질문일 수록 좋습니다.
+        질문 외 텍스트는 포함하지 마세요.
+        """.formatted(category, questionDifficultyLevel);
+    }
+
+    /* 답변에 대한 평가 추출 프롬프트 : system */
+    private String evaluationSystemPrompt(EvaluationStrictness evaluationStrictness){
+        String strictnessIntro = switch (evaluationStrictness) {
+            case GENEROUS -> """
+                당신은 **초급 개발자 면접에 맞춘 평가자**입니다.
+                핵심 개념이 제시되었는지 중심으로 평가하고, 너무 세세한 깊이나 실무 경험은 강하게 요구하지 않아도 됩니다.
+                하지만 개념이 명확하지 않거나 오류가 있다면 반드시 지적하세요.
+                """;
+            case NORMAL -> """
+                당신은 **1~3년차 개발자 대상의 일반적인 기술 면접관**입니다.
+                평가 기준은 정확성, 깊이, 예시, 구조, 명확성을 기반으로 하며, 실무 상황에 대한 이해를 강조합니다.
+                """;
+            case STRICT -> """
+                당신은 **시니어 수준의 고난도 면접을 보는 평가자**입니다.
+                개념의 깊이, 적용 사례, 설계적 사고를 매우 엄격히 평가해야 하며, 단편적인 설명만 있는 경우 감점합니다.
+                전문 용어, 구조적 표현, 시스템 관점 설명이 필수입니다.
+                """;
+        };
+
+        return strictnessIntro + """
                 
                 지원자의 기술 답변을 아래 예시들을 참고하여 **구조적이고 일관된 평가**로 도출해 주세요.
                 
@@ -267,10 +386,68 @@ public class GptService {
 
     }
 
-    /* 면접방 총평 추출 프롬프트 */
-    private String summarizeSystemPrompt(){
+    /* 답변에 대한 평가 추출 프롬프트 : user */
+    private String evaluationUserPrompt(String question, String userAnswer, EvaluationStrictness evaluationStrictness){
         return """
-                당신은 사용자의 모의 기술 면접 결과를 분석하고 피드백을 제공하는 **전문 면접관**입니다.
+        아래 질문과 답변을 위의 기준과 형식에 따라 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.
+        
+        [질문]
+        %s
+        
+        [답변]
+        %s
+        
+        [평가 엄격도]
+        %s
+        """.formatted(question, userAnswer, evaluationStrictness);
+    }
+
+    /* 면접방 총평 추출 프롬프트 : system */
+    private String summarizeSystemPrompt(EvaluationStrictness strictness, DifficultyLevel difficultyLevel){
+        String strictnessIntro = switch (strictness){
+            case GENEROUS -> """
+            이 면접은 **초급 개발자를 위한 면접 평가**를 기준으로 진행되었습니다.
+            평가자는 개념 전달과 기본적인 이해 중심으로 면접자의 역량을 검토하며,
+            세부적인 실무 경험이나 고난도 설계 역량은 상대적으로 관대하게 평가합니다.
+            """;
+            case NORMAL -> """
+            이 면접은 **1~3년차 개발자를 대상으로 하는 표준적인 면접 평가**입니다.
+            평가자는 개념의 정확성뿐 아니라, 실무에서의 응용 가능성과 문제 해결 능력을 균형 있게 평가합니다.
+            기술에 대한 이해도와 논리적 사고, 전달력을 골고루 검토합니다.
+            """;
+            case STRICT -> """
+            이 면접은 **시니어급 개발자나 기술 리더 후보자에 대한 고난도 평가**입니다.
+            평가자는 개념의 깊이, 설계적 사고, 실무 경험 기반의 답변 구성을 엄격히 검토하며,
+            단편적인 답변이나 표면적인 지식에 대해서는 감점을 적용합니다.
+            면접자는 시스템적 관점, 전문 용어의 정교한 활용, 구조적인 설명을 통해 고급 역량을 증명해야 합니다.
+            """;
+        };
+        String difficultyInfo = switch(difficultyLevel){
+            case EASY -> """
+            면접 질문은 **기초 개념 위주의 [EASY] 수준**으로 구성되었습니다.
+            정의, 구조, 기본 용어와 같은 내용을 중심으로 질문되며,
+            개념의 명확한 이해와 전달이 핵심 평가 요소입니다.
+            """;
+            case MEDIUM -> """
+            면접 질문은 **실무 적용 능력을 중점으로 한 [MEDIUM] 수준**으로 구성되었습니다.
+            실제 개발 상황에서의 문제 해결 능력, 상황별 대응 전략, 기술 간 비교 등이 포함됩니다.
+            현업에서 바로 적용 가능한 실무력 평가가 이루어집니다.
+            """;
+            case HARD -> """
+            면접 질문은 **고난도 설계 및 아키텍처 기반의 [HARD] 수준**으로 구성되었습니다.
+            시스템 최적화, 기술 스택 간 선택, 성능 병목 해결 등 고급 설계 능력을 중심으로 질문되며,
+            복합적 사고력과 경험 기반의 의사결정 능력이 중요한 평가 요소입니다.
+            """;
+        };
+
+        return """
+                 당신은 사용자의 모의 기술 면접 결과를 분석하고 피드백을 제공하는 **전문 면접관**입니다.
+                
+                ## 평가의 엄격도
+                 %s
+                
+                ## 질문의 난이도
+                 %s
                 
                 다음은 사용자가 세 번의 기술 면접에서 응답한 후 GPT가 생성한 **질문별 평가 내용들**입니다. 이 내용을 종합하여 **전반적인 총평**을 작성해주세요.
                 
@@ -321,7 +498,17 @@ public class GptService {
                 =================================
                 
                 다음은 사용자의 면접 평가 결과입니다. 위 지침과 예시를 참고하여 총평을 작성해주세요.
-                """;
+                """.formatted(strictnessIntro, difficultyInfo);
+    }
+
+    /* 면접방 총평 추출 프롬프트 : user */
+    private String summarizeUserPrompt(List<String> evaluations){
+        return """
+                면접의 내용은 아래와 같습니다. 이 면접 내용을 위의 기준에 따라 정리하고 평가해 주세요.
+                내용은 최대한 자세하게 서술될 수록 좋습니다.
+                
+                [면접 내용]
+                """+String.join("\n\n", evaluations);
     }
 
 }
