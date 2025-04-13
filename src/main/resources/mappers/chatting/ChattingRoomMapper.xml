@@ -28,4 +28,14 @@
         AND     cj.chatting_role = 'MEMBER'
         AND	    cj.chatting_join_status = 'W';
     </select>
+    <select id = "selectJoinUsers" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomJoinUserDTO">
+        SELECT
+                u.user_id,
+                u.nickname
+        FROM
+                USERS u
+        JOIN
+                CHATTING_JOIN cj ON u.user_id = cj.user_id
+        WHERE cj.chatting_room_id = #{chattingRoomId};
+    </select>
 </mapper>
