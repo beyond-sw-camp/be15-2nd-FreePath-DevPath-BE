@@ -1,7 +1,7 @@
 package com.freepath.devpath.board.interaction.command.application.service;
 
 import com.freepath.devpath.board.comment.command.domain.repository.CommentRepository;
-import com.freepath.devpath.board.interaction.command.application.dto.LikeRequest;
+import com.freepath.devpath.board.interaction.command.application.dto.*;
 import com.freepath.devpath.board.interaction.command.domain.aggregate.Like;
 import com.freepath.devpath.board.interaction.command.domain.repository.LikeRepository;
 import com.freepath.devpath.board.interaction.exception.*;
@@ -21,80 +21,71 @@ public class LikeService {
 
     @Transactional
     public void like(Long userId, LikeRequest request) {
-        if (request.getBoardId() == null && request.getCommentId() == null) {
-            throw new InvalidLikeTargetException(ErrorCode.INVALID_LIKE_TARGET);
-        }
-
-        if (request.getBoardId() != null && request.getCommentId() != null) {
-            throw new CannotLikeBothException(ErrorCode.CANNOT_LIKE_BOTH);
-        }
-
-        if (request.getBoardId() != null) {
-            if (!postRepository.existsById(request.getBoardId().intValue())) {
+        if (request instanceof BoardLikeRequest boardReq) {
+            Long boardId = boardReq.getBoardId();
+            if (!postRepository.existsById(boardId.intValue())) {
                 throw new BoardNotFoundException(ErrorCode.POST_NOT_FOUND);
             }
 
-            if (likeRepository.existsByUserIdAndBoardId(userId, request.getBoardId())) {
+            if (likeRepository.existsByUserIdAndBoardId(userId, boardId)) {
                 throw new AlreadyLikedException(ErrorCode.ALREADY_LIKED);
             }
 
             likeRepository.save(Like.builder()
                     .userId(userId)
-                    .boardId(request.getBoardId())
+                    .boardId(boardId)
                     .commentId(null)
                     .build());
 
-        } else {
-            if (!commentRepository.existsById(request.getCommentId().intValue())) {
+        } else if (request instanceof CommentLikeRequest commentReq) {
+            Long commentId = commentReq.getCommentId();
+            if (!commentRepository.existsById(commentId.intValue())) {
                 throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
             }
 
-            if (likeRepository.existsByUserIdAndCommentId(userId, request.getCommentId())) {
+            if (likeRepository.existsByUserIdAndCommentId(userId, commentId)) {
                 throw new AlreadyLikedException(ErrorCode.ALREADY_LIKED);
             }
 
             likeRepository.save(Like.builder()
                     .userId(userId)
-                    .commentId(request.getCommentId())
+                    .commentId(commentId)
                     .boardId(null)
                     .build());
-        }
 
+        } else {
+            throw new InvalidLikeTargetException(ErrorCode.INVALID_LIKE_TARGET);
+        }
     }
 
     @Transactional
     public void unlike(Long userId, LikeRequest request) {
-        if (request.getBoardId() == null && request.getCommentId() == null) {
-            throw new InvalidLikeTargetException(ErrorCode.INVALID_LIKE_TARGET);
-        }
-
-        if (request.getBoardId() != null && request.getCommentId() != null) {
-            throw new CannotLikeBothException(ErrorCode.CANNOT_LIKE_BOTH);
-        }
-
-        if (request.getBoardId() != null) {
-            if (!postRepository.existsById(request.getBoardId().intValue())) {
+        if (request instanceof BoardLikeRequest boardReq) {
+            Long boardId = boardReq.getBoardId();
+            if (!postRepository.existsById(boardId.intValue())) {
                 throw new BoardNotFoundException(ErrorCode.POST_NOT_FOUND);
             }
 
-            boolean exists = likeRepository.existsByUserIdAndBoardId(userId, request.getBoardId());
-            if (!exists) {
+            if (!likeRepository.existsByUserIdAndBoardId(userId, boardId)) {
                 throw new LikeNotFoundException(ErrorCode.LIKE_NOT_FOUND);
             }
 
-            likeRepository.deleteByUserIdAndBoardId(userId, request.getBoardId());
+            likeRepository.deleteByUserIdAndBoardId(userId, boardId);
 
-        } else {
-            if (!commentRepository.existsById(request.getCommentId().intValue())) {
+        } else if (request instanceof CommentLikeRequest commentReq) {
+            Long commentId = commentReq.getCommentId();
+            if (!commentRepository.existsById(commentId.intValue())) {
                 throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
             }
 
-            boolean exists = likeRepository.existsByUserIdAndCommentId(userId, request.getCommentId());
-            if (!exists) {
+            if (!likeRepository.existsByUserIdAndCommentId(userId, commentId)) {
                 throw new LikeNotFoundException(ErrorCode.LIKE_NOT_FOUND);
             }
 
-            likeRepository.deleteByUserIdAndCommentId(userId, request.getCommentId());
+            likeRepository.deleteByUserIdAndCommentId(userId, commentId);
+
+        } else {
+            throw new InvalidLikeTargetException(ErrorCode.INVALID_LIKE_TARGET);
         }
     }
 }

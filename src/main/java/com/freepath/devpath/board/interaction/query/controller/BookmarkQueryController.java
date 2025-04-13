@@ -6,19 +6,22 @@ import com.freepath.devpath.board.interaction.query.service.BookmarkQueryService
 import com.freepath.devpath.board.post.query.dto.response.PostListResponse;
 import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "북마크 조회", description = "북마크 조회 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class BookmarkQueryController {
 
     private final BookmarkQueryService bookmarkQueryService;
 
-    // 내가 북마크한 글 모아보기 (최신순)
+    @Operation(summary = "내가 북마크한 글 조회", description = "현재 로그인된 사용자가 북마크한 게시글들을 최신순으로 조회합니다.")
     @GetMapping("/mypage/bookmark")
     public ResponseEntity<ApiResponse<PostListResponse>> getBookmarkedPosts(
             @ModelAttribute BookmarkedBoardSearchRequest request
@@ -30,7 +33,7 @@ public class BookmarkQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    // 게시글에 북마크 여부 조회
+    @Operation(summary = "게시글 북마크 여부 확인", description = "해당 게시글에 대해 사용자가 북마크했는지 여부를 조회합니다.")
     @GetMapping("/board/{boardId}/bookmark")
     public ResponseEntity<ApiResponse<Boolean>> hasUserBookmarkedPost(
             @PathVariable int boardId
