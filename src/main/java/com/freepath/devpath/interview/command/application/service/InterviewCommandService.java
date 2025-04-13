@@ -88,7 +88,8 @@ public class InterviewCommandService {
     @Transactional
     public InterviewAnswerCommandResponse answerAndEvaluate(
             Long userId, Long roomId,
-            InterviewAnswerCommandRequest request) {
+            InterviewAnswerCommandRequest request
+    ) {
 
         // 0-1. 면접방 존재 여부 확인
         InterviewRoom room = interviewRoomRepository.findById(roomId)
@@ -129,7 +130,11 @@ public class InterviewCommandService {
 
         EvaluationStrictness evaluationStrictness = Optional.ofNullable(room.getEvaluationStrictness())
                 .orElse(EvaluationStrictness.NORMAL);
-        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer(), evaluationStrictness);
+        String evaluation = gptService.evaluateAnswer(
+                question.getInterviewMessage(),
+                request.getUserAnswer(),
+                evaluationStrictness
+        );
 
         // 3. GPT 평가 저장
         interviewRepository.save(
@@ -145,9 +150,17 @@ public class InterviewCommandService {
         DifficultyLevel difficultyLevel = Optional.ofNullable(room.getDifficultyLevel())
                 .orElse(DifficultyLevel.MEDIUM);
         if (interviewIndex < 3) {
+            List<String> previousQuestions = interviewRepository.findByInterviewRoomId(roomId).stream()
+                    .filter(i -> i.getInterviewRole() == Interview.InterviewRole.AI)
+                    .map(Interview::getInterviewMessage)
+                    .filter(msg -> msg.startsWith("[면접 질문]"))
+                    .toList();
+
             nextQuestion = gptService.generateQuestion(
-                    room.getInterviewCategory(), difficultyLevel
+                    room.getInterviewCategory(), difficultyLevel,
+                    previousQuestions
             );
+
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)

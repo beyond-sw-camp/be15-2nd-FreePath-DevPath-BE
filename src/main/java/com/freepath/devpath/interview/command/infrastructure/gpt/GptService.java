@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,50 @@ public class GptService {
                         Map.of("role", "system", "content",questionGenerationSystemPrompt()),
                         Map.of("role", "user", "content",
                                 questionGenerationUserPrompt(category, difficultyLevel))
+                )
+        );
+
+        // 2. GPT가 도출한 질문 저장
+        String response = null;
+        try{
+            response = webClient.post()
+                    .uri("https://api.openai.com/v1/chat/completions")
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .map(json -> {
+                        List<Map<String, Object>> choices = (List<Map<String, Object>>) json.get("choices");
+                        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+                        return (String) message.get("content");
+                    })
+                    .doOnNext(res -> System.out.println("[GPT 질문 응답 수신] " + res))
+                    .block();
+
+        } catch(Exception e){
+            throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
+        }
+
+        if(response == null || response.isEmpty()){
+            throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
+        }
+
+        return ("[면접 질문] " + response);
+    }
+
+    /* 카테고리에 대한 다음 질문 도출: 이전 질문 제외 */
+    public String generateQuestion(String category, DifficultyLevel difficultyLevel, List<String> previousQuestions) {
+        System.out.println("[GPT 질문 생성 요청] 카테고리: " + category);
+
+        // 1. GPT에게 전달할 프롬프트 작성
+        Map<String, Object> requestBody = Map.of(
+                "model", "gpt-3.5-turbo",
+                "temperature", 0.7,
+                "messages", List.of(
+                        Map.of("role", "system", "content",questionGenerationSystemPrompt()),
+                        Map.of("role", "user", "content",
+                                questionGenerationUserPrompt(category, difficultyLevel, previousQuestions))
                 )
         );
 
@@ -242,21 +287,37 @@ public class GptService {
 
     /* 질문 생성 프롬프트 : user */
     private String questionGenerationUserPrompt(String category, DifficultyLevel difficultyLevel){
-        String questionDifficultyLevel = switch (difficultyLevel) {
-            case EASY -> "EASY";
-            case MEDIUM -> "MEDIUM";
-            case HARD -> "HARD";
-        };
+        String questionDifficultyLevel = difficultyLevel.name();
 
         return """
         카테고리: %s
-        
-        난이도 조건: %s
+        난이도: %s
 
         위 조건에 맞는 질문을 하나 생성해 주세요.
         구체적인 질문일 수록 좋습니다.
         질문 외 텍스트는 포함하지 마세요.
         """.formatted(category, questionDifficultyLevel);
+    }
+
+    private String questionGenerationUserPrompt(String category, DifficultyLevel difficultyLevel, List<String> previousQuestions){
+        String questionDifficultyLevel = difficultyLevel.name();
+
+        String excluded = previousQuestions.isEmpty() ? "없음" :
+                previousQuestions.stream()
+                        .map(q -> "- " + q.replace("[면접 질문] ", ""))
+                        .collect(Collectors.joining("\n"));
+
+        return """
+        카테고리: %s
+        난이도: %s
+        
+        ## 제외해야 하는 질문
+        %s
+
+        위 조건에 맞는 질문을 하나 생성해 주세요.
+        구체적인 질문일 수록 좋습니다.
+        질문 외 텍스트는 포함하지 마세요.
+        """.formatted(category, questionDifficultyLevel, excluded);
     }
 
     /* 답변에 대한 평가 추출 프롬프트 : system */
