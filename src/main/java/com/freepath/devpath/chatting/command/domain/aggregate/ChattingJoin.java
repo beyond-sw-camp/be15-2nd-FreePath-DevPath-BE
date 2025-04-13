@@ -18,5 +18,5 @@ public class ChattingJoin {
     @Enumerated(EnumType.STRING)
     private ChattingRole chattingRole;
 
-    private char chattingJoinStatus;
+    private Character chattingJoinStatus;
 }

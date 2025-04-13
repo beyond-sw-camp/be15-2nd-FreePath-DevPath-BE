@@ -17,4 +17,6 @@ public class HierarchicalCommentDto {
     private Date createdAt;
     private Date modifiedAt;
     private int depth; // 계층 깊이
+    private String isCommentDeleted;
+
 }

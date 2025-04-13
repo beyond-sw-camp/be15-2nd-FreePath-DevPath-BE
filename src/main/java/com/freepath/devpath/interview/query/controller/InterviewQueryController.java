@@ -4,6 +4,7 @@ import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDetailResponse;
 import com.freepath.devpath.interview.query.dto.InterviewRoomDto;
+import com.freepath.devpath.interview.query.dto.InterviewRoomListResponse;
 import com.freepath.devpath.interview.query.dto.InterviewSummaryResponse;
 import com.freepath.devpath.interview.query.exception.*;
 import com.freepath.devpath.interview.query.service.InterviewQueryService;
@@ -37,24 +38,31 @@ public class InterviewQueryController {
     /* 사용자가 진행한 면접방 목록 조회 */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<InterviewRoomDto>>> getInterviewRoomList(
-            @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getInterviewRoomList(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         Long userId = Long.valueOf(userDetails.getUsername());
-        List<InterviewRoomDto> response = interviewQueryService.getInterviewRoomList(userId);
+        InterviewRoomListResponse response = interviewQueryService.getInterviewRoomList(userId, page, size);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    /* 특정 카테고리에 대한 면접방 목록만 조회 */
-    @GetMapping(params = "category")
+    /* 사용자가 면접방 목록 조회 시 필터 적용 */
+    @GetMapping("/filter")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<ApiResponse<List<InterviewRoomDto>>> getInterviewRoomListByCategory(
-            @RequestParam String category,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getFilteredInterviewRoomList(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String difficultyLevel,
+            @RequestParam(required = false) String evaluationStrictness,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         Long userId = Long.valueOf(userDetails.getUsername());
-        List<InterviewRoomDto> response = interviewQueryService.getInterviewRoomListByCategory(userId, category);
+        InterviewRoomListResponse response = interviewQueryService.getFilteredInterviewRoomList(
+                userId, category, difficultyLevel, evaluationStrictness, page, size);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

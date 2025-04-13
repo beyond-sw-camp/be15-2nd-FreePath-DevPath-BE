@@ -13,8 +13,15 @@
         JOIN
         CHATTING_ROOM cr ON cj.chatting_room_id = cr.chatting_room_id
         WHERE
-        cj.user_id = #{userId}
-        AND cj.chatting_join_status = 'Y';
+        cj.user_id = 6
+        AND cj.chatting_join_status = 'Y'
+        AND cr.chatting_room_id NOT IN (
+        SELECT cj2.chatting_room_id
+        FROM CHATTING_JOIN cj2
+        JOIN CHATTING_ROOM cr2 ON cj2.chatting_room_id = cr2.chatting_room_id
+        JOIN USER_BLOCK ub ON ub.blocker_id = 6 AND ub.blocked_id = cj2.user_id
+        WHERE cj2.chatting_role = 'ONE'
+        );
     </select>
     <select id = "selectWaitingUsers" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomWaitingDTO">
         SELECT
@@ -27,5 +34,15 @@
                 cj.chatting_room_id=#{chattingRoomId}
         AND     cj.chatting_role = 'MEMBER'
         AND	    cj.chatting_join_status = 'W';
+    </select>
+    <select id = "selectJoinUsers" resultType="com.freepath.devpath.chatting.query.dto.response.ChattingRoomJoinUserDTO">
+        SELECT
+                u.user_id,
+                u.nickname
+        FROM
+                USERS u
+        JOIN
+                CHATTING_JOIN cj ON u.user_id = cj.user_id
+        WHERE cj.chatting_room_id = #{chattingRoomId};
     </select>
 </mapper>

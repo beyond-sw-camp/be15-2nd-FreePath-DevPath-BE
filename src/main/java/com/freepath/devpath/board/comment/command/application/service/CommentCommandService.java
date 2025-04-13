@@ -7,6 +7,7 @@ import com.freepath.devpath.board.comment.command.exception.CommentAccessDeniedE
 import com.freepath.devpath.board.comment.command.exception.CommentDeleteDeniedException;
 import com.freepath.devpath.board.comment.command.exception.CommentInvalidArgumentException;
 import com.freepath.devpath.board.comment.command.exception.CommentNotFoundException;
+import com.freepath.devpath.board.comment.query.exception.NoSuchCommentException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentCommandService {
 
     private final CommentRepository commentRepository;
 
@@ -50,7 +51,7 @@ public class CommentService {
                 .parentCommentId(parentCommentId)
                 .contents(dto.getContents())
                 .createdAt(new Date())
-                .Deleted("N")
+                .deleted('N')
                 .build();
 
         return commentRepository.save(comment);
@@ -81,4 +82,19 @@ public class CommentService {
         comment.softDelete();
     }
 
+    @Transactional
+    public void updateCommentDeletedStatus(Integer commentId, char checkResult) {
+        // 댓글 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NoSuchCommentException(ErrorCode.COMMENT_NOT_FOUND));
+
+        // 삭제 상태를 'Y' 또는 'N'에 맞게 업데이트
+        if (checkResult == 'Y') {
+            comment.softDelete(); // 삭제 처리
+        } else if (checkResult == 'N') {
+            comment.restore(); // 복구 처리
+        }
+
+        // JPA dirty checking을 통해 자동으로 업데이트됨
+    }
 }

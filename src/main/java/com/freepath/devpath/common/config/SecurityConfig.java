@@ -44,6 +44,13 @@ public class SecurityConfig {
                         auth -> auth.requestMatchers(HttpMethod.POST,
                                         "/user/signup", "/user/login", "/user/refresh","/user/signup/temp","/user/email/check",
                                         "/user/find-id", "/user/verify-email", "/user/reset-password").permitAll()
+
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/swagger-resources/**",
+                                        "/v3/api-docs/**",
+                                        "/webjars/**"
+                                ).permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
                                 .requestMatchers("/user/info", "/mypage/**", "/user/change-password","/user/change-email").authenticated()

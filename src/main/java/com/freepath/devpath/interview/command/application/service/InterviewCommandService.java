@@ -2,10 +2,10 @@ package com.freepath.devpath.interview.command.application.service;
 
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
+import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomUpdateCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
-import com.freepath.devpath.interview.command.domain.aggregate.Interview;
-import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
+import com.freepath.devpath.interview.command.domain.aggregate.*;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRepository;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRoomRepository;
 import com.freepath.devpath.interview.command.exception.*;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,17 +29,30 @@ public class InterviewCommandService {
 
     /* 카테고리 선택으로 면접방 생성하고 첫 질문 도출*/
     @Transactional
-    public InterviewRoomCommandResponse createRoomAndFirstQuestion(Long userId, String category) {
+    public InterviewRoomCommandResponse createRoomAndFirstQuestion(
+            Long userId,
+            String category,
+            DifficultyLevel difficultyLevel,
+            EvaluationStrictness evaluationStrictness
+    ) {
+
+        // 0. 면접방 기본 정보 생성
+        difficultyLevel = Optional.ofNullable(difficultyLevel)
+                .orElse(DifficultyLevel.MEDIUM);
+        evaluationStrictness = Optional.ofNullable(evaluationStrictness)
+                .orElse(EvaluationStrictness.NORMAL);
+        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
 
         // 1. 면접방 생성 및 저장
         InterviewRoom room = null;
-        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
          try{
             room = interviewRoomRepository.save(
                     InterviewRoom.builder()
                             .userId(userId)
                             .interviewCategory(category)
                             .interviewRoomTitle(title)
+                            .difficultyLevel(difficultyLevel)
+                            .evaluationStrictness(evaluationStrictness)
                             .build()
             );
          } catch(Exception e){
@@ -47,7 +61,7 @@ public class InterviewCommandService {
 
 
         // 2. GPT로부터 첫 질문 생성
-        String firstQuestion = gptService.generateQuestion(category);
+        String firstQuestion = gptService.generateQuestion(category, difficultyLevel);
 
         // 3. 질문 내용을 INTERVIEW 테이블에 저장
         interviewRepository.save(
@@ -61,13 +75,20 @@ public class InterviewCommandService {
         // 4. 응답
         return InterviewRoomCommandResponse.builder()
                 .interviewRoomId(room.getInterviewRoomId())
+                .interviewRoomTitle(room.getInterviewRoomTitle())
+                .interviewRoomStatus(room.getInterviewRoomStatus().name())
+                .difficultyLevel(room.getDifficultyLevel().name())
+                .evaluationStrictness(room.getEvaluationStrictness().name())
+                .interviewRoomMemo(room.getInterviewRoomMemo())
                 .firstQuestion(firstQuestion)
                 .build();
     }
 
     /* 질문에 대한 답변, 답변에 대한 평가, 다음 질문 도출 */
     @Transactional
-    public InterviewAnswerCommandResponse answerAndEvaluate(Long userId, Long roomId, InterviewAnswerCommandRequest request) {
+    public InterviewAnswerCommandResponse answerAndEvaluate(
+            Long userId, Long roomId,
+            InterviewAnswerCommandRequest request) {
 
         // 0-1. 면접방 존재 여부 확인
         InterviewRoom room = interviewRoomRepository.findById(roomId)
@@ -105,7 +126,10 @@ public class InterviewCommandService {
                     .orElseThrow(
                             () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
                     );
-        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer());
+
+        EvaluationStrictness evaluationStrictness = Optional.ofNullable(room.getEvaluationStrictness())
+                .orElse(EvaluationStrictness.NORMAL);
+        String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer(), evaluationStrictness);
 
         // 3. GPT 평가 저장
         interviewRepository.save(
@@ -118,8 +142,12 @@ public class InterviewCommandService {
 
         // 4. 다음 질문 생성 (면접방 당 3회 면접 실행)
         String nextQuestion = null;
+        DifficultyLevel difficultyLevel = Optional.ofNullable(room.getDifficultyLevel())
+                .orElse(DifficultyLevel.MEDIUM);
         if (interviewIndex < 3) {
-            nextQuestion = gptService.generateQuestion(room.getInterviewCategory());
+            nextQuestion = gptService.generateQuestion(
+                    room.getInterviewCategory(), difficultyLevel
+            );
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
@@ -129,14 +157,14 @@ public class InterviewCommandService {
             );
         }
 
-        // 5. 마지막 답변이라면 면접 총평 생성
+        // 5. 마지막 답변이라면 면접 총평 생성하고 면접방 상태 변경
         if(interviewIndex == 3){
             List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
                     .filter(interview -> interview.getInterviewRole() == Interview.InterviewRole.AI)
                     .map(Interview::getInterviewMessage)
                     .filter(msg -> msg.startsWith("[답변 평가]"))
                     .toList();
-            String summary = gptService.summarizeInterview(gptEvaluations);
+            String summary = gptService.summarizeInterview(gptEvaluations, evaluationStrictness, difficultyLevel);
 
             interviewRepository.save(
                     Interview.builder()
@@ -145,6 +173,8 @@ public class InterviewCommandService {
                             .interviewMessage("[총평]"+summary)
                             .build()
             );
+
+            room.updateStatus(InterviewRoomStatus.COMPLETED);
         }
 
         // 6. 응답
@@ -178,6 +208,29 @@ public class InterviewCommandService {
         } catch (Exception e) {
             throw new InterviewRoomDeleteException(ErrorCode.INTERVIEW_ROOM_DELETE_FAILED);
         }
+    }
+
+    /* 면접방 정보 수정 */
+    @Transactional
+    public void updateInterviewRoom(Long userId, Long roomId, InterviewRoomUpdateCommandRequest request) {
+
+        // 면접방 존재 여부 확인
+        InterviewRoom room = interviewRoomRepository.findById(roomId)
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 면접방 진행자 검증
+        if (!room.getUserId().equals(userId)) {
+            throw new InterviewRoomAccessException(ErrorCode.INTERVIEW_ROOM_ACCESS_DENIED);
+        }
+
+        // 면접방 제목 수정
+        if (request.getInterviewRoomTitle() == null || request.getInterviewRoomTitle().isEmpty() || request.getInterviewRoomTitle().isBlank() || request.getInterviewRoomTitle().trim().isEmpty()) {
+            throw new InterviewRoomTitleInvalidException(ErrorCode.INTERVIEW_ROOM_TITLE_INVALID);
+        }
+        room.updateTitle(request.getInterviewRoomTitle());
+
+        // 면접방 메모 수정
+        room.updateMemo(request.getInterviewRoomMemo());
     }
 
 

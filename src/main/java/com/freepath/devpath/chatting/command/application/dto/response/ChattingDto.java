@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ChattingResponse {
+public class ChattingDto {
     private String nickname;
     private String message;
     private String timestamp;

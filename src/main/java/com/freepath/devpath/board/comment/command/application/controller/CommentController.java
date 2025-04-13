@@ -2,7 +2,7 @@ package com.freepath.devpath.board.comment.command.application.controller;
 
 import com.freepath.devpath.board.comment.command.domain.domain.Comment;
 import com.freepath.devpath.board.comment.command.application.dto.CommentRequestDto;
-import com.freepath.devpath.board.comment.command.application.service.CommentService;
+import com.freepath.devpath.board.comment.command.application.service.CommentCommandService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/comments")
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentCommandService commentCommandService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Comment>> createComment(
@@ -24,7 +24,7 @@ public class CommentController {
 
         int userId = Integer.parseInt(userDetails.getUsername());
 
-       Comment comment =commentService.saveComment(dto, userId);
+       Comment comment = commentCommandService.saveComment(dto, userId);
 
         return ResponseEntity.ok(ApiResponse.success(comment));
     }
@@ -36,7 +36,7 @@ public class CommentController {
             @AuthenticationPrincipal User userDetails) {
 
         int userId = Integer.parseInt(userDetails.getUsername());
-        commentService.updateComment(commentId, dto.getContents(), userId);
+        commentCommandService.updateComment(commentId, dto.getContents(), userId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }
@@ -47,7 +47,7 @@ public class CommentController {
             @AuthenticationPrincipal User userDetails) {
 
         int userId = Integer.parseInt(userDetails.getUsername());
-        commentService.deleteComment(commentId, userId);
+        commentCommandService.deleteComment(commentId, userId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

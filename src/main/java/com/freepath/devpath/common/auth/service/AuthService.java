@@ -29,7 +29,7 @@ public class AuthService {
 
 
     public TokenResponse login(LoginRequest request) {
-        User user = userCommandRepository.findByLoginId(request.getLoginId())
+        User user = userCommandRepository.findByLoginIdAndUserDeletedAtIsNull(request.getLoginId())
                 .orElseThrow(() -> new UserException(ErrorCode.INVALID_CREDENTIALS));
 
         if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
