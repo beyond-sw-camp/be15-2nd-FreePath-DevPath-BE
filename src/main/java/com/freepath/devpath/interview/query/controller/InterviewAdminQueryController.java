@@ -33,7 +33,8 @@ public class InterviewAdminQueryController {
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getAllInterviewRooms(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size
+    ) {
         InterviewRoomListResponse response = interviewQueryAdminService.getAllInterviewRooms(page, size);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -56,8 +57,8 @@ public class InterviewAdminQueryController {
             @RequestParam(required = false) String difficultyLevel,
             @RequestParam(required = false) String evaluationStrictness,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
+            @RequestParam(defaultValue = "10") int size
+    ) {
         InterviewRoomListResponse response = interviewQueryAdminService.getAdminFilteredInterviewRoomList(
                 status, category, difficultyLevel, evaluationStrictness, page, size);
 
