@@ -55,6 +55,7 @@ public class PostQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    // 자신이 작성한 게시글 조회 -> 내용이 "신고 처리된 게시글입니다"
     @GetMapping("/mypage")
     public ResponseEntity<ApiResponse<MyPostListResponse>> getMyPostList(
             @ModelAttribute @Validated MyPostRequest myPostRequest,
@@ -66,6 +67,17 @@ public class PostQueryController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+
+    @GetMapping("/mypage/reported-post")
+    public ResponseEntity<ApiResponse<MyPostListResponse>> getMyReportedPostList(
+            @ModelAttribute @Validated MyPostRequest myPostRequest,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        int userId = Integer.parseInt(userDetails.getUsername());
+        MyPostListResponse response = postQueryService.getReportedPostListByUserId(userId, myPostRequest);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 
     // 게시물 내용 키워드 검색
     @GetMapping("/board/search/content")

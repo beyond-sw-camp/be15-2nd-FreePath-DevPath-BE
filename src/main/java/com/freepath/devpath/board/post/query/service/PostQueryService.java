@@ -85,20 +85,23 @@ public class PostQueryService {
         List<PostDto> myPosts = postMapper.selectPostListByUserId(params);
         int totalItems = postMapper.countMyPostList(params);
 
-        int page = request.getPage();
-        int size = request.getSize();
-
-        Pagination pagination = Pagination.builder()
-                .currentPage(page)
-                .totalPage((int) Math.ceil((double) totalItems / size))
-                .totalItems(totalItems)
-                .build();
-
-        return MyPostListResponse.builder()
-                .myPosts(myPosts)
-                .pagination(pagination)
-                .build();
+        return getMyPostListResponse(request, myPosts, totalItems);
     }
+
+    /* 자신이 작성한 신고 게시물 목록 조회 */
+    @Transactional(readOnly = true)
+    public MyPostListResponse getReportedPostListByUserId(int userId, MyPostRequest request) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("limit", request.getLimit());
+        params.put("offset", request.getOffset());
+
+        List<PostDto> myPosts = postMapper.selectReportedPostListByUserId(params);
+        int totalItems = postMapper.countReportedPostList(params);
+
+        return getMyPostListResponse(request, myPosts, totalItems);
+    }
+
 
     @Transactional(readOnly = true)
     public PostListResponse searchBoardContentByKeyword(PostContentSearchRequest request) {
