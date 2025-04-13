@@ -146,4 +146,20 @@ public class PostQueryService {
 
         return postDetailDto;
     }
+
+    private MyPostListResponse getMyPostListResponse(MyPostRequest request, List<PostDto> myPosts, int totalItems) {
+        int page = request.getPage();
+        int size = request.getSize();
+
+        Pagination pagination = Pagination.builder()
+                .currentPage(page)
+                .totalPage((int) Math.ceil((double) totalItems/size))
+                .totalItems(totalItems)
+                .build();
+
+        return MyPostListResponse.builder()
+                .myPosts(myPosts)
+                .pagination(pagination)
+                .build();
+    }
 }
