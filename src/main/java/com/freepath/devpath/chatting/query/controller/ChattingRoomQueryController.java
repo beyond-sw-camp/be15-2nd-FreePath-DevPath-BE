@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "채팅방 조회", description = "채팅방 API")
+@Tag(name = "채팅방 조회", description = "채팅방 조회 API")
 public class ChattingRoomQueryController {
     private final ChattingRoomQueryService chattingRoomQueryService;
 
