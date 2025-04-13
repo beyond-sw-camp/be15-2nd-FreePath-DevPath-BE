@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>소셜 회원가입</title>
+</head>
+<body>
+<h2>소셜 회원가입</h2>
+<form id="signup-form">
+  <input type="hidden" id="email" name="email" value="">
+
+  <label for="nickname">닉네임:</label>
+  <input type="text" id="nickname" name="nickname" required><br><br>
+
+  <label for="itNewsSubscription">IT 뉴스 구독:</label>
+  <select id="itNewsSubscription" name="itNewsSubscription">
+    <option value="Y">예</option>
+    <option value="N">아니오</option>
+  </select><br><br>
+
+  <button type="submit">회원가입</button>
+</form>
+
+<script>
+  // URL에서 이메일 추출
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get("email");
+  document.getElementById("email").value = email;
+
+  document.getElementById("signup-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const request = {
+      email: document.getElementById("email").value,
+      nickname: document.getElementById("nickname").value,
+      itNewsSubscription: document.getElementById("itNewsSubscription").value
+    };
+
+    try {
+      const res = await fetch("/user/signup-social", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(request)
+      });
+
+      if (res.ok) {
+        alert("회원가입이 완료되었습니다. 다시 로그인해 주세요.");
+        window.location.href = "/before.html";
+      } else {
+        const error = await res.json();
+        alert("에러: " + error.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("네트워크 오류가 발생했습니다.");
+    }
+  });
+</script>
+</body>
+</html>

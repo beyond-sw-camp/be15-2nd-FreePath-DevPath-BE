@@ -13,6 +13,8 @@ import java.util.Map;
 public interface PostMapper {
     PostDetailDto selectPostById(int boardId);
 
+    PostDetailDto selectReportedPostById(int boardId);
+
     // 게시물 내용을 제외한 필터 검색 (동적 쿼리)
     List<PostDto> selectPostListByFilter(PostSearchRequest request);
 
@@ -24,4 +26,7 @@ public interface PostMapper {
     List<PostDto> selectPostListByUserId(Map<String, Object> request);
 
     int countMyPostList(Map<String, Object> request);
+
+    List<PostDto> findBoardByIds(List<Integer> boardIds);
+
 }

@@ -18,6 +18,7 @@
                 c.comment_contents AS contents,
                 c.comment_created_at AS createdAt,
                 c.comment_modified_at AS modifiedAt,
+                c.is_comment_deleted AS isCommentDeleted,
                 0 AS depth
             FROM comment c
                      JOIN users u ON c.user_id = u.user_id
@@ -34,6 +35,7 @@
                 c.comment_contents,
                 c.comment_created_at,
                 c.comment_modified_at,
+                c.is_comment_deleted,
                 ct.depth + 1
             FROM comment c
                      JOIN users u ON c.user_id = u.user_id
@@ -48,7 +50,8 @@
         b.board_title AS boardTitle,
         c.comment_contents AS contents,
         c.comment_created_at AS createdAt,
-        c.comment_modified_at AS modifiedAt
+        c.comment_modified_at AS modifiedAt,
+        c.is_comment_deleted AS isCommentDeleted
         FROM comment c
         JOIN board b ON c.board_id = b.board_id
         WHERE c.user_id = #{userId}
@@ -62,6 +65,41 @@
         WHERE c.user_id = #{userId}
     </select>
 
+    <select id="selectReportedComments" resultType="com.freepath.devpath.board.comment.query.dto.MyCommentResponseDto">
+        SELECT
+        b.board_title AS boardTitle,
+        c.comment_contents AS contents,
+        c.comment_created_at AS createdAt,
+        c.comment_modified_at AS modifiedAt,
+        c.is_comment_deleted AS isCommentDeleted
+        FROM comment c
+        JOIN board b ON c.board_id = b.board_id
+        WHERE c.user_id = #{userId}
+        AND c.is_comment_deleted = 'R'
+        ORDER BY c.comment_created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
 
+    <select id="countReportedComments" resultType="long">
+        SELECT COUNT(*)
+        FROM comment c
+        WHERE c.user_id = #{userId}
+        AND c.is_comment_deleted = 'R'
+    </select>
+
+
+    <!-- 신고된 댓글 조회 쿼리 -->
+    <select id="selectCommentById" resultType="com.freepath.devpath.board.comment.query.dto.CommentDetailDto">
+        SELECT
+            u.nickname,
+            c.comment_contents,
+            c.comment_created_at,
+            c.comment_modified_at,
+            c.is_comment_deleted
+        FROM comment c
+                 JOIN users u ON c.user_id = u.user_id
+        WHERE c.comment_id = #{commentId}
+          AND c.is_comment_deleted = 'R'
+    </select>
 
 </mapper>

@@ -4,33 +4,109 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.freepath.devpath.interview.query.mapper.InterviewMapper">
 
-    <!-- 사용자가 진행한 면접방 목록 조회 -->
-    <select id="selectInterviewRoomListByUserId" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
-        SELECT *
+    <!-- =========== ResultMap =========== -->
+    <!-- 목록 조회용 InterviewRoomDto -->
+    <resultMap id="InterviewRoomDtoResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
+        <result property="interviewRoomId" column="interview_room_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="interviewCategory" column="interview_category"/>
+        <result property="interviewRoomTitle" column="interview_room_title"/>
+        <result property="interviewRoomStatus" column="interview_room_status"/>
+        <result property="interviewRoomCreatedAt" column="interview_room_created_at"/>
+    </resultMap>
+
+    <!-- 상세 조회용 -->
+    <resultMap id="InterviewRoomDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewRoomDto" extends="InterviewRoomDtoResultMap">
+        <result property="interviewRoomMemo" column="interview_room_memo"/>
+    </resultMap>
+
+    <!-- 면접 내역 -->
+    <resultMap id="InterviewDetailResultMap" type="com.freepath.devpath.interview.query.dto.InterviewDetailDto">
+        <result property="interviewRole" column="interview_role"/>
+        <result property="interviewMessage" column="interview_message"/>
+        <result property="messageCreatedAt" column="message_created_at"/>
+    </resultMap>
+
+
+
+    <!-- =========== SELECT =========== -->
+    <!-- InterviewQueryService -->
+    <!-- 면접방 목록 조회 : 사용자별 -->
+    <select id="selectInterviewRoomListByUserIdExcludingExpired" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_category,
+            interview_room_title,
+            interview_room_status,
+            interview_room_created_at
         FROM INTERVIEW_ROOM
         WHERE user_id = #{userId}
+            AND interview_room_status != 'EXPIRED'
         ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
     </select>
 
-    <!-- 면접방에 대한 정보 조회 -->
-    <select id="selectInterviewRoomByRoomId" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
-        SELECT *
+    <!-- 면접방 개수 조회 : 사용자별 -->
+    <select id="countInterviewRoomListByUserIdExcludingExpired" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_room_status != 'EXPIRED'
+    </select>
+
+    <!-- 면접방 목록 조회 : 사용자&카테고리별 -->
+    <select id="selectInterviewRoomListByUserIdAndCategory" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_category,
+            interview_room_title,
+            interview_room_status,
+            interview_room_created_at
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_category = #{category}
+            AND interview_room_status != 'EXPIRED'
+        ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 면접방 개수 조회 : 사용자&카테고리 별 -->
+    <select id="countInterviewRoomListByUserIdAndCategoryExcludingExpired" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+        WHERE user_id = #{userId}
+            AND interview_category = #{category}
+            AND interview_room_status != 'EXPIRED'
+    </select>
+
+    <!-- 면접방 상세 조회 -->
+    <select id="selectInterviewRoomByRoomId" resultMap="InterviewRoomDetailResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_category,
+            interview_room_title,
+            interview_room_status,
+            interview_room_memo,
+            interview_room_created_at
         FROM INTERVIEW_ROOM
         WHERE interview_room_id = #{interviewRoomId}
     </select>
 
-    <!-- 면접방에 있는 면접 내역 조회 -->
-    <select id="selectInterviewListByRoomId" resultType="com.freepath.devpath.interview.query.dto.InterviewDetailDto">
+    <!-- 면접 내역 조회 -->
+    <select id="selectInterviewListByRoomId" resultMap="InterviewDetailResultMap">
         SELECT
-            interview_role AS interviewRole,
-            interview_message AS interviewMessage,
-            message_created_at AS messageCreatedAt
+            interview_role,
+            interview_message,
+            message_created_at
         FROM INTERVIEW
         WHERE interview_room_id = #{interviewRoomId}
         ORDER BY interview_id ASC
     </select>
 
-    <!-- 면접방의 총평 조회 -->
+    <!-- 총평 조회 -->
     <select id="selectInterviewSummaryByRoomId" resultType="string">
         SELECT interview_message
         FROM interview
@@ -41,20 +117,48 @@
         LIMIT 1
     </select>
 
-    <!-- 모든 유저에 대한 면접방 목록 조회 -->
-    <select id="selectAllInterviewRooms" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
-        SELECT *
+
+    <!-- InterviewQueryAdminService -->
+    <!-- 관리자용 면접방 목록 조회 : 전체 -->
+    <select id="selectAllInterviewRooms" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+            interview_room_id,
+            user_id,
+            interview_category,
+            interview_room_title,
+            interview_room_status,
+            interview_room_created_at
         FROM INTERVIEW_ROOM
         ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
     </select>
 
-    <!-- 특정 카테고리에 대한 면접방 목록만 조회 -->
-    <select id="selectInterviewRoomListByUserIdAndCategory" resultType="com.freepath.devpath.interview.query.dto.InterviewRoomDto">
-        SELECT *
+    <!-- 면접방 개수 조회 : 전체 -->
+    <select id="countAllInterviewRooms" resultType="int">
+        SELECT COUNT(*)
         FROM INTERVIEW_ROOM
-        WHERE user_id = #{userId}
-            AND interview_category = #{category}
+    </select>
+
+    <!-- 관리자 용 면접방 목록 조회 : 상태 필터 -->
+    <select id="selectAllInterviewRoomsByStatus" resultMap="InterviewRoomDtoResultMap">
+        SELECT
+        interview_room_id,
+        user_id,
+        interview_category,
+        interview_room_title,
+        interview_room_status,
+        interview_room_created_at
+        FROM INTERVIEW_ROOM
+        WHERE interview_room_status = #{status}
         ORDER BY interview_room_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 면접방 개수 조회 : 상태별 -->
+    <select id="countAllInterviewRoomsByStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM INTERVIEW_ROOM
+        WHERE interview_room_status = #{status}
     </select>
 
 </mapper>

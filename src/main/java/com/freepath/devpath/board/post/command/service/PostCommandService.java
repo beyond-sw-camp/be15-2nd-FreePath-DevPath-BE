@@ -1,12 +1,14 @@
 package com.freepath.devpath.board.post.command.service;
 
+import com.freepath.devpath.board.post.command.domain.BoardDocument;
 import com.freepath.devpath.board.post.command.dto.request.PostCreateRequest;
 import com.freepath.devpath.board.post.command.dto.request.PostUpdateRequest;
-import com.freepath.devpath.board.post.command.entity.Board;
+import com.freepath.devpath.board.post.command.domain.Board;
 import com.freepath.devpath.board.post.command.exception.FileDeleteFailedException;
 import com.freepath.devpath.board.post.command.exception.FileUpdateFailedException;
 import com.freepath.devpath.board.post.command.exception.InvalidPostAuthorException;
 import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
+import com.freepath.devpath.board.post.command.repository.PostElasticRepository;
 import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.command.dto.response.PostCreateResponse;
 import com.freepath.devpath.board.vote.command.service.VoteCommandService;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostCommandService {
     private final PostRepository postRepository;
+    private final PostElasticRepository postElasticRepository;
     private final AttachmentService attachmentService;
     private final VoteCommandService voteCommandService;
 
@@ -35,6 +38,16 @@ public class PostCommandService {
                 .boardContents(postCreateRequest.getBoardContents())
                 .build();
         Board saved = postRepository.save(board);
+
+        // Elasticsearch에 동기화
+        BoardDocument post = BoardDocument.builder()
+                .boardId(String.valueOf(saved.getBoardId()))
+                .boardTitle(postCreateRequest.getBoardTitle())
+                .boardContents(postCreateRequest.getBoardContents())
+                .createdAt(saved.getBoardCreatedAt())
+                .build();
+
+        postElasticRepository.save(post);  // Elasticsearch에 저장
 
         // 파일 업로드 및 첨부파일 저장
         attachmentService.uploadAndSaveFiles(multipartFiles, saved.getBoardId(), userId);
@@ -60,7 +73,7 @@ public class PostCommandService {
         }
 
         // 이미 삭제된 경우
-        if ("Y".equals(post.getIsBoardDeleted())) {
+        if (post.getIsBoardDeleted() == 'Y') {
             throw new FileDeleteFailedException(ErrorCode.POST_ALREADY_DELETED);
         }
 
@@ -82,7 +95,7 @@ public class PostCommandService {
         }
 
         // 이미 삭제되어있는 게시물을 삭제하려는 경우 에러 반환
-        if (post.getIsBoardDeleted().equals("Y")) {
+        if (post.getIsBoardDeleted() == 'Y') {
             throw new FileUpdateFailedException(ErrorCode.POST_ALREADY_DELETED);
         }
 
@@ -91,6 +104,32 @@ public class PostCommandService {
 
         // 게시글 제목, 내용 수정
         post.modifyTitleAndContent(modifiedTitle, modifiedContents);
+
+        // Elasticsearch에 동기화
+        BoardDocument elasticPost = BoardDocument.builder()
+                .boardId(String.valueOf(boardId))
+                .boardTitle(modifiedTitle)
+                .boardContents(modifiedContents)
+                .createdAt(post.getBoardCreatedAt())
+                .build();
+
+        postElasticRepository.save(elasticPost);
+    }
+
+    @Transactional
+    public void updatePostDeletedStatus(Integer postId, char checkResult) {
+        // 게시글 조회
+        Board post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
+
+        // 삭제 상태를 'Y' 또는 'N'에 맞게 업데이트
+        if (checkResult == 'Y') {
+            post.delete(); // 삭제 처리
+        } else if (checkResult == 'N') {
+            post.restore(); // 복구 처리
+        }
+
+        // JPA dirty checking을 통해 자동으로 업데이트됨
     }
 }
 

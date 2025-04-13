@@ -9,6 +9,7 @@ public class MyCommentSearchRequest {
     private Integer page = 1;
     private Integer size = 10;
     private Integer userId;
+    private String isCommentDeleted;
 
     public int getOffset() {
         return (page - 1) * size;

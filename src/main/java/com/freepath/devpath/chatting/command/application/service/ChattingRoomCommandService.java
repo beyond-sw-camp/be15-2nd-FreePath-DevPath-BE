@@ -1,6 +1,6 @@
 package com.freepath.devpath.chatting.command.application.service;
 
-import com.freepath.devpath.board.post.command.entity.Board;
+import com.freepath.devpath.board.post.command.domain.Board;
 import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomCreateRequest;
@@ -10,6 +10,7 @@ import com.freepath.devpath.chatting.command.domain.aggregate.*;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
+import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;

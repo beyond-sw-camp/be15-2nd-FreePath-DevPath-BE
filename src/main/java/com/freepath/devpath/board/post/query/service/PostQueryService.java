@@ -1,6 +1,9 @@
 package com.freepath.devpath.board.post.query.service;
 
+import com.freepath.devpath.board.post.command.domain.BoardDocument;
+import com.freepath.devpath.board.post.command.repository.PostElasticRepository;
 import com.freepath.devpath.board.post.query.dto.request.MyPostRequest;
+import com.freepath.devpath.board.post.query.dto.request.PostContentSearchRequest;
 import com.freepath.devpath.board.post.query.dto.request.PostSearchRequest;
 import com.freepath.devpath.board.post.query.dto.response.*;
 import com.freepath.devpath.board.post.query.exception.InvalidDateIntervalException;
@@ -9,18 +12,20 @@ import com.freepath.devpath.board.post.query.mapper.PostMapper;
 import com.freepath.devpath.common.dto.Pagination;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PostQueryService {
     private final PostMapper postMapper;
+    private final PostElasticRepository postElasticRepository;
 
     /* 게시글 상세 조회 */
     @Transactional(readOnly = true)
@@ -95,5 +100,47 @@ public class PostQueryService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public PostListResponse searchBoardContentByKeyword(PostContentSearchRequest request) {
+        // Elasticsearch에서 boardContents에 키워드가 포함된 게시글을 검색하고 페이징 처리
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Page<BoardDocument> boardDocumentsPage = postElasticRepository.findByBoardContentsContaining(request.getKeyWord(), pageable);
+        int totalItems = (int) boardDocumentsPage.getTotalElements();
 
+        List<Integer> boardIds = boardDocumentsPage.getContent().stream()
+                .map(BoardDocument::getBoardId)
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        int page = request.getPage();
+        int size = request.getSize();
+
+        // 게시글 목록 조회
+        List<PostDto> posts = new ArrayList<>();
+
+        if (!boardIds.isEmpty()) {
+            posts = postMapper.findBoardByIds(boardIds); // 여러 개의 boardId를 한 번에 조회하는 메서드 사용
+        }
+
+        Pagination pagination = Pagination.builder()
+                .currentPage(page)
+                .totalPage((int) Math.ceil((double) totalItems/size))
+                .totalItems(totalItems)
+                .build();
+
+        return PostListResponse.builder()
+                .posts(posts)
+                .pagination(pagination)
+                .build();
+    }
+
+    /* 게시글 상세 조회 */
+    @Transactional(readOnly = true)
+    public PostDetailDto getReportedPostById(int boardId) {
+
+        PostDetailDto postDetailDto = Optional.ofNullable(postMapper.selectReportedPostById(boardId))
+                .orElseThrow(() -> new NoSuchPostException(ErrorCode.POST_NOT_FOUND));
+
+        return postDetailDto;
+    }
 }

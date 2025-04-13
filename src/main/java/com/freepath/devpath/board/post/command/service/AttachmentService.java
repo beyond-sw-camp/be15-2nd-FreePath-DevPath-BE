@@ -1,6 +1,6 @@
 package com.freepath.devpath.board.post.command.service;
 
-import com.freepath.devpath.board.post.command.entity.Attachment;
+import com.freepath.devpath.board.post.command.domain.Attachment;
 import com.freepath.devpath.board.post.command.exception.FileDeleteFailedException;
 import com.freepath.devpath.board.post.command.repository.AttachmentRepository;
 import com.freepath.devpath.common.exception.ErrorCode;

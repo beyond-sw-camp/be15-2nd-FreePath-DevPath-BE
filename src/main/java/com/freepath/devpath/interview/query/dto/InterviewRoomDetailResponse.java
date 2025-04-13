@@ -10,7 +10,11 @@ import java.util.List;
 @Setter
 public class InterviewRoomDetailResponse {
     private Long interviewRoomId;
+    private Long userId;
+    private String interviewRoomTitle;
     private String interviewCategory;
-    private LocalDateTime interviewRomCreatedAt;
+    private String interviewRoomStatus;
+    private String interviewRoomMemo;
+    private LocalDateTime interviewRoomCreatedAt;
     private List<InterviewDetailDto> interviewList;
 }

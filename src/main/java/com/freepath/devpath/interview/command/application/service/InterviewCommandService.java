@@ -2,6 +2,7 @@ package com.freepath.devpath.interview.command.application.service;
 
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.interview.command.application.dto.request.InterviewAnswerCommandRequest;
+import com.freepath.devpath.interview.command.application.dto.request.InterviewRoomUpdateCommandRequest;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.domain.aggregate.Interview;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -30,11 +33,13 @@ public class InterviewCommandService {
 
         // 1. 면접방 생성 및 저장
         InterviewRoom room = null;
+        String title = category + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
          try{
             room = interviewRoomRepository.save(
                     InterviewRoom.builder()
                             .userId(userId)
                             .interviewCategory(category)
+                            .interviewRoomTitle(title)
                             .build()
             );
          } catch(Exception e){
@@ -125,7 +130,7 @@ public class InterviewCommandService {
             );
         }
 
-        // 5. 마지막 답변이라면 면접 총평 생성
+        // 5. 마지막 답변이라면 면접 총평 생성하고 면접방 상태 변경
         if(interviewIndex == 3){
             List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
                     .filter(interview -> interview.getInterviewRole() == Interview.InterviewRole.AI)
@@ -141,6 +146,8 @@ public class InterviewCommandService {
                             .interviewMessage("[총평]"+summary)
                             .build()
             );
+
+            room.updateStatus(InterviewRoom.InterviewRoomStatus.COMPLETED);
         }
 
         // 6. 응답
@@ -174,6 +181,29 @@ public class InterviewCommandService {
         } catch (Exception e) {
             throw new InterviewRoomDeleteException(ErrorCode.INTERVIEW_ROOM_DELETE_FAILED);
         }
+    }
+
+    /* 면접방 정보 수정 */
+    @Transactional
+    public void updateInterviewRoom(Long userId, Long roomId, InterviewRoomUpdateCommandRequest request) {
+
+        // 면접방 존재 여부 확인
+        InterviewRoom room = interviewRoomRepository.findById(roomId)
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 면접방 진행자 검증
+        if (!room.getUserId().equals(userId)) {
+            throw new InterviewRoomAccessException(ErrorCode.INTERVIEW_ROOM_ACCESS_DENIED);
+        }
+
+        // 면접방 제목 수정
+        if (request.getInterviewRoomTitle() == null || request.getInterviewRoomTitle().isEmpty() || request.getInterviewRoomTitle().isBlank() || request.getInterviewRoomTitle().trim().isEmpty()) {
+            throw new InterviewRoomTitleInvalidException(ErrorCode.INTERVIEW_ROOM_TITLE_INVALID);
+        }
+        room.updateTitle(request.getInterviewRoomTitle());
+
+        // 면접방 메모 수정
+        room.updateMemo(request.getInterviewRoomMemo());
     }
 
 
