@@ -1,9 +1,6 @@
 package com.freepath.devpath.common.jwt;
 
-import com.freepath.devpath.chatting.command.application.service.ChattingRoomCommandService;
-import com.freepath.devpath.chatting.command.application.service.UserBlockCommandService;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
-import com.freepath.devpath.chatting.query.service.ChattingRoomQueryService;
+import com.freepath.devpath.chatting.command.application.service.ChattingJoinCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -22,17 +19,15 @@ import java.security.Principal;
 public class StompAuthChannelInterceptor implements ChannelInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final ChattingJoinCommandService chattingJoinCommandService;
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor
                 .getAccessor(message, StompHeaderAccessor.class);
-
+        String token = accessor.getFirstNativeHeader("Authorization");
         if (StompCommand.CONNECT.equals(accessor.getCommand()) ||
                 StompCommand.SEND.equals(accessor.getCommand())
         ) {
-            String token = accessor.getFirstNativeHeader("Authorization");
-
             //유효하지 않은 토큰인 경우
             if (token == null || !jwtTokenProvider.validateToken(token)) {
                 throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
@@ -40,6 +35,15 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
             int userId = Integer.parseInt(jwtTokenProvider.getUsernameFromJWT(token));
             Principal principal = () -> Integer.toString(userId);
             accessor.setUser(principal);
+        }
+        else if(StompCommand.SUBSCRIBE.equals(accessor.getCommand())){
+            //유효하지 않은 토큰인 경우
+            if (token == null || !jwtTokenProvider.validateToken(token)) {
+                throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            }
+            int userId = Integer.parseInt(jwtTokenProvider.getUsernameFromJWT(token));
+            String destination = accessor.getDestination();
+            chattingJoinCommandService.isUserAllowedToSubscribe(userId, destination);
         }
 
         return message;

@@ -23,6 +23,7 @@ public class ChattingCommandController {
     @MessageMapping("/chatting/send")
     public void send(ChatDTO chatDTO, Principal principal) {
         log.info(principal.getName()+" : "+chatDTO.toString());
-        chattingService.sendChatting(chatDTO,principal);
+        int userId = Integer.parseInt(principal.getName());
+        chattingService.sendChatting(chatDTO,userId);
     }
 }

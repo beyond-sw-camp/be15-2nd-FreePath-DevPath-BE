@@ -7,10 +7,7 @@ import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepos
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
-import com.freepath.devpath.chatting.query.dto.response.ChattingRoomDTO;
-import com.freepath.devpath.chatting.query.dto.response.ChattingRoomResponse;
-import com.freepath.devpath.chatting.query.dto.response.ChattingRoomWaitingDTO;
-import com.freepath.devpath.chatting.query.dto.response.GroupChattingWaitingRoomResponse;
+import com.freepath.devpath.chatting.query.dto.response.*;
 import com.freepath.devpath.chatting.query.mapper.ChattingRoomMapper;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +34,9 @@ public class ChattingRoomQueryService {
     @Transactional
     public GroupChattingWaitingRoomResponse getWaitingRoom(int chattingRoomId, String username) {
         int userId = Integer.parseInt(username);
-        chattingRoomRepository.findById(chattingRoomId).orElseThrow(
-                () -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM)
-        );
+        if(!chattingRoomRepository.existsById(chattingRoomId)){
+            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
+        }
         ChattingJoin chattingJoin = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId)).orElseThrow(
                 ()-> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN)
         );
@@ -52,5 +49,18 @@ public class ChattingRoomQueryService {
                 .chattingRoomWatingDTOList(chattingRoomWaitingDTOS)
                 .build();
 
+    }
+
+    @Transactional(readOnly = true)
+    public ChattingRoomJoinUsersResponse getChattingRoomJoinUsers(int chattingRoomId, String username) {
+        int userId = Integer.parseInt(username);
+        if(!chattingRoomRepository.existsById(chattingRoomId)){
+            throw new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM);
+        }
+        if(!chattingJoinRepository.existsById(new ChattingJoinId(chattingRoomId, userId))){
+            throw new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN);
+        }
+        List<ChattingRoomJoinUserDTO> joinUsers = chattingRoomMapper.selectJoinUsers(chattingRoomId);
+        return new ChattingRoomJoinUsersResponse(joinUsers);
     }
 }

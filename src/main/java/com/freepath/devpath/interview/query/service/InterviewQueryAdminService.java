@@ -50,23 +50,24 @@ public class InterviewQueryAdminService {
                 .build();
     }
 
-    /* 특정 상태의 면접방 목록 조회*/
-    public InterviewRoomListResponse getAllInterviewRoomsByStatus(String status, int page, int size) {
+    /* 전체 유저 면접방 목록 조회에 필터 적용 */
+    @Transactional(readOnly = true)
+    public InterviewRoomListResponse getAdminFilteredInterviewRoomList(
+            String status, String category, String difficultyLevel, String evaluationStrictness,
+            int page, int size) {
+
         int offset = (page - 1) * size;
-        List<InterviewRoomDto> response;
 
-        try {
-            response = interviewMapper.selectAllInterviewRoomsByStatus(status, size, offset);
-        } catch (Exception e) {
-            throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
-        }
+        List<InterviewRoomDto> rooms = interviewMapper.selectAdminInterviewRoomListByFilter(
+                status, category, difficultyLevel, evaluationStrictness, size, offset);
 
-        if (response == null || response.isEmpty()) {
+        if (rooms == null || rooms.isEmpty()) {
             throw new InterviewRoomQueryNotFoundException(ErrorCode.INTERVIEW_ROOM_QUERY_NOT_FOUND);
         }
 
-        // 페이징 처리
-        int totalItems = interviewMapper.countAllInterviewRoomsByStatus(status);
+        int totalItems = interviewMapper.countAdminInterviewRoomListByFilter(
+                status, category, difficultyLevel, evaluationStrictness);
+
         Pagination pagination = Pagination.builder()
                 .currentPage(page)
                 .totalPage((int) Math.ceil((double) totalItems / size))
@@ -74,8 +75,9 @@ public class InterviewQueryAdminService {
                 .build();
 
         return InterviewRoomListResponse.builder()
-                .interviewRooms(response)
+                .interviewRooms(rooms)
                 .pagination(pagination)
+                .totalInterviewRoomCount(totalItems)
                 .build();
     }
 

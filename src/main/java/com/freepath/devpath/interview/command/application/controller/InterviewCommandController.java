@@ -32,7 +32,12 @@ public class InterviewCommandController {
             @AuthenticationPrincipal UserDetails userDetails) {
         Long userId = Long.valueOf(userDetails.getUsername());
 
-        InterviewRoomCommandResponse response = interviewCommandService.createRoomAndFirstQuestion(userId, request.getInterviewCategory());
+        InterviewRoomCommandResponse response = interviewCommandService.createRoomAndFirstQuestion(
+                userId,
+                request.getInterviewCategory(),
+                request.getDifficultyLevel(),
+                request.getEvaluationStrictness()
+        );
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -45,7 +50,9 @@ public class InterviewCommandController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(userId, roomId, request);
+        InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(
+                userId, roomId, request);
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

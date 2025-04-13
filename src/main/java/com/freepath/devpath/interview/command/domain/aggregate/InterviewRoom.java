@@ -25,6 +25,14 @@ public class InterviewRoom {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private DifficultyLevel difficultyLevel;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EvaluationStrictness evaluationStrictness;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private InterviewRoomStatus interviewRoomStatus;
 
     @Column
@@ -36,6 +44,8 @@ public class InterviewRoom {
     protected void onCreate() {
         this.interviewRoomCreatedAt = LocalDateTime.now();
         this.interviewRoomStatus = InterviewRoomStatus.PROGRESS;
+        this.difficultyLevel = difficultyLevel != null ? difficultyLevel : DifficultyLevel.MEDIUM;
+        this.evaluationStrictness = evaluationStrictness != null ? evaluationStrictness : EvaluationStrictness.NORMAL;
     }
 
     /* 면접방 제목을 변경 */
@@ -53,7 +63,4 @@ public class InterviewRoom {
         this.interviewRoomMemo = memo;
     }
 
-    public enum InterviewRoomStatus {
-        PROGRESS, COMPLETED, EXPIRED
-    }
 }

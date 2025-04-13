@@ -1,6 +1,7 @@
 package com.freepath.devpath.interview.command.infrastructure.scheduler;
 
 import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
+import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoomStatus;
 import com.freepath.devpath.interview.command.domain.repository.InterviewRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,11 +21,11 @@ public class InterviewRoomExpirationScheduler {
     @Scheduled(cron = "0 0 * * * *")
     @Transactional
     public void expireOldInterviewRooms() {
-        List<InterviewRoom> progressRooms = interviewRoomRepository.findAllByInterviewRoomStatus(InterviewRoom.InterviewRoomStatus.PROGRESS);
+        List<InterviewRoom> progressRooms = interviewRoomRepository.findAllByInterviewRoomStatus(InterviewRoomStatus.PROGRESS);
 
         for (InterviewRoom room : progressRooms) {
             if (room.getInterviewRoomCreatedAt().isBefore(LocalDateTime.now().minusHours(24))) {
-                room.updateStatus(InterviewRoom.InterviewRoomStatus.EXPIRED);
+                room.updateStatus(InterviewRoomStatus.EXPIRED);
                 System.out.println("만료 처리된 면접방 : "+room.getInterviewRoomId());
             }
         }
