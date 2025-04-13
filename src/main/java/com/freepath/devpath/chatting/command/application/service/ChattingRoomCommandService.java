@@ -5,10 +5,8 @@ import com.freepath.devpath.board.post.command.repository.PostRepository;
 import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomCreateRequest;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomUpdateRequest;
-import com.freepath.devpath.chatting.command.application.dto.response.ChattingResponse;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingRoomCommandResponse;
 import com.freepath.devpath.chatting.command.domain.aggregate.*;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingJoinRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
 import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
@@ -18,21 +16,19 @@ import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
 import com.freepath.devpath.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class ChattingRoomCommandService {
-    private final SimpMessagingTemplate messagingTemplate;
-    private final ChattingJoinRepository chattingJoinRepository;
+
+    private final ChattingJoinCommandService chattingJoinCommandService;
     private final ChattingRoomRepository chattingRoomRepository;
     private final UserCommandRepository userCommandRepository;
     private final ChattingRepository chattingRepository;
     private final PostRepository postRepository;
+    private final ChattingCommandService chattingCommandService;
 
     @Transactional
     public ChattingRoomCommandResponse createChattingRoom(
@@ -51,20 +47,9 @@ public class ChattingRoomCommandService {
         ChattingRoom savedChattingRoom = chattingRoomRepository.save(chattingRoom);
         int chattingRoomId = savedChattingRoom.getChattingRoomId();
 
-        ChattingJoin chattingJoin1 = chattingJoinBuild(creatorId, chattingRoomId,ChattingRole.ONE);
-        ChattingJoin chattingJoin2 = chattingJoinBuild(inviteeId, chattingRoomId,ChattingRole.ONE);
-
-        chattingJoinRepository.save(chattingJoin1);
-        chattingJoinRepository.save(chattingJoin2);
+        chattingJoinCommandService.insert(creatorId, chattingRoomId,ChattingRole.ONE,'Y');
+        chattingJoinCommandService.insert(inviteeId, chattingRoomId,ChattingRole.ONE,'Y');
         return new ChattingRoomCommandResponse(chattingRoomId);
-    }
-
-    private ChattingJoin chattingJoinBuild(int userId, int chattingRoomId, ChattingRole chattingRole) {
-        return ChattingJoin.builder()
-                .id(new ChattingJoinId(chattingRoomId, userId))
-                .chattingRole(chattingRole)
-                .chattingJoinStatus('Y')
-                .build();
     }
 
     @Transactional
@@ -97,9 +82,7 @@ public class ChattingRoomCommandService {
         ChattingRoom savedChattingRoom = chattingRoomRepository.save(chattingRoom);
         int chattingRoomId = savedChattingRoom.getChattingRoomId();
         int creatorId = Integer.parseInt(username);
-        ChattingJoin chattingJoin1 = chattingJoinBuild(creatorId, chattingRoomId,ChattingRole.OWNER);
-
-        chattingJoinRepository.save(chattingJoin1);
+        chattingJoinCommandService.insert(creatorId, chattingRoomId,ChattingRole.OWNER,'Y');
         return new ChattingRoomCommandResponse(chattingRoomId);
     }
 
@@ -109,49 +92,23 @@ public class ChattingRoomCommandService {
         //유효성 검사
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
                 .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
-        ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
-                .orElseThrow(() -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
-
         //퇴장 처리
-        chattingJoin.setChattingJoinStatus('N');
-        if(chattingJoin.getChattingRole()==ChattingRole.OWNER){
-            chattingJoin.setChattingRole(ChattingRole.MEMBER);
-        }
+        chattingJoinCommandService.setQuit(chattingRoomId,userId);
         User user = userCommandRepository.findById((long)userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
         chattingRoom.setUserCount(chattingRoom.getUserCount()-1);
-        //채팅 생성
-        Chatting chatting = Chatting.builder()
-                .chattingRoomId(chattingRoomId)
-                .userId(1)
-                .chattingMessage(user.getNickname()+"님이 퇴장했습니다.")
-                .chattingCreatedAt(LocalDateTime.now())
-                .build();
-        Chatting savedChatting = chattingRepository.save(chatting);
-        //메세지 처리
-        ChattingResponse chattingResponse = ChattingResponse.builder()
-                .message(savedChatting.getChattingMessage())
-                .timestamp(savedChatting.getChattingCreatedAt().toString())
-                .nickname("System")
-                .build();
-        messagingTemplate.convertAndSend("/topic/room/" + chattingRoomId, chattingResponse);
-
+        String message = user.getNickname()+"님이 퇴장했습니다.";
+       chattingCommandService.sendSystemMessage(chattingRoomId,message);
     }
 
     @Transactional
     public void deleteChattingRoom(String username, int chattingRoomId) {
         int userId = Integer.parseInt(username);
-        ChattingJoin chattingJoin = chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
-                .orElseThrow(
-                        () -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN)
-                );
-        if(chattingJoin.getChattingRole()!=ChattingRole.OWNER || chattingJoin.getChattingJoinStatus()!='Y'){
-            throw new ChattingRoomException(ErrorCode.NO_CHATTING_ROOM_AUTH);
-        }
+        chattingJoinCommandService.checkOwner(chattingRoomId,userId);
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
                 .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
         chattingRoom.setBoardId(null);
-        chattingJoinRepository.deleteByChattingRoomId(chattingRoomId);
+        chattingJoinCommandService.deleteByChattingRoomId(chattingRoomId);
         chattingRepository.deleteByChattingRoomId(chattingRoomId);
         chattingRoomRepository.delete(chattingRoom);
     }
@@ -167,11 +124,7 @@ public class ChattingRoomCommandService {
         }
         ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
                 .orElseThrow(() -> new ChattingRoomException(ErrorCode.NO_SUCH_CHATTING_ROOM));
-        ChattingJoin chattingJoin= chattingJoinRepository.findById(new ChattingJoinId(chattingRoomId,userId))
-                .orElseThrow(() -> new ChattingJoinException(ErrorCode.NO_CHATTING_JOIN));
-        if(chattingJoin.getChattingRole()!=ChattingRole.OWNER){
-            throw new ChattingJoinException(ErrorCode.NO_CHATTING_ROOM_AUTH);
-        }
+        chattingJoinCommandService.checkOwner(chattingRoomId,userId);
         //제목 수정
         chattingRoom.setChattingRoomTitle(title);
     }

@@ -1,5 +1,7 @@
 package com.freepath.devpath.chatting.query.controller;
 
+import com.freepath.devpath.chatting.command.domain.aggregate.Chatting;
+import com.freepath.devpath.chatting.query.dto.response.ChattingRoomJoinUsersResponse;
 import com.freepath.devpath.chatting.query.dto.response.GroupChattingWaitingRoomResponse;
 import com.freepath.devpath.chatting.query.dto.response.ChattingRoomResponse;
 import com.freepath.devpath.chatting.query.service.ChattingRoomQueryService;
@@ -33,5 +35,14 @@ public class ChattingRoomQueryController {
         GroupChattingWaitingRoomResponse groupChattingWaitingRoomResponse =
                 chattingRoomQueryService.getWaitingRoom(chattingRoomId, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(groupChattingWaitingRoomResponse));
+    }
+
+    @GetMapping("/chatting/list/{chattingRoomId}/users")
+    public ResponseEntity<ApiResponse<ChattingRoomJoinUsersResponse>> getChattingRoomJoinUsers(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable int chattingRoomId
+    ){
+        ChattingRoomJoinUsersResponse response =chattingRoomQueryService.getChattingRoomJoinUsers(chattingRoomId,userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
