@@ -14,5 +14,5 @@ public class BookmarkRequest {
 
     @Schema(description = "게시글 ID", example = "1")
     @NotNull(message = "게시글 ID는 필수입니다.")
-    private Long boardId;
+    private Long boardId; 
 }
