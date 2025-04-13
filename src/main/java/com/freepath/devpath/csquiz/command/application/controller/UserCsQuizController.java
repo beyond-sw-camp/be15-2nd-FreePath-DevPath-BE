@@ -5,6 +5,8 @@ import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.csquiz.command.application.dto.CsQuizResultRequest;
 import com.freepath.devpath.csquiz.command.application.service.CsQuizResultService;
 import com.freepath.devpath.csquiz.exception.CsQuizNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/csquiz")
 @RequiredArgsConstructor
+@Tag(name = "CS 퀴즈 응답", description = "CS 퀴즈 사용자 응답 제출 관련 API")
 public class UserCsQuizController {
 
     private final CsQuizResultService resultService;
 
-    // 사용자 답변 저장 (입력 받은 만큼씩)
+    @Operation(summary = "CS 퀴즈 응답 제출", description = "사용자가 퀴즈에 응답한 내용을 제출합니다. (여러 문항 일괄 제출)")
     @PostMapping("/submit")
     public ResponseEntity<ApiResponse<Void>> submitAnswers(@RequestBody @Valid List<CsQuizResultRequest> requests) {
         resultService.submitAnswers(requests);

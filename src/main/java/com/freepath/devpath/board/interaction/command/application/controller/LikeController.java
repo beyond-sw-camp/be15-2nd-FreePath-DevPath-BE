@@ -6,6 +6,8 @@ import com.freepath.devpath.board.interaction.command.application.service.LikeSe
 import com.freepath.devpath.board.interaction.exception.*;
 import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,10 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/like")
 @RequiredArgsConstructor
+@Tag(name = "좋아요", description = "게시글/댓글 좋아요 및 취소 관련 API")
 public class LikeController {
     private final LikeService likeService;
 
-    // 게시글이나 댓글 좋아요
+    @Operation(summary = "게시글 좋아요 등록", description = "사용자가 게시글을 좋아요합니다.")
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> like(
             @RequestBody LikeRequest request
@@ -30,7 +33,7 @@ public class LikeController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    // 게시글이나 댓글 좋아요 취소
+    @Operation(summary = "게시글 좋아요 취소", description = "사용자가 게시글을 좋아요를 취소합니다.")
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> unlike(
             @RequestBody LikeRequest request

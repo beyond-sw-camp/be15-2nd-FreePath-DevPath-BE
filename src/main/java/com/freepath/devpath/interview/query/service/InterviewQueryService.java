@@ -168,7 +168,7 @@ public class InterviewQueryService {
 
         // 응답
         return InterviewSummaryResponse.builder()
-                .interviewRoomId(String.valueOf(roomId))
+                .interviewRoomId(roomId)
                 .interviewRoomTitle(room.getInterviewRoomTitle())
                 .summary(summary)
                 .build();

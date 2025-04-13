@@ -6,10 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class InterviewRoomCommandRequest {
-    private Long userId;
-    private String interviewRoomTitle;
     private String interviewCategory;
     private DifficultyLevel difficultyLevel;
     private EvaluationStrictness evaluationStrictness;
-    private String interviewRoomMemo;
 }
