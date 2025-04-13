@@ -1,4 +1,4 @@
-package com.freepath.devpath.chatting.command.domain.aggregate;
+package com.freepath.devpath.chatting.command.application.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class ChatDTO {
+public class ChattingRequest {
     private Integer chattingRoomId;
     private String chattingMessage;
 }

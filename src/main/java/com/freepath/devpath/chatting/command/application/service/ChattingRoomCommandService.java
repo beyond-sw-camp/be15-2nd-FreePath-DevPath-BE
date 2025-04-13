@@ -6,11 +6,11 @@ import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomCreateRequest;
 import com.freepath.devpath.chatting.command.application.dto.request.GroupChattingRoomUpdateRequest;
 import com.freepath.devpath.chatting.command.application.dto.response.ChattingRoomCommandResponse;
-import com.freepath.devpath.chatting.command.domain.aggregate.*;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingRepository;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingRole;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingRoom;
+import com.freepath.devpath.chatting.command.domain.mongo.repository.ChattingRepository;
+import com.freepath.devpath.chatting.command.domain.jpa.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
-import com.freepath.devpath.chatting.exception.ChattingJoinException;
 import com.freepath.devpath.common.exception.ErrorCode;
 import com.freepath.devpath.user.command.entity.User;
 import com.freepath.devpath.user.command.repository.UserCommandRepository;
@@ -47,7 +47,7 @@ public class ChattingRoomCommandService {
         ChattingRoom savedChattingRoom = chattingRoomRepository.save(chattingRoom);
         int chattingRoomId = savedChattingRoom.getChattingRoomId();
 
-        chattingJoinCommandService.insert(creatorId, chattingRoomId,ChattingRole.ONE,'Y');
+        chattingJoinCommandService.insert(creatorId, chattingRoomId, ChattingRole.ONE,'Y');
         chattingJoinCommandService.insert(inviteeId, chattingRoomId,ChattingRole.ONE,'Y');
         return new ChattingRoomCommandResponse(chattingRoomId);
     }

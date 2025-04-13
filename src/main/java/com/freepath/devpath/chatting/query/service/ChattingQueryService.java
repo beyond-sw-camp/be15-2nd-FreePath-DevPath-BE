@@ -1,11 +1,10 @@
 package com.freepath.devpath.chatting.query.service;
 
 import com.freepath.devpath.chatting.command.application.service.ChattingJoinCommandService;
-import com.freepath.devpath.chatting.command.application.service.ChattingRoomCommandService;
-import com.freepath.devpath.chatting.command.domain.repository.ChattingRoomRepository;
+import com.freepath.devpath.chatting.command.domain.jpa.repository.ChattingRoomRepository;
 import com.freepath.devpath.chatting.exception.ChattingRoomException;
 import com.freepath.devpath.chatting.query.dto.response.ChattingDTO;
-import com.freepath.devpath.chatting.query.dto.response.ChattingListResponse;
+import com.freepath.devpath.chatting.command.application.dto.response.ChattingListResponse;
 import com.freepath.devpath.chatting.query.mapper.ChattingMapper;
 import com.freepath.devpath.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
