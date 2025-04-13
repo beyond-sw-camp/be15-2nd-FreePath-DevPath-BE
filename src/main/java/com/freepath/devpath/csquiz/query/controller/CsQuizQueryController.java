@@ -1,6 +1,8 @@
 package com.freepath.devpath.csquiz.query.controller;
 
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.csquiz.exception.CsQuizNotFoundException;
 import com.freepath.devpath.csquiz.query.dto.*;
 import com.freepath.devpath.csquiz.query.service.CsQuizQueryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +61,14 @@ public class CsQuizQueryController {
         return csQuizQueryService.getResultsByUserId(userId);
     }
 
+    // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
+    @ExceptionHandler(CsQuizNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCsQuizNotFound(CsQuizNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
 }
 

@@ -1,6 +1,8 @@
 package com.freepath.devpath.csquiz.query.service;
 
 import com.freepath.devpath.common.dto.Pagination;
+import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.csquiz.exception.CsQuizNotFoundException;
 import com.freepath.devpath.csquiz.query.dto.*;
 import com.freepath.devpath.csquiz.query.mapper.CsQuizQueryMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,11 @@ public class CsQuizQueryService {
         return csQuizQueryMapper.findWeeklyQuiz();
     }
     public CsQuizResponse getQuizById(Long csquizId) {
-        return csQuizQueryMapper.findQuizById(csquizId);
+        CsQuizResponse quiz = csQuizQueryMapper.findQuizById(csquizId);
+        if (quiz == null) {
+            throw new CsQuizNotFoundException(ErrorCode.CS_QUIZ_NOT_FOUND);
+        }
+        return quiz;
     }
     @Transactional(readOnly = true)
     public CsQuizListResponse getAllQuizzes(CsQuizSearchRequest csQuizSearchRequest) {
