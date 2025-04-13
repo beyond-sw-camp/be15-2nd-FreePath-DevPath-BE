@@ -4,6 +4,7 @@ import com.freepath.devpath.chatting.command.application.dto.request.WaitingRoom
 import com.freepath.devpath.chatting.command.application.service.WaitingRoomCommandService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "그룹채팅방 대기방", description = "그룹채팅방 대기방 API")
 public class WaitingRoomCommandController {
     private final WaitingRoomCommandService waitingRoomCommandService;
 

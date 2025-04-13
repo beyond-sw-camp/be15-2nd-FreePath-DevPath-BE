@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@Tag(name = "chatting room", description = "채팅방 API")
+@Tag(name = "채팅방", description = "채팅방 API")
 public class ChattingRoomCommandController {
     private final ChattingRoomCommandService chattingRoomCommandService;
 

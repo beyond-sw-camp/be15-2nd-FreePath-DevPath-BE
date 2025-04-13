@@ -3,6 +3,7 @@ package com.freepath.devpath.chatting.command.application.controller;
 import com.freepath.devpath.chatting.command.application.service.UserBlockCommandService;
 import com.freepath.devpath.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "차단", description = "차단 API")
 public class UserBlockCommandController {
     private final UserBlockCommandService userBlockCommandService;
 
