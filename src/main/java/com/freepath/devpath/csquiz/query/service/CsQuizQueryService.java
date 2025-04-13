@@ -29,7 +29,7 @@ public class CsQuizQueryService {
     @Transactional(readOnly = true)
     public CsQuizListResponse getAllQuizzes(CsQuizSearchRequest csQuizSearchRequest) {
         List<CsQuizDetailResultDTO> quizzes = csQuizQueryMapper.selectAllQuizzes(csQuizSearchRequest);
-        Long totalItems = csQuizQueryMapper.countProducts(csQuizSearchRequest);
+        long totalItems = csQuizQueryMapper.countProducts(csQuizSearchRequest);
 
         int page = csQuizSearchRequest.getPage();
         int size = csQuizSearchRequest.getSize();
