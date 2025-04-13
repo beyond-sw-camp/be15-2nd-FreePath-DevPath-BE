@@ -70,7 +70,10 @@ public class GptService {
     }
 
     /* 카테고리에 대한 다음 질문 도출: 이전 질문 제외 */
-    public String generateQuestion(String category, DifficultyLevel difficultyLevel, List<String> previousQuestions) {
+    public String generateQuestion(
+            String category, DifficultyLevel difficultyLevel,
+            List<String> previousQuestions
+    ) {
         System.out.println("[GPT 질문 생성 요청] 카테고리: " + category);
 
         // 1. GPT에게 전달할 프롬프트 작성
@@ -114,7 +117,9 @@ public class GptService {
     }
 
     /* 면접 답변에 대한 평가 */
-    public String evaluateAnswer(String question, String userAnswer, EvaluationStrictness evaluationStrictness) {
+    public String evaluateAnswer(String question, String userAnswer,
+                                 EvaluationStrictness evaluationStrictness
+    ) {
         System.out.println("[GPT 요청 전송] 사용자 답변: " + userAnswer);
 
         Map<String, Object> requestBody = Map.of(
@@ -285,7 +290,7 @@ public class GptService {
             """;
     }
 
-    /* 질문 생성 프롬프트 : user */
+    /* 첫 질문 생성 프롬프트 : user */
     private String questionGenerationUserPrompt(String category, DifficultyLevel difficultyLevel){
         String questionDifficultyLevel = difficultyLevel.name();
 
@@ -299,7 +304,11 @@ public class GptService {
         """.formatted(category, questionDifficultyLevel);
     }
 
-    private String questionGenerationUserPrompt(String category, DifficultyLevel difficultyLevel, List<String> previousQuestions){
+    /* 다음 질문 생성 프롬프트 : user */
+    private String questionGenerationUserPrompt(
+            String category, DifficultyLevel difficultyLevel,
+            List<String> previousQuestions
+    ){
         String questionDifficultyLevel = difficultyLevel.name();
 
         String excluded = previousQuestions.isEmpty() ? "없음" :
@@ -451,7 +460,10 @@ public class GptService {
     }
 
     /* 답변에 대한 평가 추출 프롬프트 : user */
-    private String evaluationUserPrompt(String question, String userAnswer, EvaluationStrictness evaluationStrictness){
+    private String evaluationUserPrompt(
+            String question, String userAnswer,
+            EvaluationStrictness evaluationStrictness
+    ){
         return """
         아래 질문과 답변을 위의 기준과 형식에 따라 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.
         

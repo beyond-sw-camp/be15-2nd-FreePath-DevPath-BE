@@ -48,7 +48,8 @@ public class InterviewQueryController {
     public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getInterviewRoomList(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size
+    ) {
 
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewRoomListResponse response = interviewQueryService.getInterviewRoomList(userId, page, size);
@@ -73,8 +74,8 @@ public class InterviewQueryController {
             @RequestParam(required = false) String difficultyLevel,
             @RequestParam(required = false) String evaluationStrictness,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
+            @RequestParam(defaultValue = "10") int size
+    ) {
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewRoomListResponse response = interviewQueryService.getFilteredInterviewRoomList(
                 userId, category, difficultyLevel, evaluationStrictness, page, size);
@@ -90,8 +91,8 @@ public class InterviewQueryController {
     @GetMapping("/{interviewRoomId}")
     public ResponseEntity<ApiResponse<InterviewRoomDetailResponse>> getInterviewRoomDetail(
             @PathVariable Long interviewRoomId,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewRoomDetailResponse response = interviewQueryService.getInterviewRoomByRoomId(interviewRoomId, userId);
 
@@ -107,7 +108,8 @@ public class InterviewQueryController {
     @GetMapping("/{interviewRoomId}/summary")
     public ResponseEntity<ApiResponse<InterviewSummaryResponse>> getInterviewSummary(
             @PathVariable Long interviewRoomId,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
 
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewSummaryResponse response = interviewQueryService.getInterviewSummary(interviewRoomId, userId);

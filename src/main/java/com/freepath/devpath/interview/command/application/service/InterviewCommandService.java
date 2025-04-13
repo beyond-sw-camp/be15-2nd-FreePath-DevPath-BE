@@ -208,7 +208,10 @@ public class InterviewCommandService {
 
     /* 기존의 면접방 재실행 */
     @Transactional
-    public InterviewRoomCommandResponse reexecuteInterviewRoom(Long userId, Long originalRoomId, EvaluationStrictness newStrictness) {
+    public InterviewRoomCommandResponse reexecuteInterviewRoom(
+            Long userId, Long originalRoomId,
+            EvaluationStrictness newStrictness
+    ) {
         // 1. 기존 면접방 조회
         InterviewRoom originalRoom = interviewRoomRepository.findById(originalRoomId)
                 .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
@@ -288,7 +291,10 @@ public class InterviewCommandService {
 
     /* 면접방 정보 수정 */
     @Transactional
-    public void updateInterviewRoom(Long userId, Long roomId, InterviewRoomUpdateCommandRequest request) {
+    public void updateInterviewRoom(
+            Long userId, Long roomId,
+            InterviewRoomUpdateCommandRequest request
+    ) {
 
         // 면접방 존재 여부 확인
         InterviewRoom room = interviewRoomRepository.findById(roomId)
@@ -308,6 +314,5 @@ public class InterviewCommandService {
         // 면접방 메모 수정
         room.updateMemo(request.getInterviewRoomMemo());
     }
-
 
 }
