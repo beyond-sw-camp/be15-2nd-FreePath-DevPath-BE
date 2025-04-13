@@ -195,4 +195,13 @@ public class UserCommandService {
         // 6. Redis에서 제거
         userRedisTemplate.delete("SOCIAL_REGISTER:" + email);
     }
+
+    @Transactional
+    public void saveDevMbti(Integer userId, String devMbti) {
+        User user = userCommandRepository.findByUserIdAndUserDeletedAtIsNull(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        user.setDeveloperPersonality(devMbti);
+    }
+
 }
