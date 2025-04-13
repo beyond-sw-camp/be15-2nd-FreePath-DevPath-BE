@@ -19,4 +19,5 @@ public class InterviewRoomDetailResponse {
     private String interviewRoomMemo;
     private LocalDateTime interviewRoomCreatedAt;
     private List<InterviewDetailDto> interviewList;
+    private List<ReexecutedRoomDto> reexecutedRooms;
 }
