@@ -83,8 +83,7 @@ public class InterviewCommandService {
     @Transactional
     public InterviewAnswerCommandResponse answerAndEvaluate(
             Long userId, Long roomId,
-            InterviewAnswerCommandRequest request,
-            EvaluationStrictness evaluationStrictness) {
+            InterviewAnswerCommandRequest request) {
 
         // 0-1. 면접방 존재 여부 확인
         InterviewRoom room = interviewRoomRepository.findById(roomId)
@@ -122,6 +121,9 @@ public class InterviewCommandService {
                     .orElseThrow(
                             () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
                     );
+
+        EvaluationStrictness evaluationStrictness = Optional.ofNullable(room.getEvaluationStrictness())
+                .orElse(EvaluationStrictness.NORMAL);
         String evaluation = gptService.evaluateAnswer(question.getInterviewMessage(), request.getUserAnswer(), evaluationStrictness);
 
         // 3. GPT 평가 저장
@@ -135,8 +137,12 @@ public class InterviewCommandService {
 
         // 4. 다음 질문 생성 (면접방 당 3회 면접 실행)
         String nextQuestion = null;
+        DifficultyLevel difficultyLevel = Optional.ofNullable(room.getDifficultyLevel())
+                .orElse(DifficultyLevel.MEDIUM);
         if (interviewIndex < 3) {
-            nextQuestion = gptService.generateQuestion(room.getInterviewCategory(), room.getDifficultyLevel());
+            nextQuestion = gptService.generateQuestion(
+                    room.getInterviewCategory(), difficultyLevel
+            );
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
@@ -153,7 +159,7 @@ public class InterviewCommandService {
                     .map(Interview::getInterviewMessage)
                     .filter(msg -> msg.startsWith("[답변 평가]"))
                     .toList();
-            String summary = gptService.summarizeInterview(gptEvaluations);
+            String summary = gptService.summarizeInterview(gptEvaluations, evaluationStrictness, difficultyLevel);
 
             interviewRepository.save(
                     Interview.builder()

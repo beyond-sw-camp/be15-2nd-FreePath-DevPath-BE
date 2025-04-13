@@ -51,7 +51,7 @@ public class InterviewCommandController {
 
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(
-                userId, roomId, request, request.getEvaluationStrictness());
+                userId, roomId, request);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

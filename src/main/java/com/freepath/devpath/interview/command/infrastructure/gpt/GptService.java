@@ -119,15 +119,17 @@ public class GptService {
     }
 
     /* 면접방의 면접 답변에 대한 총평 */
-    public String summarizeInterview(List<String> evaluations) {
+    public String summarizeInterview(
+            List<String> evaluations,
+            EvaluationStrictness evaluationStrictness,
+            DifficultyLevel difficultyLevel
+    ) {
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
                 "temperature", 0.3,
                 "messages", List.of(
-                        Map.of("role", "system", "content", summarizeSystemPrompt()),
-                        Map.of("role", "user", "content",
-                                String.join("\n\n", evaluations) +
-                                        "\n\n이 면접 내용을 위의 기준에 따라 정리하고 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.")
+                        Map.of("role", "system", "content", summarizeSystemPrompt(evaluationStrictness, difficultyLevel)),
+                        Map.of("role", "user", "content", summarizeUserPrompt(evaluations))
                 )
         );
 
@@ -385,6 +387,7 @@ public class GptService {
 
     }
 
+    /* 답변에 대한 평가 추출 프롬프트 : user */
     private String evaluationUserPrompt(String question, String userAnswer, EvaluationStrictness evaluationStrictness){
         return """
         아래 질문과 답변을 위의 기준과 형식에 따라 평가해 주세요. 내용은 최대한 자세하게 서술될 수록 좋습니다.
@@ -400,10 +403,52 @@ public class GptService {
         """.formatted(question, userAnswer, evaluationStrictness);
     }
 
-    /* 면접방 총평 추출 프롬프트 */
-    private String summarizeSystemPrompt(){
+    /* 면접방 총평 추출 프롬프트 : system */
+    private String summarizeSystemPrompt(EvaluationStrictness strictness, DifficultyLevel difficultyLevel){
+        String strictnessIntro = switch (strictness){
+            case LENIENT -> """
+            이 면접은 **초급 개발자를 위한 면접 평가**를 기준으로 진행되었습니다.
+            평가자는 개념 전달과 기본적인 이해 중심으로 면접자의 역량을 검토하며,
+            세부적인 실무 경험이나 고난도 설계 역량은 상대적으로 관대하게 평가합니다.
+            """;
+            case NORMAL -> """
+            이 면접은 **1~3년차 개발자를 대상으로 하는 표준적인 면접 평가**입니다.
+            평가자는 개념의 정확성뿐 아니라, 실무에서의 응용 가능성과 문제 해결 능력을 균형 있게 평가합니다.
+            기술에 대한 이해도와 논리적 사고, 전달력을 골고루 검토합니다.
+            """;
+            case STRICT -> """
+            이 면접은 **시니어급 개발자나 기술 리더 후보자에 대한 고난도 평가**입니다.
+            평가자는 개념의 깊이, 설계적 사고, 실무 경험 기반의 답변 구성을 엄격히 검토하며,
+            단편적인 답변이나 표면적인 지식에 대해서는 감점을 적용합니다.
+            면접자는 시스템적 관점, 전문 용어의 정교한 활용, 구조적인 설명을 통해 고급 역량을 증명해야 합니다.
+            """;
+        };
+        String difficultyInfo = switch(difficultyLevel){
+            case EASY -> """
+            면접 질문은 **기초 개념 위주의 [EASY] 수준**으로 구성되었습니다.
+            정의, 구조, 기본 용어와 같은 내용을 중심으로 질문되며,
+            개념의 명확한 이해와 전달이 핵심 평가 요소입니다.
+            """;
+            case MEDIUM -> """
+            면접 질문은 **실무 적용 능력을 중점으로 한 [MEDIUM] 수준**으로 구성되었습니다.
+            실제 개발 상황에서의 문제 해결 능력, 상황별 대응 전략, 기술 간 비교 등이 포함됩니다.
+            현업에서 바로 적용 가능한 실무력 평가가 이루어집니다.
+            """;
+            case HARD -> """
+            면접 질문은 **고난도 설계 및 아키텍처 기반의 [HARD] 수준**으로 구성되었습니다.
+            시스템 최적화, 기술 스택 간 선택, 성능 병목 해결 등 고급 설계 능력을 중심으로 질문되며,
+            복합적 사고력과 경험 기반의 의사결정 능력이 중요한 평가 요소입니다.
+            """;
+        };
+
         return """
-                당신은 사용자의 모의 기술 면접 결과를 분석하고 피드백을 제공하는 **전문 면접관**입니다.
+                 당신은 사용자의 모의 기술 면접 결과를 분석하고 피드백을 제공하는 **전문 면접관**입니다.
+                
+                ## 평가의 엄격도
+                 %s
+                
+                ## 질문의 난이도
+                 %s
                 
                 다음은 사용자가 세 번의 기술 면접에서 응답한 후 GPT가 생성한 **질문별 평가 내용들**입니다. 이 내용을 종합하여 **전반적인 총평**을 작성해주세요.
                 
@@ -454,7 +499,17 @@ public class GptService {
                 =================================
                 
                 다음은 사용자의 면접 평가 결과입니다. 위 지침과 예시를 참고하여 총평을 작성해주세요.
-                """;
+                """.formatted(strictnessIntro, difficultyInfo);
+    }
+
+    /* 면접방 총평 추출 프롬프트 : user */
+    private String summarizeUserPrompt(List<String> evaluations){
+        return """
+                면접의 내용은 아래와 같습니다. 이 면접 내용을 위의 기준에 따라 정리하고 평가해 주세요.
+                내용은 최대한 자세하게 서술될 수록 좋습니다.
+                
+                [면접 내용]
+                """+String.join("\n\n", evaluations);
     }
 
 }
