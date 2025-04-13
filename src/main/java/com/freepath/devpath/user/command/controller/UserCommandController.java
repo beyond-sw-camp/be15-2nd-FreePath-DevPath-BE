@@ -124,4 +124,17 @@ public class UserCommandController {
         userCommandService.completeSocialSignup(request.getEmail(), request.getNickname(), request.getItNewsSubscription());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
+    @PostMapping("/dev-mbti")
+    @Operation(summary = "개발자 성향 저장", description = "개발자 성향 테스트 결과를 사용자 정보에 저장합니다")
+    public ResponseEntity<ApiResponse<Void>> saveDevMbti(
+            @RequestBody @Validated SaveDevMbti request,
+            @AuthenticationPrincipal User user) {
+
+        Integer userId = Integer.valueOf(user.getUsername());
+        userCommandService.saveDevMbti(userId, request.getDevMbti());
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
 }

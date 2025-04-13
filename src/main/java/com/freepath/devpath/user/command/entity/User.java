@@ -80,4 +80,8 @@ public class User{
     public void setItNewsSubscription(String itNewsSubscription) {
         this.itNewsSubscription = itNewsSubscription;
     }
+
+    public void setDeveloperPersonality(String devMbti) {
+        this.developerPersonality = devMbti;
+    }
 }
