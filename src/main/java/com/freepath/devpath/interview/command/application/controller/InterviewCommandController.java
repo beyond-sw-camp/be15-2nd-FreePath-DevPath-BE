@@ -9,6 +9,10 @@ import com.freepath.devpath.interview.command.application.dto.response.Interview
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.application.service.InterviewCommandService;
 import com.freepath.devpath.interview.command.exception.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "면접방 생성 및 면접 흐름 제어 API", description = "면접방 생성, 답변, 평가, 수정, 삭제 등 사용자 중심의 면접 관리 기능을 제공합니다.")
 @RestController
 @RequestMapping("/interview-room")
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class InterviewCommandController {
     private final InterviewCommandService interviewCommandService;
 
     /* 카테고리 선택으로 면접방 생성하고 첫 질문 도출*/
+    @Operation(summary = "면접방 생성 및 첫 질문 도출", description = "카테고리 및 난이도 정보를 기반으로 면접방을 생성하고 첫 질문을 제공합니다.")
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping
     public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> createRoomAndFirstQuestion(
@@ -42,6 +48,10 @@ public class InterviewCommandController {
     }
 
     /* 질문에 대한 답변, 답변에 대한 평가, 다음 질문 도출 */
+    @Operation(summary = "면접 답변과 평가", description = "사용자의 답변을 저장하고 GPT 기반 평가 및 다음 질문을 생성합니다.")
+    @Parameters({
+            @Parameter(name = "roomId", description = "면접방 ID", required = true)
+    })
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/{roomId}/interview")
     public ResponseEntity<ApiResponse<InterviewAnswerCommandResponse>> answerAndEvaluate(
@@ -57,6 +67,10 @@ public class InterviewCommandController {
     }
 
     /* 면접방 삭제 */
+    @Operation(summary = "면접방 삭제", description = "면접방 ID를 통해 해당 면접방을 삭제합니다.")
+    @Parameters({
+            @Parameter(name = "roomId", description = "삭제할 면접방 ID", required = true)
+    })
     @PreAuthorize("hasAuthority('USER')")
     @DeleteMapping("/{roomId}")
     public ResponseEntity<ApiResponse<Void>> deleteInterviewRoom(
@@ -69,6 +83,10 @@ public class InterviewCommandController {
     }
 
     /* 면접방 정보 수정 */
+    @Operation(summary = "면접방 정보 수정", description = "면접방 제목 또는 메모를 수정합니다.")
+    @Parameters({
+            @Parameter(name = "roomId", description = "수정할 면접방 ID", required = true)
+    })
     @PatchMapping("/{roomId}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ApiResponse<Void>> updateInterviewRoomInfo(
