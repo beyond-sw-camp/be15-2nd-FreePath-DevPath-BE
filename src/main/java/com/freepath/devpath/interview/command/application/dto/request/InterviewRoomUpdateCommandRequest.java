@@ -5,8 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class InterviewRoomUpdateCommandRequest {
-
     private String interviewRoomTitle;
     private String interviewRoomMemo;
-
 }

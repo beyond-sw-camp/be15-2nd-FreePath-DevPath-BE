@@ -8,6 +8,10 @@ import com.freepath.devpath.interview.query.dto.InterviewRoomListResponse;
 import com.freepath.devpath.interview.query.dto.InterviewSummaryResponse;
 import com.freepath.devpath.interview.query.exception.*;
 import com.freepath.devpath.interview.query.service.InterviewQueryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "면접 컨텍스트의 사용자 조회 API", description = "사용자가 생성한 면접방 목록, 상세정보, 총평 등을 조회할 수 있습니다.")
 @RestController
 @RequestMapping("/interview-room")
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class InterviewQueryController {
     private final InterviewQueryService interviewQueryService;
 
     /* 사용자가 면접을 진행할 카테고리 목록 조회 */
+    @Operation(summary = "면접 카테고리 조회", description = "면접방 생성 시 선택 가능한 카테고리를 반환합니다.")
     @PreAuthorize("hasAnyAuthority('USER')")
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse<List<String>>> getInterviewCategories() {
@@ -36,6 +42,7 @@ public class InterviewQueryController {
     }
 
     /* 사용자가 진행한 면접방 목록 조회 */
+    @Operation(summary = "사용자 면접방 목록 조회", description = "사용자가 진행한 면접방 전체 목록을 조회합니다.")
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping
     public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getInterviewRoomList(
@@ -50,6 +57,14 @@ public class InterviewQueryController {
     }
 
     /* 사용자가 면접방 목록 조회 시 필터 적용 */
+    @Operation(summary = "사용자 면접방 필터링 조회", description = "카테고리, 난이도, 평가 기준으로 사용자 면접방을 필터링합니다.")
+    @Parameters({
+            @Parameter(name = "category", description = "면접 카테고리"),
+            @Parameter(name = "difficultyLevel", description = "질문 난이도 (EASY, MEDIUM, HARD)"),
+            @Parameter(name = "evaluationStrictness", description = "평가 기준 (LENIENT, NORMAL, STRICT)"),
+            @Parameter(name = "page", description = "페이지 번호 (기본값 1)"),
+            @Parameter(name = "size", description = "페이지당 크기 (기본값 10)")
+    })
     @GetMapping("/filter")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ApiResponse<InterviewRoomListResponse>> getFilteredInterviewRoomList(
@@ -67,6 +82,10 @@ public class InterviewQueryController {
     }
 
     /* 면접방 정보 및 면접 이력 조회 */
+    @Operation(summary = "면접방 상세 정보 조회", description = "면접방 ID를 통해 면접방 정보와 질문/답변 이력을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "interviewRoomId", description = "조회할 면접방 ID", required = true)
+    })
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{interviewRoomId}")
     public ResponseEntity<ApiResponse<InterviewRoomDetailResponse>> getInterviewRoomDetail(
@@ -80,6 +99,10 @@ public class InterviewQueryController {
     }
 
     /* 면접방의 총평 조회 */
+    @Operation(summary = "면접 총평 조회", description = "면접이 종료된 면접방에 대해 GPT가 생성한 총평을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "interviewRoomId", description = "면접방 ID", required = true)
+    })
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{interviewRoomId}/summary")
     public ResponseEntity<ApiResponse<InterviewSummaryResponse>> getInterviewSummary(
