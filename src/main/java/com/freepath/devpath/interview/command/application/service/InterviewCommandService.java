@@ -75,6 +75,11 @@ public class InterviewCommandService {
         // 4. 응답
         return InterviewRoomCommandResponse.builder()
                 .interviewRoomId(room.getInterviewRoomId())
+                .interviewRoomTitle(room.getInterviewRoomTitle())
+                .interviewRoomStatus(room.getInterviewRoomStatus().name())
+                .difficultyLevel(room.getDifficultyLevel().name())
+                .evaluationStrictness(room.getEvaluationStrictness().name())
+                .interviewRoomMemo(room.getInterviewRoomMemo())
                 .firstQuestion(firstQuestion)
                 .build();
     }

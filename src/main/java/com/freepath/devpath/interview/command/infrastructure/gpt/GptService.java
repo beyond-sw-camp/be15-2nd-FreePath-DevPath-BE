@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import software.amazon.awssdk.services.s3.endpoints.internal.Eval;
 
 import java.util.List;
 import java.util.Map;
@@ -263,7 +262,7 @@ public class GptService {
     /* 답변에 대한 평가 추출 프롬프트 : system */
     private String evaluationSystemPrompt(EvaluationStrictness evaluationStrictness){
         String strictnessIntro = switch (evaluationStrictness) {
-            case LENIENT -> """
+            case GENEROUS -> """
                 당신은 **초급 개발자 면접에 맞춘 평가자**입니다.
                 핵심 개념이 제시되었는지 중심으로 평가하고, 너무 세세한 깊이나 실무 경험은 강하게 요구하지 않아도 됩니다.
                 하지만 개념이 명확하지 않거나 오류가 있다면 반드시 지적하세요.
@@ -406,7 +405,7 @@ public class GptService {
     /* 면접방 총평 추출 프롬프트 : system */
     private String summarizeSystemPrompt(EvaluationStrictness strictness, DifficultyLevel difficultyLevel){
         String strictnessIntro = switch (strictness){
-            case LENIENT -> """
+            case GENEROUS -> """
             이 면접은 **초급 개발자를 위한 면접 평가**를 기준으로 진행되었습니다.
             평가자는 개념 전달과 기본적인 이해 중심으로 면접자의 역량을 검토하며,
             세부적인 실무 경험이나 고난도 설계 역량은 상대적으로 관대하게 평가합니다.
