@@ -8,6 +8,7 @@ import com.freepath.devpath.interview.command.application.dto.request.InterviewR
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.application.service.InterviewCommandService;
+import com.freepath.devpath.interview.command.domain.aggregate.EvaluationStrictness;
 import com.freepath.devpath.interview.command.exception.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,6 +66,20 @@ public class InterviewCommandController {
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    /* 기존의 면접방 재실행 */
+    @PostMapping("/{roomId}/reexecute")
+    @Operation(summary = "면접방 재실행", description = "기존 면접방의 질문을 복제하여 새 면접방을 생성합니다.")
+    public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> reexecuteInterviewRoom(
+            @PathVariable Long roomId,
+            @RequestParam EvaluationStrictness strictness,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+        InterviewRoomCommandResponse response = interviewCommandService.reexecuteInterviewRoom(userId, roomId, strictness);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
 
     /* 면접방 삭제 */
     @Operation(summary = "면접방 삭제", description = "면접방 ID를 통해 해당 면접방을 삭제합니다.")

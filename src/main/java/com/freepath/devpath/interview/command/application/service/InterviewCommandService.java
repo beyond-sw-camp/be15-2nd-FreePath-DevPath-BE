@@ -67,7 +67,7 @@ public class InterviewCommandService {
         interviewRepository.save(
                 Interview.builder()
                         .interviewRoomId(room.getInterviewRoomId())
-                        .interviewRole(Interview.InterviewRole.AI)
+                        .interviewRole(InterviewRole.AI)
                         .interviewMessage(firstQuestion)
                         .build()
         );
@@ -115,7 +115,7 @@ public class InterviewCommandService {
         interviewRepository.save(
                 Interview.builder()
                         .interviewRoomId(roomId)
-                        .interviewRole(Interview.InterviewRole.USER)
+                        .interviewRole(InterviewRole.USER)
                         .interviewMessage(request.getUserAnswer())
                         .build()
         );
@@ -123,7 +123,7 @@ public class InterviewCommandService {
         // 2. GPT 평가 생성
         Interview question
                 = interviewRepository.findTopByInterviewRoomIdAndInterviewRoleOrderByInterviewIdDesc(
-                            roomId, Interview.InterviewRole.AI)
+                            roomId,InterviewRole.AI)
                     .orElseThrow(
                             () -> new InterviewEvaluationCreationException(ErrorCode.INTERVIEW_EVALUATION_FAILED)
                     );
@@ -140,7 +140,7 @@ public class InterviewCommandService {
         interviewRepository.save(
                 Interview.builder()
                         .interviewRoomId(roomId)
-                        .interviewRole(Interview.InterviewRole.AI)
+                        .interviewRole(InterviewRole.AI)
                         .interviewMessage(evaluation)
                         .build()
         );
@@ -150,21 +150,28 @@ public class InterviewCommandService {
         DifficultyLevel difficultyLevel = Optional.ofNullable(room.getDifficultyLevel())
                 .orElse(DifficultyLevel.MEDIUM);
         if (interviewIndex < 3) {
-            List<String> previousQuestions = interviewRepository.findByInterviewRoomId(roomId).stream()
-                    .filter(i -> i.getInterviewRole() == Interview.InterviewRole.AI)
-                    .map(Interview::getInterviewMessage)
-                    .filter(msg -> msg.startsWith("[면접 질문]"))
-                    .toList();
+            if (room.getParentInterviewRoomId() != null) {
+                // 재실행 면접방인 경우, 기존 질문 복사본을 순서대로 사용한다
+                List<Interview> copiedQuestions = interviewRepository.findByInterviewRoomIdAndInterviewRoleOrderByInterviewIdAsc(roomId, InterviewRole.AI);
+                nextQuestion = copiedQuestions.get(interviewIndex).getInterviewMessage(); // index 1이면 두 번째 질문
+            } else {
+                // 재실행 면접방이 아니라 새로운 면접방인 경우
+                List<String> previousQuestions = interviewRepository.findByInterviewRoomId(roomId).stream()
+                        .filter(i -> i.getInterviewRole() == InterviewRole.AI)
+                        .map(Interview::getInterviewMessage)
+                        .filter(msg -> msg.startsWith("[면접 질문]"))
+                        .toList();
 
-            nextQuestion = gptService.generateQuestion(
-                    room.getInterviewCategory(), difficultyLevel,
-                    previousQuestions
-            );
+                nextQuestion = gptService.generateQuestion(
+                        room.getInterviewCategory(), difficultyLevel,
+                        previousQuestions
+                );
+            }
 
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
-                            .interviewRole(Interview.InterviewRole.AI)
+                            .interviewRole(InterviewRole.AI)
                             .interviewMessage(nextQuestion)
                             .build()
             );
@@ -173,7 +180,7 @@ public class InterviewCommandService {
         // 5. 마지막 답변이라면 면접 총평 생성하고 면접방 상태 변경
         if(interviewIndex == 3){
             List<String> gptEvaluations = interviewRepository.findByInterviewRoomId(roomId).stream()
-                    .filter(interview -> interview.getInterviewRole() == Interview.InterviewRole.AI)
+                    .filter(interview -> interview.getInterviewRole() == InterviewRole.AI)
                     .map(Interview::getInterviewMessage)
                     .filter(msg -> msg.startsWith("[답변 평가]"))
                     .toList();
@@ -182,7 +189,7 @@ public class InterviewCommandService {
             interviewRepository.save(
                     Interview.builder()
                             .interviewRoomId(roomId)
-                            .interviewRole(Interview.InterviewRole.AI)
+                            .interviewRole(InterviewRole.AI)
                             .interviewMessage("[총평]"+summary)
                             .build()
             );
@@ -198,6 +205,62 @@ public class InterviewCommandService {
                 .nextQuestion(nextQuestion)
                 .build();
     }
+
+    /* 기존의 면접방 재실행 */
+    @Transactional
+    public InterviewRoomCommandResponse reexecuteInterviewRoom(Long userId, Long originalRoomId, EvaluationStrictness newStrictness) {
+        // 1. 기존 면접방 조회
+        InterviewRoom originalRoom = interviewRoomRepository.findById(originalRoomId)
+                .orElseThrow(() -> new InterviewRoomNotFoundException(ErrorCode.INTERVIEW_ROOM_NOT_FOUND));
+
+        // 2. 기존 면접 질문만 추출 (AI 질문만, 총평 제외)
+        List<Interview> originalQuestions = interviewRepository.findByInterviewRoomId(originalRoomId).stream()
+                .filter(i -> i.getInterviewRole() == InterviewRole.AI)
+                .filter(i -> i.getInterviewMessage() != null && i.getInterviewMessage().startsWith("[면접 질문]"))
+                .toList();
+
+        if (originalQuestions.size() != 3) {
+            throw new InterviewQuestionCreationException(ErrorCode.INTERVIEW_QUESTION_CREATION_FAILED);
+        }
+
+        // 3. 새로운 면접방 제목 생성
+        String suffix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
+        String newTitle = originalRoom.getInterviewRoomTitle() + "_" + suffix;
+
+        // 4. 새 면접방 생성
+        InterviewRoom newRoom = interviewRoomRepository.save(
+                InterviewRoom.builder()
+                        .userId(userId)
+                        .interviewCategory(originalRoom.getInterviewCategory())
+                        .interviewRoomTitle(newTitle)
+                        .difficultyLevel(originalRoom.getDifficultyLevel())
+                        .evaluationStrictness(Optional.ofNullable(newStrictness).orElse(EvaluationStrictness.NORMAL))
+                        .parentInterviewRoomId(originalRoomId)
+                        .build()
+        );
+
+        // 5. 복제된 질문 저장
+        for (Interview question : originalQuestions) {
+            interviewRepository.save(
+                    Interview.builder()
+                            .interviewRoomId(newRoom.getInterviewRoomId())
+                            .interviewRole(InterviewRole.AI)
+                            .interviewMessage(question.getInterviewMessage())
+                            .build()
+            );
+        }
+
+        // 6. 응답 반환
+        return InterviewRoomCommandResponse.builder()
+                .interviewRoomId(newRoom.getInterviewRoomId())
+                .interviewRoomTitle(newRoom.getInterviewRoomTitle())
+                .interviewRoomStatus(newRoom.getInterviewRoomStatus().name())
+                .difficultyLevel(newRoom.getDifficultyLevel().name())
+                .evaluationStrictness(newRoom.getEvaluationStrictness().name())
+                .firstQuestion(originalQuestions.get(0).getInterviewMessage())
+                .build();
+    }
+
 
     /* 면접방 삭제 */
     @Transactional

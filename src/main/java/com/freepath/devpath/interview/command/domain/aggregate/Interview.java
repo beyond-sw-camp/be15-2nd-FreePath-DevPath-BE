@@ -31,7 +31,4 @@ public class Interview {
         this.messageCreatedAt = LocalDateTime.now();
     }
 
-    public enum InterviewRole {
-        USER, AI
-    }
 }
