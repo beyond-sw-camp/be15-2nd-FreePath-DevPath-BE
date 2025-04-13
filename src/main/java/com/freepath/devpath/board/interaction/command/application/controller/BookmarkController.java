@@ -7,12 +7,15 @@ import com.freepath.devpath.board.interaction.exception.BoardNotFoundException;
 import com.freepath.devpath.board.interaction.exception.BookmarkNotFoundException;
 import com.freepath.devpath.common.dto.ApiResponse;
 import com.freepath.devpath.common.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "북마크", description = "게시글 북마크 API")
 @RestController
 @RequestMapping("/bookmark")
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
-    // 게시글 북마크
+    @Operation(summary = "게시글 북마크 등록", description = "사용자가 게시글을 북마크합니다.")
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> bookmark(
             @RequestBody BookmarkRequest request
@@ -32,7 +35,7 @@ public class BookmarkController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    // 게시글 북마크 취소
+    @Operation(summary = "게시글 북마크 취소", description = "사용자가 게시글 북마크를 취소합니다.")
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> unbookmark(
             @RequestBody BookmarkRequest request
@@ -43,6 +46,7 @@ public class BookmarkController {
         bookmarkService.unbookmark(userId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
     // ===== 컨트롤러 레벨 예외 핸들러들 ===== //
 
     @ExceptionHandler(BoardNotFoundException.class)
