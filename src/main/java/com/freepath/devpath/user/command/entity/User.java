@@ -1,6 +1,5 @@
 package com.freepath.devpath.user.command.entity;
 
-import com.freepath.devpath.user.command.dto.UserModifyRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,17 +55,8 @@ public class User{
         }
     }
 
-    public void updateEmail(String newEmail) {
-        this.email = newEmail;
-    }
-
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
-    }
-
-    public void update(UserModifyRequest request) {
-        this.itNewsSubscription = request.getItNewsSubscription();
-        this.nickname = request.getNickname();
     }
 
     public void markAsDeleted() {
