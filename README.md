@@ -182,10 +182,13 @@ com.freepath.devpath
 
 <br>
 <h3 id="requirements">📣 요구사항 명세서</h3>
-<div markdown="1">
-    <a href="./assets/project-result/requirement.pdf" target="_blank"><strong>| 요구사항 명세서 보기 |</strong></a>
-</div>
-
+<details>
+    <summary><b>요구사항 명세서 상세보기</b></summary>
+    <div markdown="1">
+        <img src="./assets/project-result/요구사항명세서.png" alt="요구사항명세서" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/요구사항명세서2.png" alt="요구사항명세서2" style="width: 100%; height: auto;">
+    </div>
+</details>
 <br>
 <h3 id="ddd">📑 DDD</h3>
 <div markdown="1">
@@ -209,8 +212,16 @@ com.freepath.devpath
     </div>
 </details>
 
+<br>
+<h3 id="restapi">✔️ REST API 설계 문서</h3>
 
+<br>
+<h3 id="msa">📌 MSA 아키텍쳐 구조도</h3>
 
+<br>
+<h3 id="test">🎖️ 테스트 결과 보고서</h3>
+
+<br>
 <h3 id="wbs">📝 WBS (Work Breakdown Structure)</h3>
 <details>
     <summary><b>WBS 상세보기</b></summary>
@@ -239,8 +250,3 @@ com.freepath.devpath
 <br>
 <h1 id="Notion Page Link">🗂️ Our Playground</h1>
 <a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</text></strong></a><br><br>
-
-<img src="./assets/scrum_meeting.jpg" style="width: 100%; height: auto;">
-<center><i>매일 아침 8시 40분에 진행하는 Scrum Meeting</i></center>
-
-
