@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-@Tag(name = "게시글 조회 API", description = "게시글 단일 조회, 검색, 카테고리별 조회 기능을 제공합니다.")
+@Tag(name = "게시글 조회", description = "게시글 단일 조회, 검색, 카테고리별 조회 기능 API")
 public class PostQueryController {
 
     private final PostQueryService postQueryService;
