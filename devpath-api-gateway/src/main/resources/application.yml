@@ -3,25 +3,27 @@ server:
 spring:
   application:
     name: gateway-server
+  config:
+    import: classpath:/bootstrap.yml
   cloud:
     gateway:
       routes:
         - id: devpath-community-server
           uri: lb://DEVPATH-COMMUNITY-SERVER
           predicates:
-            - Path=/community-server/**
+            - Path=/api/community-server/**
           filters:
-            - RewritePath=/community-server/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/community-server/(?<segment>.*), /$\{segment}
             - name: CircuitBreaker
               args:
-                name: userServiceCB
+                name: communityServerCB
                 fallbackUri: forward:/fallback/user
         - id: devpath-feature-server
           uri: lb://DEVPATH-FEATURE-SERVER
           predicates:
-            - Path=/api/v1/order-service/**
+            - Path=/api/feature-server/**
           filters:
-            - RewritePath=/api/v1/order-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/feature-server/(?<segment>.*), /$\{segment}
 eureka:
   client:
     fetch-registry: true

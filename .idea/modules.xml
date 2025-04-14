@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/be15-2nd-FreePath-DevPath-BE.iml" filepath="$PROJECT_DIR$/.idea/be15-2nd-FreePath-DevPath-BE.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/devpath.iml" filepath="$PROJECT_DIR$/.idea/modules/devpath.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/devpath.main.iml" filepath="$PROJECT_DIR$/.idea/modules/devpath.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/devpath.test.iml" filepath="$PROJECT_DIR$/.idea/modules/devpath.test.iml" />
     </modules>
   </component>
 </project>
