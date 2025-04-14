@@ -36,12 +36,12 @@ public class InterviewCommandController {
     @PostMapping
     public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> createRoomAndFirstQuestion(
             @RequestBody InterviewRoomCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long Id = Long.valueOf(userId);
 
         InterviewRoomCommandResponse response = interviewCommandService.createRoomAndFirstQuestion(
-                userId,
+                Id,
                 request.getInterviewCategory(),
                 request.getDifficultyLevel(),
                 request.getEvaluationStrictness()
@@ -59,11 +59,11 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<InterviewAnswerCommandResponse>> answerAndEvaluate(
             @PathVariable Long roomId,
             @RequestBody InterviewAnswerCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long Id = Long.valueOf(userId);
         InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(
-                userId, roomId, request);
+                Id, roomId, request);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -78,10 +78,10 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> reexecuteInterviewRoom(
             @PathVariable Long roomId,
             @RequestParam EvaluationStrictness strictness,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewRoomCommandResponse response = interviewCommandService.reexecuteInterviewRoom(userId, roomId, strictness);
+        Long Id = Long.valueOf(userId);
+        InterviewRoomCommandResponse response = interviewCommandService.reexecuteInterviewRoom(Id, roomId, strictness);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -95,10 +95,10 @@ public class InterviewCommandController {
     @DeleteMapping("/{roomId}")
     public ResponseEntity<ApiResponse<Void>> deleteInterviewRoom(
             @PathVariable Long roomId,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        interviewCommandService.deleteInterviewRoom(userId, roomId);
+        Long Id = Long.valueOf(userId);
+        interviewCommandService.deleteInterviewRoom(Id, roomId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
@@ -112,10 +112,10 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<Void>> updateInterviewRoomInfo(
             @PathVariable Long roomId,
             @RequestBody @Valid InterviewRoomUpdateCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        interviewCommandService.updateInterviewRoom(userId, roomId, request);
+        Long Id = Long.valueOf(userId);
+        interviewCommandService.updateInterviewRoom(Id, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
