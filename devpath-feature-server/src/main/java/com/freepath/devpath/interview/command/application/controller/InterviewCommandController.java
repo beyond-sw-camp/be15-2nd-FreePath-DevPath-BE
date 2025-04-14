@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "면접방 및 면접 흐름 제어", description = "면접방 생성, 답변, 평가, 수정, 삭제 등 사용자 중심의 면접 관리 기능 제공 API")
@@ -36,12 +35,12 @@ public class InterviewCommandController {
     @PostMapping
     public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> createRoomAndFirstQuestion(
             @RequestBody InterviewRoomCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long Id = Long.valueOf(userId);
 
         InterviewRoomCommandResponse response = interviewCommandService.createRoomAndFirstQuestion(
-                userId,
+                Id,
                 request.getInterviewCategory(),
                 request.getDifficultyLevel(),
                 request.getEvaluationStrictness()
@@ -59,11 +58,11 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<InterviewAnswerCommandResponse>> answerAndEvaluate(
             @PathVariable Long roomId,
             @RequestBody InterviewAnswerCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long Id = Long.valueOf(userId);
         InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(
-                userId, roomId, request);
+                Id, roomId, request);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -78,10 +77,10 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> reexecuteInterviewRoom(
             @PathVariable Long roomId,
             @RequestParam EvaluationStrictness strictness,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        InterviewRoomCommandResponse response = interviewCommandService.reexecuteInterviewRoom(userId, roomId, strictness);
+        Long Id = Long.valueOf(userId);
+        InterviewRoomCommandResponse response = interviewCommandService.reexecuteInterviewRoom(Id, roomId, strictness);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -95,10 +94,10 @@ public class InterviewCommandController {
     @DeleteMapping("/{roomId}")
     public ResponseEntity<ApiResponse<Void>> deleteInterviewRoom(
             @PathVariable Long roomId,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        interviewCommandService.deleteInterviewRoom(userId, roomId);
+        Long Id = Long.valueOf(userId);
+        interviewCommandService.deleteInterviewRoom(Id, roomId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
@@ -112,10 +111,10 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<Void>> updateInterviewRoomInfo(
             @PathVariable Long roomId,
             @RequestBody @Valid InterviewRoomUpdateCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal String userId
     ) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        interviewCommandService.updateInterviewRoom(userId, roomId, request);
+        Long Id = Long.valueOf(userId);
+        interviewCommandService.updateInterviewRoom(Id, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
