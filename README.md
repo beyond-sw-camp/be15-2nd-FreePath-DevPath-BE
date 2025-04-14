@@ -52,7 +52,7 @@
 
 <br>
 
-<h1>🗂️ We are FreePath</h1>
+<h1>1️⃣ We are FreePath</h1>
 
 ## <span id="team">🗺️ Team FreePath</span>
 
@@ -178,7 +178,7 @@ com.freepath.devpath
 </details>
 <br>
 
-<h1 id="project-result">🗂️ 프로젝트 산출물</h1>
+<h1 id="project-result">2️⃣ Project Result</h1>
 
 <br>
 <h3 id="requirements">📣 요구사항 명세서</h3>
@@ -263,6 +263,6 @@ com.freepath.devpath
 </details>
 
 <br>
-<h1 id="ournotionpage">🗂️ Our Playground</h1>
+<h1 id="ournotionpage">3️⃣ Our Playground</h1>
 <a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</strong></text></a>
 <br><br>
