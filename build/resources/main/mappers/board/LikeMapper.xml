@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freepath.devpath.board.interaction.query.mapper.LikeQueryMapper">
+
+    <!-- 게시글 좋아요 여부 확인 -->
+    <select id="hasUserLikedBoard" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM `like`
+        WHERE user_id = #{userId}
+        AND board_id = #{boardId}
+        AND comment_id IS NULL
+        )
+    </select>
+
+    <!-- 댓글 좋아요 여부 확인 -->
+    <select id="hasUserLikedComment" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM `like`
+        WHERE user_id = #{userId}
+        AND comment_id = #{commentId}
+        AND board_id IS NULL
+        )
+    </select>
+
+    <!-- 게시글 좋아요 수 -->
+    <select id="countLikesByBoardId" resultType="int">
+        SELECT COUNT(*)
+        FROM `like`
+        WHERE board_id = #{boardId}
+        AND comment_id IS NULL
+    </select>
+
+    <!-- 댓글 좋아요 수 -->
+    <select id="countLikesByCommentId" resultType="int">
+        SELECT COUNT(*)
+        FROM `like`
+        WHERE comment_id = #{commentId}
+        AND board_id IS NULL
+    </select>
+
+    <select id="selectLikedPostListByUserId" resultType="com.freepath.devpath.board.post.query.dto.response.PostDto">
+        SELECT b.board_id       AS boardId,
+        b.board_title    AS boardTitle,
+        u.nickname,
+        b.board_created_at AS boardCreatedAt
+        FROM `like` l
+        JOIN board b ON l.board_id = b.board_id
+        JOIN users u ON b.user_id = u.user_id
+        WHERE l.user_id = #{userId}
+        AND b.is_board_deleted = 'N'
+        ORDER BY l.like_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+
+    </select>
+
+    <select id="countLikedPostsByUserId" resultType="long" parameterType="int">
+        SELECT COUNT(*)
+        FROM `like` l
+        JOIN board b ON l.board_id = b.board_id
+        WHERE l.user_id = #{userId}
+        AND b.is_board_deleted = 'N'
+    </select>
+
+</mapper>
