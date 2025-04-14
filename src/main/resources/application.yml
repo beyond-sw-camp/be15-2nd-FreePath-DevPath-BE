@@ -95,3 +95,7 @@ logging:
 app:
   oauth2:
     redirect-url: ${REDIRECT_URL}
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
