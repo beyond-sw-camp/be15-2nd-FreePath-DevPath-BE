@@ -1,7 +1,7 @@
-package com.freepath.devpath.chatting.command.domain.repository;
+package com.freepath.devpath.chatting.command.domain.jpa.repository;
 
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoin;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChattingJoinId;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingJoin;
+import com.freepath.devpath.chatting.command.domain.jpa.aggregate.ChattingJoinId;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

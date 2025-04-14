@@ -1,7 +1,10 @@
-package com.freepath.devpath.chatting.command.domain.aggregate;
+package com.freepath.devpath.chatting.command.domain.mongo.aggregate;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -9,12 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Setter
 @Builder
-@Entity
-@Table(name="chatting")
+@Document(collection="chatting")
 public class Chatting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int chattingId;
+    //private int chattingId;
     //@Enumerated(value = EnumType.STRING)
     //private MessageType type;
     private int chattingRoomId;

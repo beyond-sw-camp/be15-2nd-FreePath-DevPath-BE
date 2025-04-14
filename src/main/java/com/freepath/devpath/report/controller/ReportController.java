@@ -8,6 +8,9 @@ import com.freepath.devpath.report.dto.response.ReportCheckListResponse;
 import com.freepath.devpath.report.exception.AlreadyCheckedReportException;
 import com.freepath.devpath.report.exception.NoSuchReportCheckException;
 import com.freepath.devpath.report.service.ReportService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,53 +22,59 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/report")
+@Tag(name = "신고 관련 API", description = "게시글 및 댓글 신고, 신고 리스트 확인 및 처리 기능을 제공합니다.")
 public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("/board/{board-id}/report")
+    @PostMapping("/board/{board-id}")
+    @Operation(summary = "게시글 신고", description = "특정 게시글에 대해 신고를 등록합니다.")
     public ResponseEntity<ApiResponse<Report>> createBoardReport(
+            @Parameter(description = "신고할 게시글 ID", required = true)
             @PathVariable("board-id") int boardId,
-            @AuthenticationPrincipal User userDetails){
-
+            @AuthenticationPrincipal User userDetails
+    ) {
         int userId = Integer.parseInt(userDetails.getUsername());
-
         Report report = reportService.savePostReport(userId, boardId);
-
         return ResponseEntity.ok(ApiResponse.success(report));
     }
 
-    @PostMapping("/comment/{comment-id}/report")
-    public ResponseEntity<ApiResponse<Report>> creteCommentReport(
+    @PostMapping("/comment/{comment-id}")
+    @Operation(summary = "댓글 신고", description = "특정 댓글에 대해 신고를 등록합니다.")
+    public ResponseEntity<ApiResponse<Report>> createCommentReport(
+            @Parameter(description = "신고할 댓글 ID", required = true)
             @PathVariable("comment-id") int commentId,
-            @AuthenticationPrincipal User userDetails){
-
+            @AuthenticationPrincipal User userDetails
+    ) {
         int userId = Integer.parseInt(userDetails.getUsername());
         Report report = reportService.saveCommentReport(userId, commentId);
-
         return ResponseEntity.ok(ApiResponse.success(report));
     }
 
-    @GetMapping("/report-check")
+    @GetMapping("/check")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "관리자 신고 검토 리스트 조회", description = "관리자가 처리해야 할 신고 검토 리스트를 조회합니다.")
     public ResponseEntity<ApiResponse<ReportCheckListResponse>> getReportCheckList() {
         ReportCheckListResponse response = reportService.getReportCheckList();
-
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @PostMapping("/reportCheck/{reportId}")
+    @PostMapping("/check/{reportId}")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "관리자 신고 검토 처리", description = "관리자가 신고 검토 요청을 처리하고 결과를 기록합니다.")
     public ResponseEntity<ApiResponse<Void>> processReportCheck(
+            @Parameter(description = "처리할 신고 ID", required = true)
             @PathVariable("reportId") int reportCheckId,
+            @Parameter(description = "신고 처리 요청 정보")
             @Validated @ModelAttribute ReportCheckRequest reportCheckRequest,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         int adminId = Integer.parseInt(userDetails.getUsername());
         reportService.processReportCheck(reportCheckId, reportCheckRequest, adminId);
-
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
 
     @ExceptionHandler(NoSuchReportCheckException.class)
     public ResponseEntity<ApiResponse<Void>> handleNoSuchReportCheckException(NoSuchReportCheckException e) {

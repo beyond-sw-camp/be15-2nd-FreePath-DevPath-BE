@@ -1,10 +1,19 @@
 package com.freepath.devpath.chatting.command.application.controller;
 
 import com.freepath.devpath.chatting.command.application.service.ChattingCommandService;
-import com.freepath.devpath.chatting.command.domain.aggregate.ChatDTO;
+import com.freepath.devpath.chatting.command.application.dto.request.ChattingRequest;
+import com.freepath.devpath.chatting.command.application.dto.response.ChattingListResponse;
+import com.freepath.devpath.common.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -12,6 +21,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "채팅", description = "채팅 API")
 public class ChattingCommandController {
     //@MessageMapping()의 경로가 "/chat/message"이지만 ChatConfig의 setApplicationDestinationPrefixes()를 통해
     // prefix를 "/app"으로 해줬기 때문에 실질 경로는 "/app/chat/message"가 됨
@@ -21,9 +31,21 @@ public class ChattingCommandController {
     private final ChattingCommandService chattingService;
     //실제 요청은 app이 선행되어야 한다.
     @MessageMapping("/chatting/send")
-    public void send(ChatDTO chatDTO, Principal principal) {
-        log.info(principal.getName()+" : "+chatDTO.toString());
+    public void send(ChattingRequest chattingRequest, Principal principal) {
+        log.info(principal.getName()+" : "+ chattingRequest.toString());
         int userId = Integer.parseInt(principal.getName());
-        chattingService.sendChatting(chatDTO,userId);
+        chattingService.sendChatting(chattingRequest,userId);
+    }
+
+    @Operation(summary = "채팅 내역 조회", description = "채팅방 ID를 이용하여 채팅 내역을 조회한다.")
+    @GetMapping("/chatting/list/{chattingRoomId}")
+    public ResponseEntity<ApiResponse<ChattingListResponse>> loadChattingList(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable int chattingRoomId
+    ){
+        int userId = Integer.parseInt(userDetails.getUsername());
+        ChattingListResponse chattingListResponse = chattingService.getChattingList(userId, chattingRoomId);
+
+        return ResponseEntity.ok(ApiResponse.success(chattingListResponse));
     }
 }

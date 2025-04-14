@@ -31,6 +31,7 @@ public enum ErrorCode {
     FILE_DELETE_FAILED("20006", "첨부파일 삭제에 실패했습니다", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
+    POST_ALREADY_REPORTED("20009", "이미 삭제된 게시글입니다.", HttpStatus.BAD_REQUEST),
 
     // 댓글 관련 오류
     COMMENT_NOT_FOUND("25001", "댓글 또는 대댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

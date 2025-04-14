@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class InterviewSummaryResponse {
-    private String interviewRoomId;
+    private Long interviewRoomId;
     private String interviewRoomTitle;
     private String summary;
 }

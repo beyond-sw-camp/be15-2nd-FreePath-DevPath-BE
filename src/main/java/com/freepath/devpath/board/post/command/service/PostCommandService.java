@@ -77,6 +77,11 @@ public class PostCommandService {
             throw new FileDeleteFailedException(ErrorCode.POST_ALREADY_DELETED);
         }
 
+        // 이미 신고되어있는 게시물을 삭제하려는 경우 에러 반환
+        if (post.getIsBoardDeleted() == 'R') {
+            throw new FileUpdateFailedException(ErrorCode.POST_ALREADY_REPORTED);
+        }
+
         // 첨부파일 삭제 요청
         attachmentService.deleteAttachmentsByBoardId(boardId);
 
@@ -94,9 +99,14 @@ public class PostCommandService {
             throw new InvalidPostAuthorException(ErrorCode.POST_UPDATE_FORBIDDEN);
         }
 
-        // 이미 삭제되어있는 게시물을 삭제하려는 경우 에러 반환
+        // 이미 삭제되어있는 게시물을 수정하려는 경우 에러 반환
         if (post.getIsBoardDeleted() == 'Y') {
             throw new FileUpdateFailedException(ErrorCode.POST_ALREADY_DELETED);
+        }
+
+        // 이미 신고되어있는 게시물을 수정하려는 경우 에러 반환
+        if (post.getIsBoardDeleted() == 'R') {
+            throw new FileUpdateFailedException(ErrorCode.POST_ALREADY_REPORTED);
         }
 
         String modifiedTitle = postUpdateRequest.getTitle();
