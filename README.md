@@ -1,6 +1,6 @@
 <div align="center">
 
-![header](https://capsule-render.vercel.app/api?type=blur&color=0:D9E5FF,100:0054FF&height=200&section=header&text=We%20are%20DevPath!&fontSize=70)
+![header](https://capsule-render.vercel.app/api?type=blur&color=0:CEF279,100:5CD1E5&height=200&section=header&text=We%20are%20DevPath!&fontSize=70)
 
 <h1>개발자를 위한 커뮤니티가 여러분을 찾아갑니다</h1>
 <h3>개발 능력 업그레이드를 DevPath와 함께!</h3>
@@ -52,7 +52,7 @@
 
 <br>
 
-<h1>🗂️ We are FreePath</h1>
+<h1>1️⃣ We are FreePath</h1>
 
 ## <span id="team">🗺️ Team FreePath</span>
 
@@ -100,11 +100,11 @@
 
 <br><br>
 
-<h5>프로젝트 목적</h5>
+<h5><b>프로젝트 목적</b></h5>
 프로젝트 <b>DevPath</b>는 비전공자와 주니어 개발자들이 실전 준비 과정에서 겪는 단절을 해소하고자 합니다. 구조화된 피드백과 동료와의 협업, 성장 추적 기능을 통해 지속적인 성장을 지원합니다. 이를 통해 단편적인 정보 소비를 넘어 자기 주도적 학습과 회고가 가능한 환경을 제공합니다.
 <br><br>
 <details>
-<summary>프로젝트 구조</summary>
+<summary><b>프로젝트 구조</b></summary>
 
 ```angular2html
 com.freepath.devpath
@@ -178,12 +178,12 @@ com.freepath.devpath
 </details>
 <br>
 
-<h1 id="project-result">🗂️ 프로젝트 산출물</h1>
+<h1 id="project-result">2️⃣ Project Result</h1>
 
 <br>
 <h3 id="requirements">📣 요구사항 명세서</h3>
 <details>
-    <summary><b>요구사항 명세서 상세보기</b></summary>
+    <summary>요구사항 명세서 상세보기</summary>
     <div markdown="1">
         <img src="./assets/project-result/요구사항명세서.png" alt="요구사항명세서" style="width: 100%; height: auto;">
         <img src="./assets/project-result/요구사항명세서2.png" alt="요구사항명세서2" style="width: 100%; height: auto;">
@@ -199,14 +199,14 @@ com.freepath.devpath
 <h3 id="erd">📋 논리/물리 ERD</h3>
 
 <details>
-    <summary><b>논리 ERD 상세보기</b></summary>
+    <summary>논리 ERD 상세보기</summary>
     <div markdown="1">
         <img src="./assets/project-result/BE-PJT-3team-erd(1).png" alt="논리 ERD" style="width: 100%; height: auto;">
         <br><br>
     </div>
 </details>
 <details>
-    <summary><b>물리 ERD 상세보기</b></summary>
+    <summary>물리 ERD 상세보기</summary>
     <div markdown="1">
         <img src="./assets/project-result/BE-PJT-3team-erd(2).png" alt="물리 ERD" style="width: 100%; height: auto;">
     </div>
@@ -214,7 +214,22 @@ com.freepath.devpath
 
 <br>
 <h3 id="restapi">✔️ REST API 설계 문서</h3>
-
+<details>
+    <summary>REST API 설계 문서 (Swagger)</summary>
+    <div markdown="1">
+        <img src="./assets/project-result/restapi1.png" alt="restapi1" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi2.png" alt="restapi2" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi3.png" alt="restapi3" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi4.png" alt="restapi4" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi5.png" alt="restapi5" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi6.png" alt="restapi6" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi7.png" alt="restapi7" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi8.png" alt="restapi8" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi9.png" alt="restapi9" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi10.png" alt="restapi10" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/restapi11.png" alt="restapi11" style="width: 100%; height: auto;">
+</div>
+</details>
 <br>
 <h3 id="msa">📌 MSA 아키텍쳐 구조도</h3>
 
@@ -248,5 +263,6 @@ com.freepath.devpath
 </details>
 
 <br>
-<h1 id="Notion Page Link">🗂️ Our Playground</h1>
-<a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</text></strong></a><br><br>
+<h1 id="ournotionpage">3️⃣ Our Playground</h1>
+<a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</strong></text></a>
+<br><br>
