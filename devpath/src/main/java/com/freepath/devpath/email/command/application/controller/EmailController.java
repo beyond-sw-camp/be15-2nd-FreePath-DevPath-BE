@@ -28,13 +28,6 @@ public class EmailController {
 
     @PostMapping("/email/check")
     @Operation(summary = "이메일과 인증번호 확인", description = "해당 이메일에 전송된 인증번호가 맞는지 확인 합니다.")
-    @Parameters({
-            @Parameter(
-                    name = "purpose",
-                    description = "이메일 인증 목적 (SIGN_UP / FIND_LOGINID / RESET_PASSWORD / CHANGE_PASSWORD / CHANGE_EMAIL / DELETE_USER)",
-                    required = true
-            )
-    })
     public ResponseEntity<ApiResponse<String>> authCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
         EmailAuthPurpose purpose;
         try {
