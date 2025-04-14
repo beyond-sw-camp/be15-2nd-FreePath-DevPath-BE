@@ -29,11 +29,9 @@ public class AuthService {
 
 
     public TokenResponse login(LoginRequest request) {
-        System.out.println(request.getLoginId());
-        System.out.println(request.getPassword());
         User user = userCommandRepository.findByLoginIdAndUserDeletedAtIsNull(request.getLoginId())
                 .orElseThrow(() -> new UserException(ErrorCode.INVALID_CREDENTIALS));
-        System.out.println(2);
+
         if (!"GENERAL".equalsIgnoreCase(user.getLoginMethod())) {
             throw new UserException(ErrorCode.SOCIAL_LOGIN_USER);
         }

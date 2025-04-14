@@ -31,7 +31,7 @@ public enum ErrorCode {
     FILE_DELETE_FAILED("20006", "첨부파일 삭제에 실패했습니다", HttpStatus.INTERNAL_SERVER_ERROR),
     POST_DELETE_FORBIDDEN("20007","게시글을 작성한 사용자의 요청이 아닙니다." , HttpStatus.FORBIDDEN),
     POST_ALREADY_DELETED("20008", "이미 삭제된 게시글입니다.", HttpStatus.GONE),
-    POST_ALREADY_REPORTED("20009", "이미 삭제된 게시글입니다.", HttpStatus.BAD_REQUEST),
+    POST_ALREADY_REPORTED("20009", "이미 신고된 게시글입니다.", HttpStatus.BAD_REQUEST),
 
     // 댓글 관련 오류
     COMMENT_NOT_FOUND("25001", "댓글 또는 대댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -99,7 +99,10 @@ public enum ErrorCode {
 
     // Report 관련 오류 : 70000번대
     REPORT_NOT_FOUND("70001", "해당 신고 내역이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    REPORT_ALREADY_CHECKED("70002", "이미 처리된 신고 검토 내역입니다", HttpStatus.BAD_REQUEST),
+    REPORT_ALREADY_CHECKED("70002", "이미 처리된 신고 검토 내역입니다.", HttpStatus.BAD_REQUEST),
+    ALREADY_REPORTED_POST("70003", "이미 신고된 게시물입니다.", HttpStatus.BAD_REQUEST),
+    ALREADY_REPORTED_COMMENT("70004", "이미 신고된 댓글입니다.", HttpStatus.BAD_REQUEST),
+
 
     // 공통 오류
     VALIDATION_ERROR("90001", "입력 값 검증 오류입니다.", HttpStatus.BAD_REQUEST),
