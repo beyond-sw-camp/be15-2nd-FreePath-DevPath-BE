@@ -182,9 +182,13 @@ com.freepath.devpath
 
 <br>
 <h3 id="requirements">📣 요구사항 명세서</h3>
-<div markdown="1">
-    <a href="./assets/project-result/requirement.pdf" target="_blank"><strong>| 요구사항 명세서 보기 |</strong></a>
-</div>
+<details>
+    <summary><b>요구사항 명세서 상세보기</b></summary>
+    <div markdown="1">
+        <img src="./assets/project-result/요구사항명세서.png" alt="요구사항명세서" style="width: 100%; height: auto;">
+        <img src="./assets/project-result/요구사항명세서2.png" alt="요구사항명세서2" style="width: 100%; height: auto;">
+    </div>
+</details>
 
 <br>
 <h3 id="ddd">📑 DDD</h3>
