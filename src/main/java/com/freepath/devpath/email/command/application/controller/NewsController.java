@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-@Tag(name = "IT 뉴스 기사 작성, 전송", description = "관리자가 IT 뉴스를 요약 및 저장, 전송 기능 API")
+@Tag(name = "IT 뉴스 기사", description = "관리자가 IT 뉴스를 요약 및 저장, 전송 기능 API")
 public class NewsController {
 
     private final NewsService newsService;
