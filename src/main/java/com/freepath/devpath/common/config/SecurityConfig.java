@@ -51,6 +51,7 @@ public class SecurityConfig {
                                         "/v3/api-docs/**",
                                         "/webjars/**"
                                 ).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/board/search", "/board/search/content", "/board/category/{category-id:[\\d]+}", "/board/{board-id:[\\d]+}").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/*/comments").permitAll()
