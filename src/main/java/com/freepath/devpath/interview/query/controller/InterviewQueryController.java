@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "면접 컨텍스트의 사용자 조회 API", description = "사용자가 생성한 면접방 목록, 상세정보, 총평 등을 조회할 수 있습니다.")
+@Tag(name = "면접 정보 사용자 조회", description = "사용자의 면접방 목록, 상세정보, 총평 등 조회 기능 API")
 @RestController
 @RequestMapping("/interview-room")
 @RequiredArgsConstructor

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "면접 컨텍스트의 관리자 조회 API", description = "관리자 권한으로 모든 유저의 면접방 조회 및 필터링 기능을 제공합니다.")
+@Tag(name = "면접 정보 관리자 조회", description = "관리자의 모든 면접방 조회 기능 API")
 @RestController
 @RequestMapping("/admin/interview-room")
 @RequiredArgsConstructor
