@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "좋아요 조회", description = "좋아요 조회 관련 API")
+@Tag(name = "좋아요 조회", description = "사용자가 좋아요한 게시글, 게시글 좋아요 여부, 게시글/댓글 좋아요 개수 조회 기능 API")
 @RestController
 @RequiredArgsConstructor
 public class LikeQueryController {
