@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "북마크", description = "게시글 북마크 API")
+@Tag(name = "북마크 관리", description = "게시글 북마크 및 취소 기능 API")
 @RestController
 @RequestMapping("/bookmark")
 @RequiredArgsConstructor

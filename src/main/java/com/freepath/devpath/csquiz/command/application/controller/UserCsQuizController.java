@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/csquiz")
 @RequiredArgsConstructor
-@Tag(name = "CS 퀴즈 응답", description = "CS 퀴즈 사용자 응답 제출 관련 API")
+@Tag(name = "CS 퀴즈 응답", description = "CS 퀴즈 사용자 응답 제출 기능 API")
 public class UserCsQuizController {
 
     private final CsQuizResultService resultService;

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-@Tag(name = "게시글 조회 API", description = "게시글 단일 조회, 검색, 카테고리별 조회 기능을 제공합니다.")
+@Tag(name = "게시글 조회", description = "게시글 단일 조회, 검색, 카테고리별 조회 기능 API")
 public class PostQueryController {
 
     private final PostQueryService postQueryService;
@@ -74,7 +74,7 @@ public class PostQueryController {
     }
 
     @GetMapping("/mypage/reported-post")
-    @Operation(summary = "신고된 게시글 조회", description = "현재 로그인한 사용자가 작성한 신고된 게시글 목록을 조회합니다. 내용은 모두 \"신고 처리된 게시글입니다\"로 대체됩니다.")
+    @Operation(summary = "내 신고된 게시글 조회", description = "현재 로그인한 사용자가 작성한 신고된 게시글 목록을 조회합니다. 내용은 모두 \"신고 처리된 게시글입니다\"로 대체됩니다.")
     public ResponseEntity<ApiResponse<MyPostListResponse>> getMyReportedPostList(
             @Parameter(description = "페이지 정보 등 요청 조건")
             @ModelAttribute @Validated MyPostRequest myPostRequest,

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vote")
-@Tag(name = "투표 관련 API", description = "투표 참여 및 마감 기능을 담당합니다.")
+@Tag(name = "투표 관리", description = "투표 참여 및 마감 기능 API")
 public class VoteCommandController {
 
     private final VoteCommandService voteCommandService;

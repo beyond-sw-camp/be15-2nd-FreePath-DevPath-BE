@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "차단", description = "차단 API")
+@Tag(name = "차단 관리", description = "차단 추가/삭제 기능 API")
 public class UserBlockCommandController {
     private final UserBlockCommandService userBlockCommandService;
 

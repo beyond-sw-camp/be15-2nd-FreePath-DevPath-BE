@@ -14,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "북마크 조회", description = "북마크 조회 관련 API")
+@Tag(name = "북마크 조회", description = "사용자가 북마크한 게시글, 게시글 북마크 여부 조회 기능 API")
 @RestController
 @RequiredArgsConstructor
 public class BookmarkQueryController {

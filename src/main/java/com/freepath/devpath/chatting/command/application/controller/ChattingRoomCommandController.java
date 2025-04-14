@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@Tag(name = "채팅방", description = "채팅방 API")
+@Tag(name = "채팅방 관리", description = "채팅방 생성/수정/삭제 기능 API")
 public class ChattingRoomCommandController {
     private final ChattingRoomCommandService chattingRoomCommandService;
 
@@ -31,7 +31,7 @@ public class ChattingRoomCommandController {
         return ResponseEntity.ok(ApiResponse.success(chattingRoomCommandResponse));
     }
 
-    @Operation(summary = "그룹 채팅방 생성", description = "그룹 채팅방을 생성한다.")
+    @Operation(summary = "그룹 채팅방 생성", description = "게시글 ID를 이용하여 그룹 채팅방을 생성한다.")
     @PostMapping("/chatting/create/group")
     public ResponseEntity<ApiResponse<ChattingRoomCommandResponse>> createGroupChattingRoom(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -62,7 +62,7 @@ public class ChattingRoomCommandController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @Operation(summary = "채팅방 삭제", description = "채팅방을 삭제한다.")
+    @Operation(summary = "채팅방 삭제", description = "채팅방 ID를 통해 채팅방을 삭제한다.")
     @DeleteMapping("/chatting/list/{chattingRoomId}")
     public ResponseEntity<ApiResponse<Void>> deleteChattingRoom(
             @AuthenticationPrincipal UserDetails userDetails,

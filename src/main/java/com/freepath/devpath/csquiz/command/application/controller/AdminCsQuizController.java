@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/csquiz")
 @RequiredArgsConstructor
-@Tag(name = "관리자 CS 퀴즈 관리", description = "관리자용 CS 퀴즈 등록, 수정, 제출 관련 API")
+@Tag(name = "CS 퀴즈 관리", description = "관리자용 CS 퀴즈 등록, 수정, 버전 관리(테스트용) 기능 API")
 public class AdminCsQuizController {
 
     private final CsQuizService csQuizService;

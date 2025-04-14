@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-@Tag(name = "게시글 작성/수정/삭제 API", description = "게시글 업로드, 수정, 삭제 기능을 담당합니다.")
+@Tag(name = "게시글 관리", description = "게시글 업로드, 수정, 삭제 기능 API")
 public class PostCommandController {
 
     private final PostCommandService postCommandService;
