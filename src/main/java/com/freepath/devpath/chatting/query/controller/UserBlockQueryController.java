@@ -3,6 +3,7 @@ package com.freepath.devpath.chatting.query.controller;
 import com.freepath.devpath.chatting.query.dto.response.UserBlockResponse;
 import com.freepath.devpath.chatting.query.service.UserBlockQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "차단 목록 조회", description = "차단 조회 API")
 public class UserBlockQueryController {
     private final UserBlockQueryService userBlockQueryService;
+    @Operation(summary = "채팅 차단 목록 조회", description = "사용자의 채팅 차단 목록을 조회한다.")
     @GetMapping("/chatting/block")
     public ResponseEntity<ApiResponse<UserBlockResponse>> getUserBlocked(
             @AuthenticationPrincipal UserDetails userDetails
