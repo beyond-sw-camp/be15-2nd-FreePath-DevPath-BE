@@ -71,4 +71,3 @@ eureka:
 app:
   oauth2:
     redirect-url: ${REDIRECT_URL}
-

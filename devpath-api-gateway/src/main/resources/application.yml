@@ -14,10 +14,7 @@ spring:
             - Path=/api/community-server/**
           filters:
             - RewritePath=/api/community-server/(?<segment>.*), /$\{segment}
-            - name: CircuitBreaker
-              args:
-                name: communityServerCB
-                fallbackUri: forward:/fallback/user
+            - RemoveRequestHeader=Content-Length
         - id: devpath-feature-server
           uri: lb://DEVPATH-FEATURE-SERVER
           predicates:

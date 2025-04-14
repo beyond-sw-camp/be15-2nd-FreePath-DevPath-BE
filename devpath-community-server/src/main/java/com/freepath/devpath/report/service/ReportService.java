@@ -16,6 +16,7 @@ import com.freepath.devpath.report.dto.response.ReportCheckDto;
 import com.freepath.devpath.report.dto.response.ReportCheckListResponse;
 import com.freepath.devpath.report.dto.response.ReportCheckWithIdDto;
 import com.freepath.devpath.report.exception.AlreadyCheckedReportException;
+import com.freepath.devpath.report.exception.AlreadyReportedException;
 import com.freepath.devpath.report.exception.NoSuchReportCheckException;
 import com.freepath.devpath.report.mapper.ReportMapper;
 import com.freepath.devpath.report.repository.ReportCheckRepository;
@@ -44,6 +45,11 @@ public class ReportService {
 
     @Transactional
     public Report savePostReport(int userId, int boardId) {
+        // 이미 신고한 적 있는지 확인
+        boolean alreadyReported = reportRepository.existsByReporterIdAndPostId(userId, boardId);
+        if (alreadyReported) {
+            throw new AlreadyReportedException(ErrorCode.ALREADY_REPORTED_POST); // 적절한 예외 처리
+        }
 
         Report report = Report.builder()
                 .reporterId(userId)
@@ -72,6 +78,12 @@ public class ReportService {
 
     @Transactional
     public Report saveCommentReport(int userId, int commentId) {
+        // 이미 신고한 적 있는지 확인
+        boolean alreadyReported = reportRepository.existsByReporterIdAndCommentId(userId, commentId);
+        if (alreadyReported) {
+            throw new AlreadyReportedException(ErrorCode.ALREADY_REPORTED_COMMENT); // 적절한 예외 처리
+        }
+
 
         Report report = Report.builder()
                 .reporterId(userId)

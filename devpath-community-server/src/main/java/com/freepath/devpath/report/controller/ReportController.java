@@ -6,6 +6,7 @@ import com.freepath.devpath.report.domain.Report;
 import com.freepath.devpath.report.dto.request.ReportCheckRequest;
 import com.freepath.devpath.report.dto.response.ReportCheckListResponse;
 import com.freepath.devpath.report.exception.AlreadyCheckedReportException;
+import com.freepath.devpath.report.exception.AlreadyReportedException;
 import com.freepath.devpath.report.exception.NoSuchReportCheckException;
 import com.freepath.devpath.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,6 +76,13 @@ public class ReportController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    @ExceptionHandler(AlreadyReportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAlreadyReportedException(AlreadyReportedException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
+    }
 
     @ExceptionHandler(NoSuchReportCheckException.class)
     public ResponseEntity<ApiResponse<Void>> handleNoSuchReportCheckException(NoSuchReportCheckException e) {
