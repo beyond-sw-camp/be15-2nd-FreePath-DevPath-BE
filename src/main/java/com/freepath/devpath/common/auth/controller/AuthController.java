@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "인증 API", description = "로그인, 로그아웃, 토큰 갱신, 회원 탈퇴 등 인증 관련 기능 제공")
+@Tag(name = "인증 관리", description = "로그인, 로그아웃, 토큰 갱신, 회원 탈퇴 등 인증 관련 기능 API")
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
