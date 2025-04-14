@@ -1,9 +1,12 @@
 package com.freepath.devpath.board.vote.query.controller;
 
 
+import com.freepath.devpath.board.post.command.exception.InvalidPostAuthorException;
+import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
 import com.freepath.devpath.board.vote.query.dto.response.VoteDetailResponse;
 import com.freepath.devpath.board.vote.query.service.VoteQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;
+import com.freepath.devpath.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,5 +36,13 @@ public class VoteQueryController {
         VoteDetailResponse response = voteQueryService.getVoteDetail(userId, boardId);
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @ExceptionHandler(NoSuchPostException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoSuchPostException(NoSuchPostException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.failure(errorCode.getCode(), errorCode.getMessage()));
     }
 }

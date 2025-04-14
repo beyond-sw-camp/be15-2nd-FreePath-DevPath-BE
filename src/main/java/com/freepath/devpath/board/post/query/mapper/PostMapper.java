@@ -33,4 +33,5 @@ public interface PostMapper {
 
     List<PostDto> findBoardByIds(List<Integer> boardIds);
 
+    boolean existsById(int boardId);
 }
