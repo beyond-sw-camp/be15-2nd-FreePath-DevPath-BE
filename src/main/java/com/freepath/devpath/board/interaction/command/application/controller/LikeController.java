@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
     private final LikeService likeService;
 
-    @Operation(summary = "게시글 좋아요 등록", description = "사용자가 게시글을 좋아요합니다.")
+    @Operation(summary = "게시글/댓글 좋아요 등록", description = "사용자가 게시글 또는 댓글에 좋아요합니다.")
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> like(
             @RequestBody LikeRequest request
@@ -33,7 +33,7 @@ public class LikeController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @Operation(summary = "게시글 좋아요 취소", description = "사용자가 게시글을 좋아요를 취소합니다.")
+    @Operation(summary = "게시글/댓글 좋아요 취소", description = "사용자가 게시글 또는 댓글에 좋아요를 취소합니다.")
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> unlike(
             @RequestBody LikeRequest request

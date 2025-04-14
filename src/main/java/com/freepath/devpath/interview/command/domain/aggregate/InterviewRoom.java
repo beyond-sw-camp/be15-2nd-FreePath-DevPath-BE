@@ -18,6 +18,8 @@ public class InterviewRoom {
 
     private Long userId;
 
+    private Long parentInterviewRoomId;
+
     private String interviewCategory;
 
     @Column(nullable = false)

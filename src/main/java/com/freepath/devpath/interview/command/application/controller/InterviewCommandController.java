@@ -8,6 +8,7 @@ import com.freepath.devpath.interview.command.application.dto.request.InterviewR
 import com.freepath.devpath.interview.command.application.dto.response.InterviewAnswerCommandResponse;
 import com.freepath.devpath.interview.command.application.dto.response.InterviewRoomCommandResponse;
 import com.freepath.devpath.interview.command.application.service.InterviewCommandService;
+import com.freepath.devpath.interview.command.domain.aggregate.EvaluationStrictness;
 import com.freepath.devpath.interview.command.exception.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,7 +36,8 @@ public class InterviewCommandController {
     @PostMapping
     public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> createRoomAndFirstQuestion(
             @RequestBody InterviewRoomCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         Long userId = Long.valueOf(userDetails.getUsername());
 
         InterviewRoomCommandResponse response = interviewCommandService.createRoomAndFirstQuestion(
@@ -57,14 +59,32 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<InterviewAnswerCommandResponse>> answerAndEvaluate(
             @PathVariable Long roomId,
             @RequestBody InterviewAnswerCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         Long userId = Long.valueOf(userDetails.getUsername());
         InterviewAnswerCommandResponse response = interviewCommandService.answerAndEvaluate(
                 userId, roomId, request);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    /* 기존의 면접방 재실행 */
+    @PostMapping("/{roomId}/reexecute")
+    @Operation(summary = "면접방 재실행", description = "기존 면접방의 질문을 복제하여 새 면접방을 생성합니다.")
+    @Parameters({
+            @Parameter(name = "roomId", description = "재실행할 기준이 되는 면접방 ID", example = "45"),
+            @Parameter(name = "strictness", description = "재실행 면접의 평가 엄격도 (LENIENT | NORMAL | STRICT)", example = "NORMAL")
+    })
+    public ResponseEntity<ApiResponse<InterviewRoomCommandResponse>> reexecuteInterviewRoom(
+            @PathVariable Long roomId,
+            @RequestParam EvaluationStrictness strictness,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Long userId = Long.valueOf(userDetails.getUsername());
+        InterviewRoomCommandResponse response = interviewCommandService.reexecuteInterviewRoom(userId, roomId, strictness);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
 
     /* 면접방 삭제 */
     @Operation(summary = "면접방 삭제", description = "면접방 ID를 통해 해당 면접방을 삭제합니다.")
@@ -75,8 +95,8 @@ public class InterviewCommandController {
     @DeleteMapping("/{roomId}")
     public ResponseEntity<ApiResponse<Void>> deleteInterviewRoom(
             @PathVariable Long roomId,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         Long userId = Long.valueOf(userDetails.getUsername());
         interviewCommandService.deleteInterviewRoom(userId, roomId);
         return ResponseEntity.ok(ApiResponse.success(null));
@@ -92,8 +112,8 @@ public class InterviewCommandController {
     public ResponseEntity<ApiResponse<Void>> updateInterviewRoomInfo(
             @PathVariable Long roomId,
             @RequestBody @Valid InterviewRoomUpdateCommandRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         Long userId = Long.valueOf(userDetails.getUsername());
         interviewCommandService.updateInterviewRoom(userId, roomId, request);
         return ResponseEntity.ok(ApiResponse.success(null));

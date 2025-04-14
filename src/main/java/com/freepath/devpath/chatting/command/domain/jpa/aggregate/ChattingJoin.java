@@ -1,4 +1,4 @@
-package com.freepath.devpath.chatting.command.domain.aggregate;
+package com.freepath.devpath.chatting.command.domain.jpa.aggregate;
 
 import jakarta.persistence.*;
 import lombok.*;

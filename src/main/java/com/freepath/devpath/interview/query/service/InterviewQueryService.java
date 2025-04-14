@@ -2,6 +2,7 @@ package com.freepath.devpath.interview.query.service;
 
 import com.freepath.devpath.common.dto.Pagination;
 import com.freepath.devpath.common.exception.ErrorCode;
+import com.freepath.devpath.interview.command.domain.aggregate.InterviewRoom;
 import com.freepath.devpath.interview.query.dto.*;
 import com.freepath.devpath.interview.query.exception.InterviewQueryAccessException;
 import com.freepath.devpath.interview.query.exception.InterviewQueryHistoryNotFoundException;
@@ -124,6 +125,9 @@ public class InterviewQueryService {
             throw new InterviewQueryHistoryNotFoundException(ErrorCode.INTERVIEW_HISTORY_NOT_FOUND);
         }
 
+        // 재실행된 면접방 목록 조회
+        List<ReexecutedRoomDto> reexecutedRooms =interviewMapper.selectReexecutedRoomsByParentId(interviewRoomId);
+
         // 응답DTO 객체에 쿼리 결과값 저장
         InterviewRoomDetailResponse response = new InterviewRoomDetailResponse();
         try {
@@ -137,6 +141,7 @@ public class InterviewQueryService {
             response.setInterviewRoomMemo(room.getInterviewRoomMemo());
             response.setInterviewRoomCreatedAt(room.getInterviewRoomCreatedAt());
             response.setInterviewList(interviews);
+            response.setReexecutedRooms(reexecutedRooms);
         } catch(Exception e){
             throw new InterviewRoomQueryCreationException(ErrorCode.INTERVIEW_QUERY_CREATION_FAILED);
         }
