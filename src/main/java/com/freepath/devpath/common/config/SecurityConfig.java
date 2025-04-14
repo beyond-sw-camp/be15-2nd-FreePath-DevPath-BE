@@ -54,6 +54,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/ws-stomp/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/board/*/comments").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/board/*/like/count").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/comment/*/like/count").permitAll()
                                 .requestMatchers("/user/info", "/mypage/**", "/user/change-password","/user/change-email", "/user/dev-mbti").authenticated()
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/interview-room/**").hasAuthority("USER")
