@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Tag(name = "회원 관련 API", description = "회원가입, 정보 수정, 비밀번호/이메일 변경 등")
+@Tag(name = "회원", description = "회원가입, 정보 수정, 비밀번호/이메일 변경 등의 기능 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
