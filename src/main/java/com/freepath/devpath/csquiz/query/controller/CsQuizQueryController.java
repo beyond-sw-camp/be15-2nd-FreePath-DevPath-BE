@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "CS 퀴즈 조회", description = "CS 퀴즈 조회 관련 API")
+@Tag(name = "CS 퀴즈 조회", description = "CS 퀴즈 조회 기능 API")
 public class CsQuizQueryController {
 
     private final CsQuizQueryService csQuizQueryService;
