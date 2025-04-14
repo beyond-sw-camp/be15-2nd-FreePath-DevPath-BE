@@ -15,5 +15,7 @@ public class EmailCheckDto {
     private String authNum;
 
     @NotBlank
+    @Schema(description = "이메일 인증 목적 (SIGN_UP / FIND_LOGINID / RESET_PASSWORD / CHANGE_PASSWORD / CHANGE_EMAIL / DELETE_USER)",
+            example = "SIGN_UP")
     private String purpose;
 }
