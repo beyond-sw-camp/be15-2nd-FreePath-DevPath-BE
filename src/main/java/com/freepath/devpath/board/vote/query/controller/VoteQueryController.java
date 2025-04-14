@@ -1,8 +1,6 @@
 package com.freepath.devpath.board.vote.query.controller;
 
-
-import com.freepath.devpath.board.post.command.exception.InvalidPostAuthorException;
-import com.freepath.devpath.board.post.command.exception.NoSuchPostException;
+import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.board.vote.query.dto.response.VoteDetailResponse;
 import com.freepath.devpath.board.vote.query.service.VoteQueryService;
 import com.freepath.devpath.common.dto.ApiResponse;

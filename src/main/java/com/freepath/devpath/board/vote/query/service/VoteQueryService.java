@@ -2,7 +2,6 @@ package com.freepath.devpath.board.vote.query.service;
 
 import com.freepath.devpath.board.post.query.exception.NoSuchPostException;
 import com.freepath.devpath.board.post.query.mapper.PostMapper;
-import com.freepath.devpath.board.vote.command.repository.VoteRepository;
 import com.freepath.devpath.board.vote.query.dto.response.VoteDetailDTO;
 import com.freepath.devpath.board.vote.query.dto.response.VoteDetailResponse;
 import com.freepath.devpath.board.vote.query.mapper.VoteMapper;
