@@ -197,4 +197,10 @@
         </foreach>
     </select>
 
+    <select id="existsById" parameterType="int" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1 FROM board WHERE board_id = #{boardId}
+        )
+    </select>
+
 </mapper>
