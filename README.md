@@ -1,6 +1,6 @@
 <div align="center">
 
-![header](https://capsule-render.vercel.app/api?type=blur&color=0:CEF279,100:5CD1E5&height=200&section=header&text=We%20are%20DevPath!&fontSize=70)
+![header](https://capsule-render.vercel.app/api?type=blur&color=0:CEF279,100:73EDFF&height=200&section=header&text=We%20are%20DevPath!&fontSize=70)
 
 <h1>개발자를 위한 커뮤니티가 여러분을 찾아갑니다</h1>
 <h3>개발 능력 업그레이드를 DevPath와 함께!</h3>
@@ -12,20 +12,17 @@
 <table>
   <tr>
     <td>
-      <details open>
-        <summary><b>1. We are FreePath</b></summary>
+      <b>1️⃣ We are FreePath</b>
         <ul>
-          <li><a href="#team">🗺️ Team FreePath</a></li>
-          <li><a href="#project">📹 Our Project</a></li>
+          <li><a href="#team">✨ Team FreePath profile</a></li>
+          <li><a href="#devtools">🛠️ Dev tools</a></li>
         </ul>
-      </details>
     </td>
   </tr>
   <tr>
     <td>
-      <details open>
-        <summary><b>2. Project Result</b></summary>
-        <ul>
+      <b>️2️⃣ Project Result</b>
+       <ul>
           <li><a href="#requirements">📣 요구사항 명세서</a></li>
           <li><a href="#ddd">📑 DDD</a></li>
           <li><a href="#erd">📋 논리/물리 ERD</a></li>
@@ -35,17 +32,14 @@
           <li><a href="#wbs">📝 WBS</a></li>
           <li><a href="#gantt">📊Gantt Chart</a></li>
         </ul>
-      </details>
     </td>
   </tr>
   <tr>
     <td>
-      <details open>
-        <summary><b>3. Our Notion Page</b></summary>
+      <b>3️⃣ Our Notion Page</b>
         <ul>
           <li><a href="#ournotionpage">📓 Notion Page Link</a></li>
         </ul>
-      </details>
     </td>
   </tr>
 </table>
@@ -54,57 +48,72 @@
 
 <h1>1️⃣ We are FreePath</h1>
 
-## <span id="team">🗺️ Team FreePath</span>
+<h3 id="team">✨ Team FreePath profile</h3>
 
 <div align="center">
 
-|                                **김운경**                                |                                **김태인**                                |                                **이기연**                                |
-| :----------------------------------------------------------------------: | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
-| <img src="./assets/profile/김운경.png" width="180" height="180"> | <img src="./assets/profile/김태인.png" width="180" height="180"> | <img src="./assets/profile/이기연.png" width="180" height="180"> |
-|                [@splguyjr](https://github.com/splguyjr)                |              [@Taein5415](https://github.com/Taein5415)                  |                  [@Lee-gi-yeun](https://github.com/Lee-gi-yeun)                  |
+|                            **김운경**                            |                            **김태인**                            |                            **이기연**                            |
+|:-------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|
+| <img src="./assets/profile/김운경.png" width="180" height="130"> | <img src="./assets/profile/김태인.png" width="180" height="130"> | <img src="./assets/profile/이기연.png" width="180" height="130"> |
+|           [@splguyjr](https://github.com/splguyjr)            |          [@Taein5415](https://github.com/Taein5415)           |        [@Lee-gi-yeun](https://github.com/Lee-gi-yeun)         |
 
-|                                **이주미**                                |                               **이채은**                               |                                **하채린**                                |
-| :----------------------------------------------------------------------: |:-------------------------------------------------------------------:| :----------------------------------------------------------------------: |
-| <img src="./assets/profile/이주미.png" width="180" height="180"> | <img src="./assets/profile/이채은.png" width="180" height="180"> | <img src="./assets/profile/하채린.png" width="180" height="180"> |
-|                 [@z00m-1n](https://github.com/z00m-1n)                 |              [@nineeko](https://github.com/nineeko)               |                   [@didiha](https://github.com/didiha)                   | 
+|                            **이주미**                            |                            **이채은**                            |                            **하채린**                            |
+|:-------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|
+| <img src="./assets/profile/이주미.png" width="180" height="130"> | <img src="./assets/profile/이채은.png" width="180" height="130"> | <img src="./assets/profile/하채린.png" width="180" height="130"> |
+|            [@z00m-1n](https://github.com/z00m-1n)             |            [@nineeko](https://github.com/nineeko)             |             [@didiha](https://github.com/didiha)              | 
 
 </div>
 
-<br><br>
+<br>
+<h3 id="devtools">🛠️ Dev tools</h3>
 
-## <span id="project">📹 Our Project</span>
-
-### <span id="tech-stack">💻 기술 스택</span>
-
+<h4>📂 Database</h4>
 <div>
   <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">
   <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white">
-<br>
   <img src="https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white">
+  <img src="https://img.shields.io/badge/elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white">
+</div>
+
+<!-- Infrastructure -->
+<h4>☁️ Infrastructure</h4>
+<div>
   <img src="https://img.shields.io/badge/docker-2496ED.svg?&style=for-the-badge&logo=docker&logoColor=white">
   <img src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white"> 
   <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
-    <img src="https://img.shields.io/badge/openai-412991?style=for-the-badge&logo=openai&logoColor=white">
-  <img src="https://img.shields.io/badge/elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white">
-<br>
+</div>
+
+<!-- Backend -->
+<h4>🚀 Backend</h4>
+<div>
   <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
   <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+  <img src="https://img.shields.io/badge/openai-412991?style=for-the-badge&logo=openai&logoColor=white">
+</div>
+
+<!-- Tools -->
+<h4>🛠️ Tools</h4>
+<div>
   <img src="https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white">
-<br>
   <img src="https://img.shields.io/badge/Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white">
-  <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
   <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+</div>
+
+<!-- Communication -->
+<h4>💬 Communication</h4>
+<div>
+  <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
   <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
 </div>
 
 <br><br>
 
-<h5><b>프로젝트 목적</b></h5>
+<h3><b>프로젝트 목적</b></h3>
 프로젝트 <b>DevPath</b>는 비전공자와 주니어 개발자들이 실전 준비 과정에서 겪는 단절을 해소하고자 합니다. 구조화된 피드백과 동료와의 협업, 성장 추적 기능을 통해 지속적인 성장을 지원합니다. 이를 통해 단편적인 정보 소비를 넘어 자기 주도적 학습과 회고가 가능한 환경을 제공합니다.
 <br><br>
 <details>
-<summary><b>프로젝트 구조</b></summary>
+  <summary><b><span style="font-size: 1.2em">프로젝트 구조</span></b></summary>
 
 ```angular2html
 com.freepath.devpath
@@ -263,6 +272,6 @@ com.freepath.devpath
 </details>
 
 <br>
-<h1 id="ournotionpage">3️⃣ Our Playground</h1>
+<h1 id="ournotionpage">3️⃣ Our Notion Page</h1>
 <a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</strong></text></a>
 <br><br>
