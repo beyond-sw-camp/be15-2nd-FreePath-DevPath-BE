@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comments")
-@Tag(name = "댓글 및 대댓글 작성/수정/삭제", description = "댓글, 대댓글 작성, 수정, 삭제 기능 API")
+@Tag(name = "댓글 및 대댓글", description = "댓글, 대댓글 작성, 수정, 삭제 기능 API")
 public class CommentController {
 
     private final CommentCommandService commentCommandService;
