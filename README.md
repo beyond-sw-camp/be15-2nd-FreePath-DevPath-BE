@@ -13,10 +13,10 @@
   <tr>
     <td>
       <details open>
-        <summary><b>1. We are FreePath 👋</b></summary>
+        <summary><b>1. We are FreePath</b></summary>
         <ul>
-          <li><a href="#team">Team FreePath 🪄</a></li>
-          <li><a href="#project">Our Project 📹</a></li>
+          <li><a href="#team">🗺️ Team FreePath</a></li>
+          <li><a href="#project">📹 Our Project</a></li>
         </ul>
       </details>
     </td>
@@ -24,15 +24,16 @@
   <tr>
     <td>
       <details open>
-        <summary><b>2. Project Result 🗂️</b></summary>
+        <summary><b>2. Project Result</b></summary>
         <ul>
-          <li><a href="#wbs">WBS 📝</a></li>
-          <li><a href="#gantt">Gantt Chart 📊</a></li>
-          <li><a href="#requirements">요구사항 명세서 📣</a></li>
-          <li><a href="#erd">논리/물리 ERD 📋</a></li>
-          <li><a href="#restapi">REST API 설계 문서 ✔️</a></li>
-          <li><a href="#msa">MSA 아키텍쳐 구조도 📌</a></li>
-          <li><a href="#test">테스트 결과 보고서 🎖️</a></li>
+          <li><a href="#requirements">📣 요구사항 명세서</a></li>
+          <li><a href="#ddd">📑 DDD</a></li>
+          <li><a href="#erd">📋 논리/물리 ERD</a></li>
+          <li><a href="#restapi">✔️ REST API 설계 문서</a></li>
+          <li><a href="#msa">📌 MSA 아키텍쳐 구조도</a></li>
+          <li><a href="#test">🎖️ 테스트 결과 보고서</a></li>
+          <li><a href="#wbs">📝 WBS</a></li>
+          <li><a href="#gantt">📊Gantt Chart</a></li>
         </ul>
       </details>
     </td>
@@ -40,9 +41,9 @@
   <tr>
     <td>
       <details open>
-        <summary><b>3. Our Notion Page 🗂️</b></summary>
+        <summary><b>3. Our Notion Page</b></summary>
         <ul>
-          <li><a href="#ournotionpage">Notion Page Link 📓</a></li>
+          <li><a href="#ournotionpage">📓 Notion Page Link</a></li>
         </ul>
       </details>
     </td>
@@ -51,7 +52,9 @@
 
 <br>
 
-## <span id="team">🪄 Team FreePath</span>
+<h1>🗂️ We are FreePath</h1>
+
+## <span id="team">🗺️ Team FreePath</span>
 
 <div align="center">
 
@@ -177,6 +180,37 @@ com.freepath.devpath
 
 <h1 id="project-result">🗂️ 프로젝트 산출물</h1>
 
+<br>
+<h3 id="requirements">📣 요구사항 명세서</h3>
+<div markdown="1">
+    <a href="/assets/project-result/requirement.pdf" target="_blank"><strong>| 요구사항 명세서 보기 |</strong></a>
+</div>
+
+<br>
+<h3 id="ddd">📑 DDD</h3>
+<div markdown="1">
+        <a href="https://www.notion.so/DDD-Miro-1c22fdb1414880e484dade87a24fbc40" target="_blank"><strong>| DDD 보기 |</strong></a>
+</div>
+
+<br>
+<h3 id="erd">📋 논리/물리 ERD</h3>
+
+<details>
+    <summary><b>논리 ERD 상세보기</b></summary>
+    <div markdown="1">
+        <img src="./assets/project-result/BE-PJT-3team-erd(1).png" alt="논리 ERD" style="width: 100%; height: auto;">
+        <br><br>
+    </div>
+</details>
+<details>
+    <summary><b>물리 ERD 상세보기</b></summary>
+    <div markdown="1">
+        <img src="./assets/project-result/BE-PJT-3team-erd(2).png" alt="물리 ERD" style="width: 100%; height: auto;">
+    </div>
+</details>
+
+
+
 <h3 id="wbs">📝 WBS (Work Breakdown Structure)</h3>
 <details>
     <summary><b>WBS 상세보기</b></summary>
@@ -184,10 +218,11 @@ com.freepath.devpath
         <img src="./assets/project-result/wbs.png" alt="WBS" style="width: 100%; height: auto;">
         <br>
         <a href="https://www.notion.so/WBS-1c82fdb141488047835cd0ac36875e59" target="_blank">
-            <b>🔗 WBS 상세 문서 보기</b>
+            <b>| WBS 상세 문서 보기 |</b>
         </a>
     </div>
 </details>
+
 <br>
 <h3 id="gantt">📊 Gantt Chart</h3>
 <details>
@@ -196,34 +231,13 @@ com.freepath.devpath
         <img src="./assets/project-result/ganttchart.png" alt="Gantt Chart" style="width: 100%; height: auto;">
         <br>
         <a href="https://www.notion.so/Gantt-Chart-1d52fdb14148807aba37f0dedc7945a6" target="_blank">
-            <b>🔗 Gantt chart 상세 문서 보기</b>
+            <b>| Gantt chart 상세 문서 보기 |</b>
         </a>
     </div>
 </details>
-<br>
-<h3 id="requirements">📣 요구사항 명세서</h3>
-<a href="./assets/project-result/requirement.pdf" target="_blank">요구사항 명세서 보기</a>
-<br>
-<h3 id="erd">📋 논리/물리 ERD</h3>
-
-<details>
-    <summary><b>테이블 명세서 상세보기</b></summary>
-    <div markdown="1">
-        <img src="./assets/table_spec.png" alt="테이블 명세서" style="width: 80%; height: auto;">
-    </div>
-</details>
-
-<h3 id="usecase">👤 Usecase</h3>
-<details>
-    <summary>Usecase 자세히 보기</summary>
-    <div markdown="1">
-        <img src="./assets/usecase.png" alt="usecase" style="max-width: 100%; height: auto;">    
-    </div>
-</details>
-
 
 <br>
-<h1 id="Our-Playground">🗂️ Our Playground</h1>
+<h1 id="Notion Page Link">🗂️ Our Playground</h1>
 <a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</text></strong></a><br><br>
 
 <img src="./assets/scrum_meeting.jpg" style="width: 100%; height: auto;">
