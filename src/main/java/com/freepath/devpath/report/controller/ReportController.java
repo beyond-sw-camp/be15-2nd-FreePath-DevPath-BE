@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/report")
-@Tag(name = "신고 관련", description = "게시글 및 댓글 신고, 신고 리스트 확인 및 처리 기능 API")
+@Tag(name = "신고 관리", description = "게시글 및 댓글 신고, 신고 리스트 확인 및 처리 기능 API")
 public class ReportController {
 
     private final ReportService reportService;

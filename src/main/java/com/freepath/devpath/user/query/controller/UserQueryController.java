@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Tag(name = "유저 조회 API", description = "유저 관련 조회 기능")
+@Tag(name = "회원 조회", description = "유저 관련 조회 기능 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
