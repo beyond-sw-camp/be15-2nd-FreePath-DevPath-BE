@@ -183,7 +183,7 @@ com.freepath.devpath
 <br>
 <h3 id="requirements">📣 요구사항 명세서</h3>
 <div markdown="1">
-    <a href="/assets/project-result/requirement.pdf" target="_blank"><strong>| 요구사항 명세서 보기 |</strong></a>
+    <a href="./assets/project-result/requirement.pdf" target="_blank"><strong>| 요구사항 명세서 보기 |</strong></a>
 </div>
 
 <br>
