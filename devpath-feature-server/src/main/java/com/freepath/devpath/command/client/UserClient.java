@@ -10,6 +10,6 @@ import java.util.List;
 public interface UserClient {
 
     // 사용자의 subscribe가 Y인 이메일 List 전달 받음
-    @GetMapping("/it-news-subscribers")
+    @GetMapping("/user/it-news-subscribers")
     List<UserEmail> getSubscribedUsers();
 }
