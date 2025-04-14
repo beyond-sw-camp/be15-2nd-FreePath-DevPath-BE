@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "그룹채팅방 대기방", description = "그룹채팅방 대기방 API")
+@Tag(name = "그룹채팅방 대기방 참여 관리", description = "그룹채팅방 대기방 참여 생성, 삭제 API")
 public class WaitingRoomCommandController {
     private final WaitingRoomCommandService waitingRoomCommandService;
 

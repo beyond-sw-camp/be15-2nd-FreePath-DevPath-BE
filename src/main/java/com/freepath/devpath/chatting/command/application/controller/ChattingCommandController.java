@@ -21,7 +21,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "채팅", description = "채팅 API")
+@Tag(name = "채팅 관리", description = "채팅 전송/조회 기능 API")
 public class ChattingCommandController {
     //@MessageMapping()의 경로가 "/chat/message"이지만 ChatConfig의 setApplicationDestinationPrefixes()를 통해
     // prefix를 "/app"으로 해줬기 때문에 실질 경로는 "/app/chat/message"가 됨
