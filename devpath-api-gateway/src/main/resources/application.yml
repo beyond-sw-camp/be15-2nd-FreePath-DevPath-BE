@@ -1,0 +1,30 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      routes:
+        - id: devpath-community-server
+          uri: lb://DEVPATH-COMMUNITY-SERVER
+          predicates:
+            - Path=/community-server/**
+          filters:
+            - RewritePath=/community-server/(?<segment>.*), /$\{segment}
+            - name: CircuitBreaker
+              args:
+                name: userServiceCB
+                fallbackUri: forward:/fallback/user
+        - id: devpath-feature-server
+          uri: lb://DEVPATH-FEATURE-SERVER
+          predicates:
+            - Path=/api/v1/order-service/**
+          filters:
+            - RewritePath=/api/v1/order-service/(?<segment>.*), /$\{segment}
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
