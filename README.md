@@ -521,7 +521,69 @@ com.freepath.devpath
         <br>
         <img src="./assets/test/csquiz/CS퀴즈 등록.png" alt="csquiz1" style="width: 80%; height: auto;">
         <br>: 관리자가 CS 퀴즈를 등록함
-     트</span></li>
+        <br><br>
+    </details>
+    <details>
+        <summary><b>CS 퀴즈 버전 갱신</b></summary>
+        1. 버전 갱신(수동)
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 버전 갱신(수동).gif" alt="csquiz2" style="width: 80%; height: auto;">
+        <br>: 관리자가 CS 퀴즈 버전 갱신을 수동으로 진행함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>CS 퀴즈 조회</b></summary>
+        1. 상세 조회
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 상세조회.png" alt="csquiz3" style="width: 80%; height: auto;">
+        <br>: CS 퀴즈를 상세 조회함
+        <br><br>
+        2. 목록 조회
+        <br>
+        <img src="./assets/test/csquiz/CS 퀴즈 전체 목록 조회.png" alt="csquiz4" style="width: 80%; height: auto;">
+        <br>: CS 퀴즈의 전체 목록 조회함
+        <br><br>
+        3. 주간 조회
+        <br>
+        <img src="./assets/test/csquiz/주간 CS퀴즈 조회.png" alt="csquiz5" style="width: 80%; height: auto;">
+        <br>: 주간 CS 퀴즈 조회함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>CS 퀴즈 수정</b></summary>
+        1. 수정
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 수정.png" alt="csquiz6" style="width: 80%; height: auto;">
+        <br>: 관리자가 CS 퀴즈 내용을 수정함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>사용자 답변 등록</b></summary>
+        1. 답변 등록
+        <br>
+        <img src="./assets/test/csquiz/사용자 답변 등록.png" alt="csquiz7" style="width: 80%; height: auto;">
+        <br>: 사용자가 퀴즈에 대해 답변을 등록함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>사용자 CS 퀴즈 결과 조회</b></summary>
+        1. 결과 조회
+        <br>
+        <img src="./assets/test/csquiz/사용자 CS퀴즈 결과 조회.png" alt="csquiz8" style="width: 80%; height: auto;">
+        <br>: 사용자는 퀴즈 결과를 조회할 수 있음
+        <br><br>
+    </details>
+    <details>
+        <summary><b>사용자 주간 CS 퀴즈 정답 개수 조회</b></summary>
+        1. 정답 개수 조회
+        <br>
+        <img src="./assets/test/csquiz/사용자 주간 CS퀴즈 정답 개수.png" alt="csquiz9" style="width: 80%; height: auto;">
+        <br>: 사용자는 주간 CS 퀴즈의 정답 개수를 조회할 수 있음
+        <br><br>
+    </details>
+
+<br>
+<li><h3>모의 면접 테스트</h3></li>
 <details>
     <summary><b>관리자 - 조회</b></summary>
     1. 관리자 모의 면접방 전체 목록 조회
