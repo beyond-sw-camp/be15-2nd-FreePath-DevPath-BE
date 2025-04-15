@@ -565,7 +565,133 @@ com.freepath.devpath
 </details>
 <br>
 
-<li><span style="font-size: 1.2em">CS 퀴즈</span></li>
+<li><span style="font-size: 1.2em">게시판 상호작용 테스트</span></li>
+<details>
+    <summary><b>게시글 북마크</b></summary>
+    1. 게시글 북마크
+    <br>
+    <img src="./assets/test/board/interaction/게시글 북마크.png" alt="intr1" style="width: 80%; height: auto;">
+    <br>: 사용자는 게시글 북마크를 할 수 있다.
+    <br><br>
+    2. 게시글 북마크 모아보기
+    <br>
+    <img src="./assets/test/board/interaction/게시글 북마크 모아보기.png" alt="intr2" style="width: 80%; height: auto;">
+    <br>: 사용자는 마이페이지에서 북마크 목록을 조회할 수 있다.
+    <br><br>
+    3. 게시글 북마크 삭제
+    <br>
+    <img src="./assets/test/board/interaction/게시글 북마크 삭제.png" alt="intr3" style="width: 80%; height: auto;">
+    <br>: 사용자는 북마크를 취소할 수 있다.
+    <br><br>
+    4. 게시글 북마크 실패
+    <br>
+    <img src="./assets/test/board/interaction/게시글 북마크 실패.png" alt="intr4" style="width: 80%; height: auto;">
+    <br>: 게시글 북마크 실패 예외 처리
+    <br><br>
+    5. 게시글 북마크 삭제 실패
+    <br>
+    <img src="./assets/test/board/interaction/게시글 북마크 삭제 실패.png" alt="intr5" style="width: 80%; height: auto;">
+    <br>: 북마크 삭제 실패 예외 처리
+    <br><br>
+</details>
+<details>
+    <summary><b>게시글 좋아요</b></summary>
+    1. 게시글 좋아요
+    <br>
+    <img src="./assets/test/board/interaction/게시글 좋아요.png" alt="intr6" style="width: 80%; height: auto;">
+    <br>: 사용자는 게시글에 좋아요를 누를 수 있다.
+    <br><br>
+    2. 게시글 좋아요 모아보기
+    <br>
+    <img src="./assets/test/board/interaction/게시글 좋아요 모아보기.png" alt="intr7" style="width: 80%; height: auto;">
+    <br>: 사용자는 마이페이지에서 좋아요 한 게시글을 조회할 수 있다.
+    <br><br>
+    3. 게시글 좋아요 총 개수
+    <br>
+    <img src="./assets/test/board/interaction/게시글 총 좋아요 개수.png" alt="intr8" style="width: 80%; height: auto;">
+    <br>: 사용자는 게시글의 좋아요 총 개수를 조회할 수 있다.
+    4. 게시글 좋아요 삭제
+    <br>
+    <img src="./assets/test/board/interaction/게시글 좋아요 삭제.png" alt="intr9" style="width: 80%; height: auto;">
+    <br>: 사용자는 게시글의 좋아요를 취소할 수 있다.
+    <br><br>
+    5. 게시글 좋아요 실패
+    <br>
+    <img src="./assets/test/board/interaction/게시글 좋아요 실패.png" alt="intr10" style="width: 80%; height: auto;">
+    <br>: 게시글의 좋아요 실패 예외 처리
+    <br><br>
+    6. 게시글 좋아요 삭제 실패
+    <br>
+    <img src="./assets/test/board/interaction/게시글 좋아요 삭제실패.png" alt="intr11" style="width: 80%; height: auto;">
+    <br>: 게시글의 좋아요 삭제 실패 예외 처리
+    <br><br>
+</details>
+<details>
+    <summary><b>게시글 조회 시 북마크 여부</b></summary>
+    1. 북마크 되어있을 때
+    <br>
+    <img src="./assets/test/board/interaction/게시글 조회 시 북마크 여부(북마크 되어있을때).png" alt="intr12" style="width: 80%; height: auto;">
+    <br>: 사용자가 특정 게시글 조회 시 북마크가 되어있을 때
+    <br><br>
+    2. 북마크 안 되어있을 때
+    <br>
+    <img src="./assets/test/board/interaction/게시글 조회 시 북마크 여부(북마크 안되어있을때).png" alt="intr13" style="width: 80%; height: auto;">
+    <br>: 사용자가 특정 게시글 조회 시 북마크가 안 되어있을 때
+    <br><br>
+</details>
+<details>
+    <summary><b>게시글 조회 시 좋아요 여부</b></summary>
+    1. 좋아요 되어있을 때
+    <br>
+    <img src="./assets/test/board/interaction/게시글 조회 시 좋아요 여부(좋아요 되어있을 때).png" alt="intr14" style="width: 80%; height: auto;">
+    <br>: 사용자가 특정 게시글 조회 시 좋아요가 되어있을 때
+    <br><br>
+    2. 좋아요 안 되어있을 때
+    <br>
+    <img src="./assets/test/board/interaction/게시글 조회 시 좋아요 여부(좋아요 안되어있을 때).png" alt="intr15" style="width: 80%; height: auto;">
+    <br>: 사용자가 특정 게시글 조회 시 좋아요가 안 되어있을 때
+    <br><br>
+</details>
+<details>
+    <summary><b>댓글 좋아요</b></summary>
+    1. 댓글 좋아요
+    <br>
+    <img src="./assets/test/board/interaction/댓글 좋아요.png" alt="intr16" style="width: 80%; height: auto;">
+    <br>: 사용자는 댓글에 좋아요를 할 수 있다.
+    <br><br>
+    2. 댓글 좋아요 총 개수
+    <br>
+    <img src="./assets/test/board/interaction/댓글 총 좋아요 개수.png" alt="intr17" style="width: 80%; height: auto;">
+    <br>: 사용자는 댓글의 좋아요 총 개수를 조회할 수 있다.
+    3. 댓글 좋아요 삭제
+    <br>
+    <img src="./assets/test/board/interaction/댓글 좋아요 삭제.png" alt="intr18" style="width: 80%; height: auto;">
+    <br>: 사용자는 댓글의 좋아요를 취소할 수 있다.
+    4. 댓글 좋아요 실패
+    <br>
+    <img src="./assets/test/board/interaction/댓글 좋아요 실패.png" alt="intr19" style="width: 80%; height: auto;">
+    <br>: 댓글의 좋아요 실패 예외 처리
+    5. 댓글 좋아요 삭제 실패
+    <br>
+    <img src="./assets/test/board/interaction/댓글 좋아요 삭제 실패.png" alt="intr20" style="width: 80%; height: auto;">
+    <br>: 댓글의 좋아요 삭제 실패 예외 처리
+</details>
+<details>
+    <summary><b>댓글 조회 시 좋아요 여부</b></summary>
+    1. 좋아요 되어있을 때
+    <br>
+    <img src="./assets/test/board/interaction/댓글 조회 시 좋아요 여부(좋아요 되어있을때).png" alt="intr21" style="width: 80%; height: auto;">
+    <br>: 사용자가 특정 댓글에 좋아요를 했을 때
+    <br><br>
+    2. 좋아요 안 되어있을 때
+    <br>
+    <img src="./assets/test/board/interaction/댓글 조회 시 좋아요 여부(좋아요 안되어있을 때).png" alt="intr22" style="width: 80%; height: auto;">
+    <br>: 사용자가 특정 댓글에 좋아요를 안 했을 때
+    <br><br>
+</details>
+
+
+<li><span style="font-size: 1.2em">CS 퀴즈 테스트</span></li>
     <details>
         <summary><b>CS 퀴즈 등록</b></summary>
         1. 등록
