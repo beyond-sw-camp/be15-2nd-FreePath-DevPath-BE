@@ -845,7 +845,7 @@ com.freepath.devpath
         <br><br>
     </details>
     <details>
-    <summary>채팅 연결 테스트 </summary>
+    <summary><b>채팅 연결 테스트</b></summary>
     <img src="./assets/test/chatting/채팅 연결 테스트.gif" alt="채팅 연결 테스트" style="width: 80%; height: auto;">
         <br>: stomp를 이용하여 connect, subscribe, send시 사용자의 토큰을 확인하여 채팅방에 참여중인 사용자인지 확인한다. 
     </details>
