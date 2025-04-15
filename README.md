@@ -131,7 +131,7 @@ com.freepath.devpath
 │   └── service
 │
 │
-├── user # Users 
+├── user # Users
 │   ├── command
 │   ├── config
 │   ├── exception
@@ -142,7 +142,7 @@ com.freepath.devpath
 │   ├── config
 │   ├── exception
 │   └── query
-│ 
+│
 ├── chatting # Chatting, ChattingJoin, ChattingRoom, UserBlock
 │   ├── command
 │   ├── exception
@@ -152,15 +152,15 @@ com.freepath.devpath
 │   ├── post # Board, BoardCategory, Attachment
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   ├── comment # Comment
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   ├── vote # Vote, VoteItem, VoteHistory
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   └── interaction # Like, BoardBookmark
 │       ├── command
 │       └── query
@@ -179,9 +179,9 @@ com.freepath.devpath
 │   └── service
 │
 └── csquiz # CsQuiz, CsQuizResult, CsQuizOption
-    ├── command
-    ├── exception
-    └── query
+├── command
+├── exception
+└── query
 
 ```
 </details>
@@ -690,7 +690,7 @@ com.freepath.devpath
     <br><br>
 </details>
 
-
+<br>
 <li><span style="font-size: 1.2em">CS 퀴즈 테스트</span></li>
     <details>
         <summary><b>CS 퀴즈 등록</b></summary>
@@ -845,7 +845,7 @@ com.freepath.devpath
         <br><br>
     </details>
     <details>
-    <summary>채팅 연결 테스트 </summary>
+    <summary><b>채팅 연결 테스트</b></summary>
     <img src="./assets/test/chatting/채팅 연결 테스트.gif" alt="채팅 연결 테스트" style="width: 80%; height: auto;">
         <br>: stomp를 이용하여 connect, subscribe, send시 사용자의 토큰을 확인하여 채팅방에 참여중인 사용자인지 확인한다. 
     </details>
