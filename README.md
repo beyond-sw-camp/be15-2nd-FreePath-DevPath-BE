@@ -406,6 +406,79 @@ com.freepath.devpath
     </details>
 <br>
 
+<li><span style="font-size: 1.2em">게시글 테스트</span></li>
+<details>
+  <summary><b>게시글 업로드</b></summary>
+  1. 게시글 업로드
+  <br>
+  <img src="https://github.com/user-attachments/assets/9979f153-f1aa-49ec-a027-30c6e289ccb9" alt="게시글 업로드 예시" style="width: 80%; height: auto;">
+  <br>각 필드에 대한 입력 유효성 검사와 파일 첨부 기능 등이 포함됩니다.
+</details>
+
+<details>
+  <summary><b>게시글 수정</b></summary>
+  1. 게시글 수정
+  <br>
+  <img src="https://github.com/user-attachments/assets/ecd6bc39-f368-4e42-8372-1f7824c4a5bc" alt="게시글 수정 예시" style="width: 80%; height: auto;">
+  <br>수정 시 변경된 내용이 정상적으로 반영되는지와 편집 전후 데이터 비교 기능 등을 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 삭제</b></summary>
+  1. 게시글 삭제
+  <br>
+  <img src="https://github.com/user-attachments/assets/26f60396-b3ff-4867-bef7-8c2a5f2e9b32" alt="게시글 삭제 예시" style="width: 80%; height: auto;">
+  <br>삭제 전 확인 메시지와 실제 데이터베이스에서 삭제 처리가 되는지를 테스트합니다.
+</details>
+
+<details>
+  <summary><b>하위 카테고리 목록 조회</b></summary>
+  1. 하위 카테고리 목록 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/db528f3c-bbef-450c-b280-078fee3cab65" alt="하위 카테고리 목록 조회 예시" style="width: 80%; height: auto;">
+  <br>계층 구조가 제대로 표시되고, 클릭 시 해당 카테고리로 이동되는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 상세 조회</b></summary>
+  1. 게시글 상세 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/bd8cabe1-b318-40b9-8a6e-de6412781b24" alt="게시글 상세 조회 예시" style="width: 80%; height: auto;">
+  <br>게시글 내용, 작성자 정보, 작성일, 댓글 및 추천 수 등의 정보가 올바르게 표시되는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 검색 (작성일, 작성자, 제목)</b></summary>
+  1. 게시글 검색 (작성일, 작성자, 제목)
+  <br>
+  <img src="https://github.com/user-attachments/assets/787dd012-6f0f-4849-880b-2557afa9ff77" alt="게시글 검색 (필터) 예시" style="width: 80%; height: auto;">
+  <br>조건에 맞는 게시글이 올바르게 필터링되어 나타나는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 검색 (게시글 내용 필터)</b></summary>
+  1. 게시글 내용 필터
+  <br>
+  <img src="https://github.com/user-attachments/assets/269fe4e7-03b5-480e-86ee-e704c4292d61" alt="게시글 내용 필터 예시" style="width: 80%; height: auto;">
+  <br>검색 결과에 불필요한 게시글이 노출되지 않고, 정확하게 필터링되는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>회원이 작성한 게시글 목록 조회</b></summary>
+  1. 회원이 작성한 게시글 목록 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/534991c6-a68e-4e39-a75f-ceb6b41e4ee2" alt="회원이 작성한 게시글 목록 조회 예시" style="width: 80%; height: auto;">
+  <br>회원 정보와 연동되어, 로그인 상태에서 자신의 게시글만 확인 가능하게 처리되어 있는지 테스트합니다.
+</details>
+
+<details>
+  <summary><b>자신의 신고된 게시물 목록 확인</b></summary>
+  1. 신고된 게시물 목록 확인
+  <br>
+  <img src="https://github.com/user-attachments/assets/49a8c793-31ae-4931-81ff-b151fd2bf6ba" alt="신고된 게시물 목록 확인 예시" style="width: 80%; height: auto;">
+  <br>신고 처리 현황과 해당 게시글의 상태가 정확하게 표시되는지 확인합니다.
+</details>
+
 <li><span style="font-size: 1.2em">CS 퀴즈</span></li>
     <details>
         <summary><b>CS 퀴즈 등록</b></summary>
