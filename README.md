@@ -132,7 +132,7 @@ com.freepath.devpath
 │   └── service
 │
 │
-├── user # Users 
+├── user # Users
 │   ├── command
 │   ├── config
 │   ├── exception
@@ -143,7 +143,7 @@ com.freepath.devpath
 │   ├── config
 │   ├── exception
 │   └── query
-│ 
+│
 ├── chatting # Chatting, ChattingJoin, ChattingRoom, UserBlock
 │   ├── command
 │   ├── exception
@@ -153,15 +153,15 @@ com.freepath.devpath
 │   ├── post # Board, BoardCategory, Attachment
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   ├── comment # Comment
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   ├── vote # Vote, VoteItem, VoteHistory
 │   │   ├── command
 │   │   └── query
-│   │   
+│   │
 │   └── interaction # Like, BoardBookmark
 │       ├── command
 │       └── query
@@ -180,9 +180,9 @@ com.freepath.devpath
 │   └── service
 │
 └── csquiz # CsQuiz, CsQuizResult, CsQuizOption
-    ├── command
-    ├── exception
-    └── query
+├── command
+├── exception
+└── query
 
 ```
 </details>
