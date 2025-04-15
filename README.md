@@ -583,7 +583,7 @@ com.freepath.devpath
     </details>
 
 <br>
-<li><h3>모의 면접 테스트</h3></li>
+<li><span style="font-size: 1.2em">모의 면접 테스트</span></li>
 <details>
     <summary><b>관리자 - 조회</b></summary>
     1. 관리자 모의 면접방 전체 목록 조회
