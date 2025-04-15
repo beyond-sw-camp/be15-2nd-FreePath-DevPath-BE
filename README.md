@@ -245,7 +245,7 @@ com.freepath.devpath
 <h3 id="msa">📌 MSA 아키텍쳐 구조도</h3>
     <details>
         <summary><b>MSA 아키텍쳐 구조도 상세보기</b></summary>
-        <img src="https://github.com/user-attachments/assets/4a2a1b83-abcf-4296-b3be-51dd39ae851d" alt="MSA" style="width: 100%; height: auto;">
+        <img src="https://github.com/user-attachments/assets/4a2a1b83-abcf-4296-b3be-51dd39ae851d" alt="MSA" style="width: 80%; height: auto;">
     </details>
     <br>
 <h3 id="eca">🙌 Eureka Server & Client & API Gateway 구조</h3>
