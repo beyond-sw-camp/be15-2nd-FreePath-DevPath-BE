@@ -308,12 +308,97 @@ com.freepath.devpath
         <br>: 회원 탈퇴 시 본인 확인을 위한 이메일 발송
         <br><br>
         2. 인증 번호
+        <br>
         <img src="./assets/test/user/회원_회원탈퇴인증번호확인.png" alt="user12" style="width: 80%; height: auto;">
         <br>: 인증 번호 확인
         <br><br>
         3. 회원 탈퇴
+        <br>
         <img src="./assets/test/user/회원_회원탈퇴완료.png" alt="user13" style="width: 80%; height: auto;">
         <br>: 회원 탈퇴 완료
+        <br><br>
+    </details>
+    <details>
+        <summary><b>로그인 아이디 찾기</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/일반회원_로그인아이디찾기이메일.png" alt="user14" style="width: 80%; height: auto;">
+        <br>: 로그인 아이디 찾기를 위한 인증용 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/일반회원_로그인아이디찾기인증번호확인.png" alt="user15" style="width: 80%; height: auto;">
+        <br>: 인증 번호 인증 완료
+        <br><br>
+        3. 로그인 찾기 완료
+        <br>
+        <img src="./assets/test/user/일반회원_로그인아이디찾기완료.png" alt="user16" style="width: 80%; height: auto;">
+        <br>: 회원의 아이디 반환
+        <br><br>
+    </details>
+    <details>
+        <summary><b>비밀번호 재설정</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정이메일.png" alt="user17" style="width: 80%; height: auto;">
+        <br>: 비밀번호를 잃어버렸을 때 재설정하는 기능을 사용하기 위해 인증용 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정인증번호확인.png" alt="user18" style="width: 80%; height: auto;">
+        <br>: 인증 번호 인증 완료
+        <br><br>
+        3. 비밀번호 재설정 오류
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정_오류.png" alt="user19" style="width: 80%; height: auto;">
+        <br>: 비밀번호에 특수문자를 넣지 않으면 안 됨
+        <br><br>
+        4. 비밀번호 재설정 완료
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정완료.png" alt="user20" style="width: 80%; height: auto;">
+        <br>: 특수문자 넣고 다시 시도하면 성공함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>비밀번호 변경</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호변경이메일.png" alt="user21" style="width: 80%; height: auto;">
+        <br>: 비밀번호를 변경 시 인증용 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호변경인증번호확인.png" alt="user22" style="width: 80%; height: auto;">
+        <br>: 인증 번호 인증 완료
+        <br><br>
+        3. 비밀번호 변경 완료
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호변경완료.png" alt="user23" style="width: 80%; height: auto;">
+        <br>: 비밀번호가 성공적으로 변경됨
+        <br><br>
+    </details>
+    <details>
+        <summary><b>회원 정보 수정</b></summary>
+        1. 닉네임, it 기사 구독 여부 수정
+        <br>
+        <img src="./assets/test/user/회원_닉네임,it구독여부수정.png" alt="user24" style="width: 80%; height: auto;">
+        <br>: 중복되는 닉네임은 변경이 불가능
+        <br><br>
+    </details>
+     <details>
+        <summary><b>개발자 성향 테스트 저장</b></summary>
+        1. 개발자 성향 테스트 저장
+        <br>
+        <img src="./assets/test/user/회원_개발자성향테스트저장.png" alt="user25" style="width: 80%; height: auto;">
+        <br>: 프론트에서 주는 값을 회원의 개발자 성향 테스트 결과로 저장함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>마이페이지 내의 회원 정보 조회</b></summary>
+        1. 회원 정보 조회
+        <br>
+        <img src="./assets/test/user/회원_마이페이지정보조회.png" alt="user26" style="width: 80%; height: auto;">
+        <br>: 이메일, 닉네임, it 뉴스 구독 여부, 개발자 성향 테스트 등을 조회할 수 있다.
         <br><br>
     </details>
 
