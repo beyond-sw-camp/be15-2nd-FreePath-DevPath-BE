@@ -61,7 +61,7 @@ public class NewsService {
             helper.setTo(to);
             helper.setSubject("[DevPath 뉴스] " + subject);
 
-            String htmlContent = content + "<br><br><a href='" + link + "'>👉 기사 전체 보기</a>";
+            String htmlContent = content.replace("\n","<br>") + "<br><br><a href='" + link + "'>👉 기사 전체 보기</a>";
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
