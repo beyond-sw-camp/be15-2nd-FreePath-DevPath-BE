@@ -581,6 +581,56 @@ com.freepath.devpath
         <br>: 사용자는 주간 CS 퀴즈의 정답 개수를 조회할 수 있음
         <br><br>
     </details>
+<br>
+
+<li><span style="font-size: 1.2em">신고 테스트</span></li>
+<details>
+  <summary><b>게시글 신고</b></summary>
+  1. 게시글 신고(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/c52c6a38-5652-405a-9af0-0e5e66c68a46" alt="게시글 신고(일반)" style="width: 80%; height: auto;">
+  <br>
+  2. 게시글 신고(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/03567cdc-c364-44ff-9fea-6324523d7c42" alt="게시글 신고(중복)" style="width: 80%; height: auto;">
+  <br> 게시글 신고 시 중복 예외 처리
+</details>
+
+<details>
+  <summary><b>댓글 신고</b></summary>
+  1. 댓글 신고(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/ac6fc59e-7288-4a57-ad54-a93bb7391f8e" alt="댓글 신고(일반)" style="width: 80%; height: auto;">
+   <br><br>
+  2. 댓글 신고(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/b1fc9e0a-5350-4dec-9081-f64cbd40729b" alt="댓글 신고(중복)" style="width: 80%; height: auto;">
+  <br> 댓글 신고 시 중복 예외 처리
+  <br>
+</details>
+
+<details>
+  <summary><b>관리자 신고 검토 리스트 조회</b></summary>
+  1. 관리자 신고 검토 리스트 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/050f3d15-9df8-4f50-a437-913d41b1a13f" alt="관리자 신고 검토 리스트 조회" style="width: 80%; height: auto;">
+  <br>관리자가 신고 검토 요청 리스트를 조회
+</details>
+
+<details>
+  <summary><b>관리자 신고 검토 처리</b></summary>
+  1. 관리자 신고 검토 처리
+  <br>
+  <img src="https://github.com/user-attachments/assets/283cef1c-1ebe-4882-b9f7-9785408bbf2b" alt="관리자 신고 검토 처리" style="width: 80%; height: auto;">
+  <br>관리자가 신고 검토 요청을 처리
+  <br>
+  2. 관리자 신고 검토 처리(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/35e63c95-3389-47e5-969a-a7165e889986" alt="관리자 신고 검토 리스트 조회" style="width: 80%; height: auto;">
+  <br>관리자가 신고 검토 요청 처리 시 중복 예외 처리
+</details>
+
+<br>
 
 
 <br>
