@@ -581,8 +581,78 @@ com.freepath.devpath
         <br>: 사용자는 주간 CS 퀴즈의 정답 개수를 조회할 수 있음
         <br><br>
     </details>
-<br>
 
+<br>
+<li><h3>모의 면접 테스트</h3></li>
+<details>
+    <summary><b>관리자 - 조회</b></summary>
+    1. 관리자 모의 면접방 전체 목록 조회
+    <br>
+    <img src="./assets/test/interview/관리자 면접방 전체 목록 조회.png" alt="interview1" style="width: 80%; height: auto;">
+    <br>: 관리자는 사용자가 만든 모의 면접방 전체 목록을 조회할 수 있음
+    <br><br>
+    2. 관리자 모의 면접방 필터링 조회
+    <br>
+    <img src="./assets/test/interview/관리자 면접방 필터링 조회.png" alt="interview2" style="width: 80%; height: auto;">
+    <br>: 관리자는 사용자가 만든 모의 면접방을 필터링 해서 조회할 수 있음
+    <br><br>
+</details>
+<details>
+    <summary><b>사용자 - 조회</b></summary>
+    1. 사용자 모의 면접방 목록 조회
+    <br>
+    <img src="./assets/test/interview/사용자 면접방 목록 조회.png" alt="interview3" style="width: 80%; height: auto;">
+    <br>: 사용자는 본인이 만든 모의 면접방 목록을 조회할 수 있음
+    <br><br>
+    2. 사용자 모의 면접방 상세 조회
+    <br>
+    <img src="./assets/test/interview/면접방 상세 조회.png" alt="interview4" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 상세 조회2.png" alt="interview5" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 상세 조회3.png" alt="interview6" style="width: 80%; height: auto;">
+    <br>: 사용자는 본인의 모의 면접방 상세 조회를 할 수 있음
+    <br><br>
+    4. 사용자 모의 면접방 총평 조회
+    <br>
+    <img src="./assets/test/interview/면접방 총평 조회.png" alt="interview7" style="width: 80%; height: auto;">
+    <br>: 사용자는 본인이 만든 모의 면접방의 총평을 조회할 수 있음
+    <br><br>
+</details>
+<details>
+    summary><b>모의 면접방 생성</b></summary>
+    1. 생성
+    <br>
+    <img src="./assets/test/interview/면접방 생성.png" alt="interview8" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방을 생성할 수 있음
+    <br><br>
+</details>
+<details>
+    summary><b>모의 면접방 제목, 메모 수정</b></summary>
+    1. 수정
+    <br>
+    <img src="./assets/test/interview/면접방 제목 및 메모 수정.png" alt="interview9" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방의 제목 및 메모를 수정할 수 있음
+    <br><br>
+</details>
+<details>
+    summary><b>모의 면접방 사용</b></summary>
+    1. 대화
+    <br>
+    <img src="./assets/test/interview/면접방 대화.png" alt="interview10" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 대화.png" alt="interview11" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 대화.png" alt="interview12" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방의 제목 및 메모를 수정할 수 있음
+    <br><br>
+</details>
+<details>
+    summary><b>모의 면접방 재실행</b></summary>
+    1. 대화
+    <br>
+    <img src="./assets/test/interview/면접방 질문 재실행.png" alt="interview13" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방을 재실행 할 수 있음
+    <br><br>
+</details>
+
+<br>
 <li><span style="font-size: 1.2em">신고 테스트</span></li>
 <details>
   <summary><b>게시글 신고</b></summary>
