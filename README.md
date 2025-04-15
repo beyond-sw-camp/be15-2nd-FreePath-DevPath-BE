@@ -478,6 +478,7 @@ com.freepath.devpath
   <img src="https://github.com/user-attachments/assets/49a8c793-31ae-4931-81ff-b151fd2bf6ba" alt="신고된 게시물 목록 확인 예시" style="width: 80%; height: auto;">
   <br>신고 처리 현황과 해당 게시글의 상태가 정확하게 표시되는지 확인합니다.
 </details>
+<br>
 
 <li><span style="font-size: 1.2em">투표 테스트</span></li>
 <details>
@@ -508,9 +509,10 @@ com.freepath.devpath
   <summary><b>투표 조회</b></summary>
   1. 투표 조회(투표 존재 여부, 투표 여부, 종료 여부)
   <br>
-  <img src="https://github.com/user-attachments/assets/26f60396-b3ff-4867-bef7-8c2a5f2e9b32" alt="투표 조회(투표 존재 여부, 투표 여부, 종료 여부)" style="width: 80%; height: auto;">
+  <img src="https://github.com/user-attachments/assets/ade40274-a107-47cb-9705-3453e1f9e45f" alt="투표 조회(투표 존재 여부, 투표 여부, 종료 여부)" style="width: 80%; height: auto;">
   <br>투표 조회 시 투표 존재 여부, 투표 여부, 종료 여부를 확인
 </details>
+<br>
 
 <li><span style="font-size: 1.2em">CS 퀴즈</span></li>
     <details>
