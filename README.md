@@ -744,6 +744,58 @@ com.freepath.devpath
 </details>
 
 <br>
+<li><span style="font-size: 1.2em">IT 뉴스 테스트</span></li>
+<details>
+    <summary><b>IT 뉴스 저장</b></summary>
+     1. 저장
+    <br>
+    <img src="./assets/test/itnews/IT 뉴스 저장.png" alt="itnews1" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 저장할 수 있다.
+    <br><br>
+</details>
+<details>
+    <summary><b>IT 뉴스 수정</b></summary>
+     1. 수정
+    <br>
+    <img src="./assets/test/itnews/IT 뉴스 수정.png" alt="itnews2" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 수정할 수 있다.
+    <br><br>
+</details>
+<details>
+    <summary><b>IT 뉴스 조회</b></summary>
+     1. 목록 조회
+    <br>
+    <img src="./assets/test/itnews/뉴스 목록 조회.png" alt="itnews3" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스 목록을 조회할 수 있다.
+    <br><br>
+    2. 상세 조회
+    <br>
+    <img src="./assets/test/itnews/뉴스 상세조회.png" alt="itnews4" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스 상세 조회할 수 있다.
+    <br><br>
+</details>
+<details>
+    <summary><b>IT 뉴스 전송</b></summary>
+    1. 전송(수동)
+    <br>
+    <img src="./assets/test/itnews/IT뉴스 수동 전송.png" alt="itnews5" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 구독한 사용자들에게 전송할 수 있다.
+    <br>
+    <img src="./assets/test/itnews/IT뉴스 수동 전송.png" alt="itnews6" style="width: 80%; height: auto;">
+    <br>: 사용자가 받은 이메일
+    <br><br>    
+</details>
+<details>
+    <summary><b>IT 뉴스 삭제</b></summary>
+    1. 삭제
+    <br>
+    <img src="./assets/test/itnews/뉴스 삭제.png" alt="itnews7" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 삭제할 수 있다.
+    <br><br>
+</details>
+
+
+<br>
 <li><span style="font-size: 1.2em">신고 테스트</span></li>
 <details>
   <summary><b>게시글 신고</b></summary>
