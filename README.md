@@ -480,6 +480,58 @@ com.freepath.devpath
 </details>
 <br>
 
+<li><span style="font-size: 1.2em">댓글 테스트</span></li>
+<details>
+    <summary><b>게시글 내 댓글 조회 기능</b></summary>
+    1. 게시글 내 댓글 조회 기능
+    <br>
+    <img src="./assets/test/comment/게시글 내 댓글, 대댓글 조회.png" alt="게시글 내 댓글, 대댓글 조회" style="width: 80%; height: auto;">
+    <br>: 게시글 내 댓글 및 대댓글을 조회할 수 있다.
+</details>
+<details>
+        <summary><b>댓글 작성</b></summary>
+        2. 댓글 작성
+        <br>
+        <img src="./assets/test/comment/댓글작성.png" alt="댓글작성" style="width: 80%; height: auto;">
+        <br>사용자는 게시글ID와 댓글을 전송하여여 댓글을 작성할 수 있다.
+</details>
+<details>
+        <summary><b>대댓글 작성</b></summary>
+            3. 대댓글 작성
+             <br>
+              <img src="./assets/test/comment/대댓글 작성.png" alt="대댓글 작성" style="width: 80%; height: auto;">
+            <br>사용자는 게시글ID와 댓글을 전송하여여 대댓글을 작성할 수 있다.
+</details>
+<details>
+        <summary><b>댓글 삭제</b></summary>
+            4. 댓글 삭제제
+             <br>
+              <img src="./assets/test/comment/댓글 삭제.png" alt="댓글 삭제" style="width: 80%; height: auto;">
+            <br>사용자는 특정 댓글의 id를 이용하여 댓글을 삭제할 수 있다.
+</details>
+<details>
+        <summary><b>댓글,대댓글 수정</b></summary>
+            5. 댓글,대댓글 수정
+             <br>
+              <img src="./assets/test/comment/댓글, 대댓글 수정.png" alt="댓글, 대댓글 수정" style="width: 80%; height: auto;">
+            <br>사용자는 특정 댓글의 id를 이용하여 댓글을 수정할 수 있다.
+</details>
+<details>
+        <summary><b>내가 쓴 댓글, 대댓글 조회</b></summary>
+            6.내가 쓴 댓글, 대댓글 조회
+             <br>
+              <img src="./assets/test/comment/내가 쓴 댓글, 대댓글 조회.png.png" alt="내가 쓴 댓글, 대댓글 조회" style="width: 80%; height: auto;">
+            <br>사용자는 자신이 작성한 댓글 및 대댓글을 조회할 수 있다.
+</details>
+<details>
+        <summary><b>신고 된 내 댓글 조회</b></summary>
+            7. 신고 된 내 댓글 조회
+             <br>
+              <img src="./assets/test/comment/신고된 내 댓글 조회.png.png.png" alt="신고 된 내 댓글 조회" style="width: 80%; height: auto;">
+            <br>사용자는 신고된 자신의 댓글을 조회할 수 있다.
+</details>
+<br>
+
 <li><span style="font-size: 1.2em">투표 테스트</span></li>
 <details>
   <summary><b>투표 참여</b></summary>
@@ -492,7 +544,6 @@ com.freepath.devpath
   <img src="https://github.com/user-attachments/assets/7dbff11a-c536-4822-a8eb-2c8f3cbd0fd5" alt="투표 참여(중복)" style="width: 80%; height: auto;">
   <br>투표가 있는 게시글에 중복 투표 참여시 예외처리
 </details>
-
 <details>
   <summary><b>투표 종료</b></summary>
   1. 투표 종료(일반)
@@ -781,7 +832,7 @@ com.freepath.devpath
     <img src="./assets/test/itnews/IT뉴스 수동 전송.png" alt="itnews5" style="width: 80%; height: auto;">
     <br>: 관리자는 IT 뉴스를 구독한 사용자들에게 전송할 수 있다.
     <br>
-    <img src="./assets/test/itnews/IT뉴스 수동 전송.png" alt="itnews6" style="width: 80%; height: auto;">
+    <img src="./assets/test/itnews/사용자에게 IT뉴스기사 전송.png" alt="itnews6" style="width: 80%; height: auto;">
     <br>: 사용자가 받은 이메일
     <br><br>    
 </details>
