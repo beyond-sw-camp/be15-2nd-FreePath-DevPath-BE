@@ -241,9 +241,312 @@ com.freepath.devpath
 </details>
 <br>
 <h3 id="msa">📌 MSA 아키텍쳐 구조도</h3>
+    <details>
+        <summary><b>MSA 아키텍쳐 구조도 상세보기</b></summary>
+        <img src="./assets/project-result/msa.png" alt="WBS" style="width: 100%; height: auto;">
+    </details>
 
 <br>
 <h3 id="test">🎖️ 테스트 결과 보고서</h3>
+<li><span style="font-size: 1.2em">회원 테스트</span></li>
+    <details>
+        <summary><b>회원 가입</b></summary>
+        1. 일반 회원가입
+        <br>
+        <img src="./assets/test/user/일반회원_회원가입.png" alt="user1" style="width: 80%; height: auto;">
+        <br>: 일반 회원가입 시 인증 이메일 발송
+        <br><br>
+        <img src="./assets/test/user/일반회원_회원가입인증번호확인.png" alt="user2" style="width: 80%; height: auto;">
+        <br>: 인증번호 확인
+        <br><br>
+        <img src="./assets/test/user/일반회원_회원가입완료.png" alt="user3" style="width: 80%; height: auto;">
+        <br>: 인증번호 확인
+        <br><br>
+        2. 구글 회원가입
+        <br>
+        <img src="./assets/test/user/소셜회원_회원가입&로그인창.png" alt="user4" style="width: 80%; height: auto;">
+        <br>: 구글 회원가입 or 로그인 화면
+        <br><br>
+        <img src="./assets/test/user/소셜회원_닉네임,구독여부입력페이지.png" alt="user5" style="width: 80%; height: auto;">
+        <br>: 구글 인증 후 닉네임, it 기사 구독 여부 입력
+        <br><br>
+        <img src="./assets/test/user/소셜회원_회원가입완료.png" alt="user6" style="width: 80%; height: auto;">
+        <br>: 구글 회원가입 완료
+    </details>
+    <details>
+        <summary><b>로그인</b></summary>
+        1. 일반 로그인
+        <br>
+        <img src="./assets/test/user/일반회원_로그인.png" alt="user7" style="width: 80%; height: auto;">
+        <br>: 일반 로그인 완료
+        <br><br>
+        2. 구글 로그인
+        <br>
+        <img src="./assets/test/user/소셜회원_회원가입&로그인창.png" alt="user8" style="width: 80%; height: auto;">
+        <br>: 구글 로그인 화면
+        <br><br>
+        <img src="./assets/test/user/소셜회원_로그인시토큰확인가능.png" alt="user9" style="width: 80%; height: auto;">
+        <br>: 구글 로그인 시 토큰 확인 가능
+        <br><br>
+    </details>
+    <details>
+        <summary><b>로그아웃</b></summary>
+        1. 로그아웃
+        <br>
+        <img src="./assets/test/user/회원_로그아웃.png" alt="user11" style="width: 80%; height: auto;">
+        <br><br>
+    </details>
+    <details>
+        <summary><b>리프레시 토큰 발급</b></summary>
+        1. 리프레시 토큰 발급
+        <br>
+        <img src="./assets/test/user/회원_리프레시토큰.png" alt="user10" style="width: 80%; height: auto;">
+        <br><br>
+    </details>
+    <details>
+        <summary><b>회원 탈퇴</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/회원_회원탈퇴이메일.png" alt="user11" style="width: 80%; height: auto;">
+        <br>: 회원 탈퇴 시 본인 확인을 위한 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/회원_회원탈퇴인증번호확인.png" alt="user12" style="width: 80%; height: auto;">
+        <br>: 인증 번호 확인
+        <br><br>
+        3. 회원 탈퇴
+        <br>
+        <img src="./assets/test/user/회원_회원탈퇴완료.png" alt="user13" style="width: 80%; height: auto;">
+        <br>: 회원 탈퇴 완료
+        <br><br>
+    </details>
+    <details>
+        <summary><b>로그인 아이디 찾기</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/일반회원_로그인아이디찾기이메일.png" alt="user14" style="width: 80%; height: auto;">
+        <br>: 로그인 아이디 찾기를 위한 인증용 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/일반회원_로그인아이디찾기인증번호확인.png" alt="user15" style="width: 80%; height: auto;">
+        <br>: 인증 번호 인증 완료
+        <br><br>
+        3. 로그인 찾기 완료
+        <br>
+        <img src="./assets/test/user/일반회원_로그인아이디찾기완료.png" alt="user16" style="width: 80%; height: auto;">
+        <br>: 회원의 아이디 반환
+        <br><br>
+    </details>
+    <details>
+        <summary><b>비밀번호 재설정</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정이메일.png" alt="user17" style="width: 80%; height: auto;">
+        <br>: 비밀번호를 잃어버렸을 때 재설정하는 기능을 사용하기 위해 인증용 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정인증번호확인.png" alt="user18" style="width: 80%; height: auto;">
+        <br>: 인증 번호 인증 완료
+        <br><br>
+        3. 비밀번호 재설정 오류
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정_오류.png" alt="user19" style="width: 80%; height: auto;">
+        <br>: 비밀번호에 특수문자를 넣지 않으면 안 됨
+        <br><br>
+        4. 비밀번호 재설정 완료
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호재설정완료.png" alt="user20" style="width: 80%; height: auto;">
+        <br>: 특수문자 넣고 다시 시도하면 성공함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>비밀번호 변경</b></summary>
+        1. 이메일 발송
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호변경이메일.png" alt="user21" style="width: 80%; height: auto;">
+        <br>: 비밀번호를 변경 시 인증용 이메일 발송
+        <br><br>
+        2. 인증 번호
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호변경인증번호확인.png" alt="user22" style="width: 80%; height: auto;">
+        <br>: 인증 번호 인증 완료
+        <br><br>
+        3. 비밀번호 변경 완료
+        <br>
+        <img src="./assets/test/user/일반회원_비밀번호변경완료.png" alt="user23" style="width: 80%; height: auto;">
+        <br>: 비밀번호가 성공적으로 변경됨
+        <br><br>
+    </details>
+    <details>
+        <summary><b>회원 정보 수정</b></summary>
+        1. 닉네임, it 기사 구독 여부 수정
+        <br>
+        <img src="./assets/test/user/회원_닉네임,it구독여부수정.png" alt="user24" style="width: 80%; height: auto;">
+        <br>: 중복되는 닉네임은 변경이 불가능
+        <br><br>
+    </details>
+     <details>
+        <summary><b>개발자 성향 테스트 저장</b></summary>
+        1. 개발자 성향 테스트 저장
+        <br>
+        <img src="./assets/test/user/회원_개발자성향테스트저장.png" alt="user25" style="width: 80%; height: auto;">
+        <br>: 프론트에서 주는 값을 회원의 개발자 성향 테스트 결과로 저장함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>마이페이지 내의 회원 정보 조회</b></summary>
+        1. 회원 정보 조회
+        <br>
+        <img src="./assets/test/user/회원_마이페이지정보조회.png" alt="user26" style="width: 80%; height: auto;">
+        <br>: 이메일, 닉네임, it 뉴스 구독 여부, 개발자 성향 테스트 등을 조회할 수 있다.
+        <br><br>
+    </details>
+<br>
+
+<li><span style="font-size: 1.2em">게시글 테스트</span></li>
+<details>
+  <summary><b>게시글 업로드</b></summary>
+  1. 게시글 업로드
+  <br>
+  <img src="https://github.com/user-attachments/assets/9979f153-f1aa-49ec-a027-30c6e289ccb9" alt="게시글 업로드 예시" style="width: 80%; height: auto;">
+  <br>각 필드에 대한 입력 유효성 검사와 파일 첨부 기능 등이 포함됩니다.
+</details>
+
+<details>
+  <summary><b>게시글 수정</b></summary>
+  1. 게시글 수정
+  <br>
+  <img src="https://github.com/user-attachments/assets/ecd6bc39-f368-4e42-8372-1f7824c4a5bc" alt="게시글 수정 예시" style="width: 80%; height: auto;">
+  <br>수정 시 변경된 내용이 정상적으로 반영되는지와 편집 전후 데이터 비교 기능 등을 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 삭제</b></summary>
+  1. 게시글 삭제
+  <br>
+  <img src="https://github.com/user-attachments/assets/26f60396-b3ff-4867-bef7-8c2a5f2e9b32" alt="게시글 삭제 예시" style="width: 80%; height: auto;">
+  <br>삭제 전 확인 메시지와 실제 데이터베이스에서 삭제 처리가 되는지를 테스트합니다.
+</details>
+
+<details>
+  <summary><b>하위 카테고리 목록 조회</b></summary>
+  1. 하위 카테고리 목록 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/db528f3c-bbef-450c-b280-078fee3cab65" alt="하위 카테고리 목록 조회 예시" style="width: 80%; height: auto;">
+  <br>계층 구조가 제대로 표시되고, 클릭 시 해당 카테고리로 이동되는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 상세 조회</b></summary>
+  1. 게시글 상세 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/bd8cabe1-b318-40b9-8a6e-de6412781b24" alt="게시글 상세 조회 예시" style="width: 80%; height: auto;">
+  <br>게시글 내용, 작성자 정보, 작성일, 댓글 및 추천 수 등의 정보가 올바르게 표시되는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 검색 (작성일, 작성자, 제목)</b></summary>
+  1. 게시글 검색 (작성일, 작성자, 제목)
+  <br>
+  <img src="https://github.com/user-attachments/assets/787dd012-6f0f-4849-880b-2557afa9ff77" alt="게시글 검색 (필터) 예시" style="width: 80%; height: auto;">
+  <br>조건에 맞는 게시글이 올바르게 필터링되어 나타나는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>게시글 검색 (게시글 내용 필터)</b></summary>
+  1. 게시글 내용 필터
+  <br>
+  <img src="https://github.com/user-attachments/assets/269fe4e7-03b5-480e-86ee-e704c4292d61" alt="게시글 내용 필터 예시" style="width: 80%; height: auto;">
+  <br>검색 결과에 불필요한 게시글이 노출되지 않고, 정확하게 필터링되는지 확인합니다.
+</details>
+
+<details>
+  <summary><b>회원이 작성한 게시글 목록 조회</b></summary>
+  1. 회원이 작성한 게시글 목록 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/534991c6-a68e-4e39-a75f-ceb6b41e4ee2" alt="회원이 작성한 게시글 목록 조회 예시" style="width: 80%; height: auto;">
+  <br>회원 정보와 연동되어, 로그인 상태에서 자신의 게시글만 확인 가능하게 처리되어 있는지 테스트합니다.
+</details>
+
+<details>
+  <summary><b>자신의 신고된 게시물 목록 확인</b></summary>
+  1. 신고된 게시물 목록 확인
+  <br>
+  <img src="https://github.com/user-attachments/assets/49a8c793-31ae-4931-81ff-b151fd2bf6ba" alt="신고된 게시물 목록 확인 예시" style="width: 80%; height: auto;">
+  <br>신고 처리 현황과 해당 게시글의 상태가 정확하게 표시되는지 확인합니다.
+</details>
+
+<li><span style="font-size: 1.2em">CS 퀴즈</span></li>
+    <details>
+        <summary><b>CS 퀴즈 등록</b></summary>
+        1. 등록
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 등록.png" alt="csquiz1" style="width: 80%; height: auto;">
+        <br>: 관리자가 CS 퀴즈를 등록함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>CS 퀴즈 버전 갱신</b></summary>
+        1. 버전 갱신(수동)
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 버전 갱신(수동).gif" alt="csquiz2" style="width: 80%; height: auto;">
+        <br>: 관리자가 CS 퀴즈 버전 갱신을 수동으로 진행함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>CS 퀴즈 조회</b></summary>
+        1. 상세 조회
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 상세조회.png" alt="csquiz3" style="width: 80%; height: auto;">
+        <br>: CS 퀴즈를 상세 조회함
+        <br><br>
+        2. 목록 조회
+        <br>
+        <img src="./assets/test/csquiz/CS 퀴즈 전체 목록 조회.png" alt="csquiz4" style="width: 80%; height: auto;">
+        <br>: CS 퀴즈의 전체 목록 조회함
+        <br><br>
+        3. 주간 조회
+        <br>
+        <img src="./assets/test/csquiz/주간 CS퀴즈 조회.png" alt="csquiz5" style="width: 80%; height: auto;">
+        <br>: 주간 CS 퀴즈 조회함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>CS 퀴즈 수정</b></summary>
+        1. 수정
+        <br>
+        <img src="./assets/test/csquiz/CS퀴즈 수정.png" alt="csquiz6" style="width: 80%; height: auto;">
+        <br>: 관리자가 CS 퀴즈 내용을 수정함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>사용자 답변 등록</b></summary>
+        1. 답변 등록
+        <br>
+        <img src="./assets/test/csquiz/사용자 답변 등록.png" alt="csquiz7" style="width: 80%; height: auto;">
+        <br>: 사용자가 퀴즈에 대해 답변을 등록함
+        <br><br>
+    </details>
+    <details>
+        <summary><b>사용자 CS 퀴즈 결과 조회</b></summary>
+        1. 결과 조회
+        <br>
+        <img src="./assets/test/csquiz/사용자 CS퀴즈 결과 조회.png" alt="csquiz8" style="width: 80%; height: auto;">
+        <br>: 사용자는 퀴즈 결과를 조회할 수 있음
+        <br><br>
+    </details>
+    <details>
+        <summary><b>사용자 주간 CS 퀴즈 정답 개수 조회</b></summary>
+        1. 정답 개수 조회
+        <br>
+        <img src="./assets/test/csquiz/사용자 주간 CS퀴즈 정답 개수.png" alt="csquiz9" style="width: 80%; height: auto;">
+        <br>: 사용자는 주간 CS 퀴즈의 정답 개수를 조회할 수 있음
+        <br><br>
+    </details>
+
 
 <br>
 <h3 id="wbs">📝 WBS (Work Breakdown Structure)</h3>
