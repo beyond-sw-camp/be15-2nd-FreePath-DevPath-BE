@@ -478,6 +478,41 @@ com.freepath.devpath
   <img src="https://github.com/user-attachments/assets/49a8c793-31ae-4931-81ff-b151fd2bf6ba" alt="신고된 게시물 목록 확인 예시" style="width: 80%; height: auto;">
   <br>신고 처리 현황과 해당 게시글의 상태가 정확하게 표시되는지 확인합니다.
 </details>
+<br>
+
+<li><span style="font-size: 1.2em">투표 테스트</span></li>
+<details>
+  <summary><b>투표 참여</b></summary>
+  1. 투표 참여(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/f447f1d6-89e4-4fb7-bd72-55f98e1b8642" alt="투표 참여(일반)" style="width: 80%; height: auto;">
+  <br>투표가 있는 게시글에 투표 참여
+  2. 투표 참여(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/7dbff11a-c536-4822-a8eb-2c8f3cbd0fd5" alt="투표 참여(중복)" style="width: 80%; height: auto;">
+  <br>투표가 있는 게시글에 중복 투표 참여시 예외처리
+</details>
+
+<details>
+  <summary><b>투표 종료</b></summary>
+  1. 투표 종료(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/39d852da-784b-4c99-94a2-3942d5241c09" alt="투표 종료(일반)" style="width: 80%; height: auto;">
+  <br>투표를 종료
+  2. 투표 종료(권한 X)
+  <br>
+  <img src="https://github.com/user-attachments/assets/63203bca-d59b-4a50-b07f-8c54ccd702cc" alt="투표 종료(권한 X)" style="width: 80%; height: auto;">
+  <br>투표 종료 시 게시글 작성자인지 검증 후 예외처리
+</details>
+
+<details>
+  <summary><b>투표 조회</b></summary>
+  1. 투표 조회(투표 존재 여부, 투표 여부, 종료 여부)
+  <br>
+  <img src="https://github.com/user-attachments/assets/ade40274-a107-47cb-9705-3453e1f9e45f" alt="투표 조회(투표 존재 여부, 투표 여부, 종료 여부)" style="width: 80%; height: auto;">
+  <br>투표 조회 시 투표 존재 여부, 투표 여부, 종료 여부를 확인
+</details>
+<br>
 
 <li><span style="font-size: 1.2em">CS 퀴즈</span></li>
     <details>
@@ -546,6 +581,269 @@ com.freepath.devpath
         <br>: 사용자는 주간 CS 퀴즈의 정답 개수를 조회할 수 있음
         <br><br>
     </details>
+<br>
+<li><span style="font-size: 1.2em">채팅 테스트</span></li>
+    <details>
+        <summary><b>채팅방 기능</b></summary>
+        1. 채팅방 생성
+        <br>
+        <img src="./assets/test/chatting/1_채팅방 생성.png" alt="채팅방 생성성" style="width: 80%; height: auto;">
+        <br>: 사용자 토큰을 이용하여 채팅방 생성
+        <br><br>
+        2. 그룹채팅방 생성
+        <br>
+        <img src="./assets/test/chatting/2_그룹채팅방 생성.png" alt="그룹채팅방 생성성" style="width: 80%; height: auto;">
+        <br>: 게시글ID와 사용자 토큰을 이용해 그룹채팅방 생성
+        <br><br>
+        3. 채팅방 나가기
+        <br>
+        <img src="./assets/test/chatting/3_채팅방 나가기.png" alt="채팅방 나가기기" style="width: 80%; height: auto;">
+        <br>: 채팅방Id와 토큰을 이용해 채팅방을 나감
+        <br><br>
+        4. 채팅방 삭제
+        <br>
+        <img src="./assets/test/chatting/4_채팅방 삭제.png" alt="채팅방 나가기" style="width: 80%; height: auto;">
+        <br>: 그룹채팅방의 OWNER인 사용자만이 채팅방 삭제 가능
+        <br><br>
+        5. 채팅방 조회
+        <br>
+        <img src="./assets/test/chatting/5_채팅방 조회.png" alt="채팅방 조회회" style="width: 80%; height: auto;">
+        <br>: 참여중인 채팅방을 조회한다.
+        <br><br>
+         6. 채팅방 조회
+        <br>
+        <img src="./assets/test/chatting/6_채팅내역 조회.png" alt="채팅 내역 조회" style="width: 80%; height: auto;">
+        <br>: 채팅방의 채팅 내역을 조회한다.
+        <br><br>
+        7. 채팅방 제목 변경
+        <br>
+        <img src="./assets/test/chatting/7_채팅방 제목 변경.png" alt="채팅방 제목 변경경" style="width: 80%; height: auto;">
+        <br>: 그룹채팅방의 OWNER가 채팅방의 제목을 수정한다.
+        <br><br>
+        8. 채팅방 참여자 목록 조회
+        <br>
+        <img src="./assets/test/chatting/8_채팅 참여자 목록 조회.png" alt="채팅 참여자 목록 조회회" style="width: 80%; height: auto;">
+        <br>: 특정 채팅방의 참여자 목록을 조회할 수 있다.
+        <br><br>
+    </details>
+    <details>
+        <summary><b>차단 기능</b></summary>
+        1. 회원 차단 기능
+        <br>
+        <img src="./assets/test/chatting/9_회원 차단.png" alt="회원 차단 기능" style="width: 80%; height: auto;">
+        <br>: 특정 사용자를 차단할 수 있다.
+        <br><br>
+        2. 회원 차단 취소 기능
+        <br>
+        <img src="./assets/test/chatting/10_회원 차단 취소.png" alt="회원 차단 취소 기능" style="width: 80%; height: auto;">
+        <br>: 특정 사용자 차단을 취소할 수 있다.
+        <br><br>
+        3. 회원 차단 목록 조회
+        <br>
+        <img src="./assets/test/chatting/11_회원 차단 목록 조회.png" alt="회원 차단 목록 조회" style="width: 80%; height: auto;">
+        <br>: 사용자가 차단한 다른 사용자들을 조회할 수 있다.
+        <br><br>
+    </details>
+    <details>
+    <summary><b>그룹채팅방 기능</b></summary>
+        1. 그룹채팅방 참여 요청
+        <br>
+        <img src="./assets/test/chatting/12_그룹채팅방 참여요청.png" alt="그룹채팅방 참여요청" style="width: 80%; height: auto;">
+        <br>: 일반 사용자는 그룹채팅방 참여 요청을 보낸다.
+        <br><br>
+        2. 그룹채팅방 대기방 조회
+        <br>
+        <img src="./assets/test/chatting/13_그룹채팅방 대기방 조회.png" alt="그룹채팅방 대기방 조회" style="width: 80%; height: auto;">
+        <br>: 그룹채팅방의 OWNER는 대기방을 조회할 수 있다.
+        <br><br>
+        3. 그룹채팅방 요청 수락락
+        <br>
+        <img src="./assets/test/chatting/14_그룹채팅방 요청 수락.png" alt="그룹채팅방 참여요청 수락락" style="width: 80%; height: auto;">
+        <br>: 그룹채팅방의 OWNER는 그룹채팅방 참여 요청을 수락할 수 있다.
+        <br><br>
+        3. 그룹채팅방 요청 수락
+        <br>
+        <img src="./assets/test/chatting/15_그룹채팅방 요청 거절.png" alt="그룹채팅방 참여요청 거절절" style="width: 80%; height: auto;">
+        <br>: 그룹채팅방의 OWNER는 그룹채팅방 참여 요청을 거절할 수도 있다.
+        <br><br>
+    </details>
+    <details>
+    <summary>채팅 연결 테스트 </summary>
+    <img src="./assets/test/chatting/채팅 연결 테스트.gif" alt="채팅 연결 테스트" style="width: 80%; height: auto;">
+        <br>: stomp를 이용하여 connect, subscribe, send시 사용자의 토큰을 확인하여 채팅방에 참여중인 사용자인지 확인한다. 
+    </details>
+
+<br>
+<li><span style="font-size: 1.2em">모의 면접 테스트</span></li>
+<details>
+    <summary><b>관리자 - 조회</b></summary>
+    1. 관리자 모의 면접방 전체 목록 조회
+    <br>
+    <img src="./assets/test/interview/관리자 면접방 전체 목록 조회.png" alt="interview1" style="width: 80%; height: auto;">
+    <br>: 관리자는 사용자가 만든 모의 면접방 전체 목록을 조회할 수 있음
+    <br><br>
+    2. 관리자 모의 면접방 필터링 조회
+    <br>
+    <img src="./assets/test/interview/관리자 면접방 필터링 조회.png" alt="interview2" style="width: 80%; height: auto;">
+    <br>: 관리자는 사용자가 만든 모의 면접방을 필터링 해서 조회할 수 있음
+    <br><br>
+</details>
+<details>
+    <summary><b>사용자 - 조회</b></summary>
+    1. 사용자 모의 면접방 목록 조회
+    <br>
+    <img src="./assets/test/interview/사용자 면접방 목록 조회.png" alt="interview3" style="width: 80%; height: auto;">
+    <br>: 사용자는 본인이 만든 모의 면접방 목록을 조회할 수 있음
+    <br><br>
+    2. 사용자 모의 면접방 상세 조회
+    <br>
+    <img src="./assets/test/interview/면접방 상세 조회.png" alt="interview4" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 상세 조회2.png" alt="interview5" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 상세 조회3.png" alt="interview6" style="width: 80%; height: auto;">
+    <br>: 사용자는 본인의 모의 면접방 상세 조회를 할 수 있음
+    <br><br>
+    4. 사용자 모의 면접방 총평 조회
+    <br>
+    <img src="./assets/test/interview/면접방 총평 조회.png" alt="interview7" style="width: 80%; height: auto;">
+    <br>: 사용자는 본인이 만든 모의 면접방의 총평을 조회할 수 있음
+    <br><br>
+</details>
+<details>
+    <summary><b>모의 면접방 생성</b></summary>
+    1. 생성
+    <br>
+    <img src="./assets/test/interview/면접방 생성.png" alt="interview8" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방을 생성할 수 있음
+    <br><br>
+</details>
+<details>
+    <summary><b>모의 면접방 제목, 메모 수정</b></summary>
+    1. 수정
+    <br>
+    <img src="./assets/test/interview/면접방 제목 및 메모 수정.png" alt="interview9" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방의 제목 및 메모를 수정할 수 있음
+    <br><br>
+</details>
+<details>
+    <summary><b>모의 면접방 사용</b></summary>
+    1. 대화
+    <br>
+    <img src="./assets/test/interview/면접방 대화.png" alt="interview10" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 대화.png" alt="interview11" style="width: 80%; height: auto;">
+    <img src="./assets/test/interview/면접방 대화.png" alt="interview12" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방의 제목 및 메모를 수정할 수 있음
+    <br><br>
+</details>
+<details>
+    <summary><b>모의 면접방 재실행</b></summary>
+    1. 대화
+    <br>
+    <img src="./assets/test/interview/면접방 질문 재실행.png" alt="interview13" style="width: 80%; height: auto;">
+    <br>: 사용자는 모의 면접방을 재실행 할 수 있음
+    <br><br>
+</details>
+
+<br>
+<li><span style="font-size: 1.2em">IT 뉴스 테스트</span></li>
+<details>
+    <summary><b>IT 뉴스 저장</b></summary>
+     1. 저장
+    <br>
+    <img src="./assets/test/itnews/IT 뉴스 저장.png" alt="itnews1" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 저장할 수 있다.
+    <br><br>
+</details>
+<details>
+    <summary><b>IT 뉴스 수정</b></summary>
+     1. 수정
+    <br>
+    <img src="./assets/test/itnews/IT 뉴스 수정.png" alt="itnews2" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 수정할 수 있다.
+    <br><br>
+</details>
+<details>
+    <summary><b>IT 뉴스 조회</b></summary>
+     1. 목록 조회
+    <br>
+    <img src="./assets/test/itnews/뉴스 목록 조회.png" alt="itnews3" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스 목록을 조회할 수 있다.
+    <br><br>
+    2. 상세 조회
+    <br>
+    <img src="./assets/test/itnews/뉴스 상세조회.png" alt="itnews4" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스 상세 조회할 수 있다.
+    <br><br>
+</details>
+<details>
+    <summary><b>IT 뉴스 전송</b></summary>
+    1. 전송(수동)
+    <br>
+    <img src="./assets/test/itnews/IT뉴스 수동 전송.png" alt="itnews5" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 구독한 사용자들에게 전송할 수 있다.
+    <br>
+    <img src="./assets/test/itnews/IT뉴스 수동 전송.png" alt="itnews6" style="width: 80%; height: auto;">
+    <br>: 사용자가 받은 이메일
+    <br><br>    
+</details>
+<details>
+    <summary><b>IT 뉴스 삭제</b></summary>
+    1. 삭제
+    <br>
+    <img src="./assets/test/itnews/뉴스 삭제.png" alt="itnews7" style="width: 80%; height: auto;">
+    <br>: 관리자는 IT 뉴스를 삭제할 수 있다.
+    <br><br>
+</details>
+
+
+<br>
+<li><span style="font-size: 1.2em">신고 테스트</span></li>
+<details>
+  <summary><b>게시글 신고</b></summary>
+  1. 게시글 신고(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/c52c6a38-5652-405a-9af0-0e5e66c68a46" alt="게시글 신고(일반)" style="width: 80%; height: auto;">
+  <br>
+  2. 게시글 신고(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/03567cdc-c364-44ff-9fea-6324523d7c42" alt="게시글 신고(중복)" style="width: 80%; height: auto;">
+  <br> 게시글 신고 시 중복 예외 처리
+</details>
+
+<details>
+  <summary><b>댓글 신고</b></summary>
+  1. 댓글 신고(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/ac6fc59e-7288-4a57-ad54-a93bb7391f8e" alt="댓글 신고(일반)" style="width: 80%; height: auto;">
+   <br><br>
+  2. 댓글 신고(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/b1fc9e0a-5350-4dec-9081-f64cbd40729b" alt="댓글 신고(중복)" style="width: 80%; height: auto;">
+  <br> 댓글 신고 시 중복 예외 처리
+  <br>
+</details>
+
+<details>
+  <summary><b>관리자 신고 검토 리스트 조회</b></summary>
+  1. 관리자 신고 검토 리스트 조회
+  <br>
+  <img src="https://github.com/user-attachments/assets/050f3d15-9df8-4f50-a437-913d41b1a13f" alt="관리자 신고 검토 리스트 조회" style="width: 80%; height: auto;">
+  <br>관리자가 신고 검토 요청 리스트를 조회
+</details>
+
+<details>
+  <summary><b>관리자 신고 검토 처리</b></summary>
+  1. 관리자 신고 검토 처리
+  <br>
+  <img src="https://github.com/user-attachments/assets/283cef1c-1ebe-4882-b9f7-9785408bbf2b" alt="관리자 신고 검토 처리" style="width: 80%; height: auto;">
+  <br>관리자가 신고 검토 요청을 처리
+  <br>
+  2. 관리자 신고 검토 처리(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/35e63c95-3389-47e5-969a-a7165e889986" alt="관리자 신고 검토 리스트 조회" style="width: 80%; height: auto;">
+  <br>관리자가 신고 검토 요청 처리 시 중복 예외 처리
+</details>
+
+<br>
 
 
 <br>
