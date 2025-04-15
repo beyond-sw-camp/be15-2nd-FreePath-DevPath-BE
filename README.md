@@ -479,6 +479,39 @@ com.freepath.devpath
   <br>신고 처리 현황과 해당 게시글의 상태가 정확하게 표시되는지 확인합니다.
 </details>
 
+<li><span style="font-size: 1.2em">투표 테스트</span></li>
+<details>
+  <summary><b>투표 참여</b></summary>
+  1. 투표 참여(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/f447f1d6-89e4-4fb7-bd72-55f98e1b8642" alt="투표 참여(일반)" style="width: 80%; height: auto;">
+  <br>투표가 있는 게시글에 투표 참여
+  2. 투표 참여(중복)
+  <br>
+  <img src="https://github.com/user-attachments/assets/7dbff11a-c536-4822-a8eb-2c8f3cbd0fd5" alt="투표 참여(중복)" style="width: 80%; height: auto;">
+  <br>투표가 있는 게시글에 중복 투표 참여시 예외처리
+</details>
+
+<details>
+  <summary><b>투표 종료</b></summary>
+  1. 투표 종료(일반)
+  <br>
+  <img src="https://github.com/user-attachments/assets/39d852da-784b-4c99-94a2-3942d5241c09" alt="투표 종료(일반)" style="width: 80%; height: auto;">
+  <br>투표를 종료
+  2. 투표 종료(권한 X)
+  <br>
+  <img src="https://github.com/user-attachments/assets/63203bca-d59b-4a50-b07f-8c54ccd702cc" alt="투표 종료(권한 X)" style="width: 80%; height: auto;">
+  <br>투표 종료 시 게시글 작성자인지 검증 후 예외처리
+</details>
+
+<details>
+  <summary><b>투표 조회</b></summary>
+  1. 투표 조회(투표 존재 여부, 투표 여부, 종료 여부)
+  <br>
+  <img src="https://github.com/user-attachments/assets/26f60396-b3ff-4867-bef7-8c2a5f2e9b32" alt="투표 조회(투표 존재 여부, 투표 여부, 종료 여부)" style="width: 80%; height: auto;">
+  <br>투표 조회 시 투표 존재 여부, 투표 여부, 종료 여부를 확인
+</details>
+
 <li><span style="font-size: 1.2em">CS 퀴즈</span></li>
     <details>
         <summary><b>CS 퀴즈 등록</b></summary>
