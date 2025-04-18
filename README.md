@@ -200,6 +200,33 @@ com.freepath.devpath
         <img src="./assets/project-result/요구사항명세서2.png" alt="요구사항명세서2" style="width: 100%; height: auto;">
     </div>
 </details>
+
+<br>
+<h3 id="wbs">📝 WBS (Work Breakdown Structure)</h3>
+<details>
+    <summary><b>WBS 상세보기</b></summary>
+    <div markdown="1">
+        <img src="./assets/project-result/wbs.png" alt="WBS" style="width: 100%; height: auto;">
+        <br>
+        <a href="https://www.notion.so/WBS-1c82fdb141488047835cd0ac36875e59" target="_blank">
+            <b>| WBS 상세 문서 보기 |</b>
+        </a>
+    </div>
+</details>
+
+<br>
+<h3 id="gantt">📊 Gantt Chart</h3>
+<details>
+    <summary><b>Gantt Chart 상세보기</b></summary>
+    <div markdown="1">
+        <img src="./assets/project-result/ganttchart.png" alt="Gantt Chart" style="width: 100%; height: auto;">
+        <br>
+        <a href="https://www.notion.so/Gantt-Chart-1d52fdb14148807aba37f0dedc7945a6" target="_blank">
+            <b>| Gantt chart 상세 문서 보기 |</b>
+        </a>
+    </div>
+</details>
+
 <br>
 <h3 id="ddd">📑 DDD</h3>
 <div markdown="1">
@@ -245,7 +272,7 @@ com.freepath.devpath
 <h3 id="msa">📌 MSA 아키텍쳐 구조도</h3>
     <details>
         <summary><b>MSA 아키텍쳐 구조도 상세보기</b></summary>
-        <img src="https://github.com/user-attachments/assets/4a2a1b83-abcf-4296-b3be-51dd39ae851d" alt="MSA" style="width: 80%; height: auto;">
+        <img src="./assets/project-result/msa.png" alt="MSA" style="width: 80%; height: auto;">
     </details>
     <br>
 <h3 id="eca">🙌 Eureka Server & Client & API Gateway 구조</h3>
@@ -1037,32 +1064,6 @@ com.freepath.devpath
 
 <br>
 
-
-<br>
-<h3 id="wbs">📝 WBS (Work Breakdown Structure)</h3>
-<details>
-    <summary><b>WBS 상세보기</b></summary>
-    <div markdown="1">
-        <img src="./assets/project-result/wbs.png" alt="WBS" style="width: 100%; height: auto;">
-        <br>
-        <a href="https://www.notion.so/WBS-1c82fdb141488047835cd0ac36875e59" target="_blank">
-            <b>| WBS 상세 문서 보기 |</b>
-        </a>
-    </div>
-</details>
-
-<br>
-<h3 id="gantt">📊 Gantt Chart</h3>
-<details>
-    <summary><b>Gantt Chart 상세보기</b></summary>
-    <div markdown="1">
-        <img src="./assets/project-result/ganttchart.png" alt="Gantt Chart" style="width: 100%; height: auto;">
-        <br>
-        <a href="https://www.notion.so/Gantt-Chart-1d52fdb14148807aba37f0dedc7945a6" target="_blank">
-            <b>| Gantt chart 상세 문서 보기 |</b>
-        </a>
-    </div>
-</details>
 
 <br>
 <h1 id="ournotionpage">3️⃣ Our Notion Page</h1>
