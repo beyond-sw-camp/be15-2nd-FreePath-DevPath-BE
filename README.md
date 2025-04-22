@@ -36,14 +36,6 @@
         </ul>
     </td>
   </tr>
-  <tr>
-    <td>
-      <b>3️⃣ Our Notion Page</b>
-        <ul>
-          <li><a href="#ournotionpage">📓 Notion Page Link</a></li>
-        </ul>
-    </td>
-  </tr>
 </table>
 
 <br>
@@ -1064,8 +1056,4 @@ com.freepath.devpath
 
 <br>
 
-
-<br>
-<h1 id="ournotionpage">3️⃣ Our Notion Page</h1>
-<a href="https://www.notion.so/be15_1st_Project_DB-5c52900ed26b42ad812641a28fe85249"><text><strong>| 📓 Notion Page Link |</strong></text></a>
 <br><br>
