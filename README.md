@@ -221,9 +221,14 @@ com.freepath.devpath
 
 <br>
 <h3 id="ddd">📑 DDD</h3>
-<div markdown="1">
-        <a href="https://miro.com/app/board/uXjVIPVe0Us=/?share_link_id=219832960001" target="_blank"><strong>| DDD 보기 |</strong></a>
-</div>
+<details>
+  <summary>DDD 문서 상세보기</summary>
+      <div markdown="1">
+          <img src="https://github.com/user-attachments/assets/85d6df15-918d-4483-a78f-75701d892b49" alt="DDD 문서" style="width: 40%; height: auto">
+          <br>
+        <a href="https://miro.com/app/board/uXjVIPVe0Us=/?share_link_id=219832960001" target="_blank"><strong>| DDD 바로가기 |</strong></a>
+      </div> 
+</details>
 
 <br>
 <h3 id="erd">📋 논리/물리 ERD</h3>
